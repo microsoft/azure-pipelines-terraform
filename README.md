@@ -1,33 +1,30 @@
-# Project
+# Terraform Extension for Azure DevOps
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+## Overview:
 
-As the maintainer of this project, please make a few updates:
+This repo contains the Azure DevOps Pipeline tasks for installing Terraform and running Terraform commands in a build or release pipeline. The goal of this extension is to guide the user in the process of using Terraform to deploy infrastructure within Azure, Amazon Web Services(AWS) and Google Cloud Platform(GCP).
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+This extension contains the following contributions:
+- Terraform tool installer - for installing Terraform if not installed on the build agent
+- Terraform - for executing the core Terraform commands
+- Amazon Web Services(AWS) service connection - for creating a service connection for AWS to provide AWS credentials
+- Google Cloud Platform(GCP) service connection - for creating a service connection for GCP to provide GCP credentials
 
-## Contributing
+The tasks are capable of running on the following build agent operating systems: 
+- Windows
+- MacOS
+- Linux
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+For more detailed information about the tasks, see the README for each from the below links:
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+- [Terraform tool installer](https://aka.ms/AA5jd97)
+- [Terraform](https://aka.ms/AAese2w)
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
-## Trademarks
+## Contact Information
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+This extension is authored by [Microsoft DevLabs](https://marketplace.visualstudio.com/publishers/Microsoft%20DevLabs). It is not supported by Microsoft.
+
+To report a problem with this extension, create an issue in this repository. The maintainers of this repository will review and respond to the issue.
+
+You can also report problems or share feedback about this extension on [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html).
