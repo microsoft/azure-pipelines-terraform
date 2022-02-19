@@ -1,0 +1,26 @@
+{
+    "name": "Terraform",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "clean": "rimraf ./dist",
+        "build:release": "npm run deps:release && npm run compile && npm run deps:prune && webpack",
+        "package:dev": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/dev.json --root ./dist",
+        "package:test": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/test.json --root ./dist",
+        "package:release": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/release.json --root ./dist",
+        "deps:release": "npm --prefix ./Tasks/TerraformInstaller/ install && npm --prefix ./Tasks/TerraformTask/TerraformTaskV1 install  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV2 install",
+        "deps:prune": "npm --prefix ./Tasks/TerraformInstaller/ prune --production  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV1 prune --production  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV2 install --production",
+        "compile": "tsc -p ./Tasks/TerraformTask/TerraformTaskV1 && tsc -p ./Tasks/TerraformTask/TerraformTaskV2"
+    },
+    "devDependencies": {
+        "azure-pipelines-task-lib": "^3.1.7",
+        "azure-pipelines-tool-lib": "^0.13.0",
+        "ts-loader": "^5.2.2",
+        "webpack": "^4.46.0",
+        "webpack-cli": "^4.9.2",
+        "copy-webpack-plugin": "^6.3.2",
+        "tfx-cli": "0.9.3"
+    }
+}
+
+

@@ -1,0 +1,86 @@
+# variables:
+# - name: major
+#   value: '2'
+# - name: minor
+#   value: '3'
+# - name: extensionName
+#   value: 'estimate'
+# - name: marketplaceServiceConnection
+#   value: 'marketplaceServiceConnection'
+# - name: publisherId
+#   value: 'ms-devlabs'
+# - name: publicExtensionName
+#   value: "Estimate"
+
+# name: $(major).$(minor)$(rev:.r)
+
+# trigger:
+#   branches:
+#     include:
+#     - main
+
+# pr: none
+
+# resources:
+#   repositories:
+#     - repository: pipeline-templates
+#       type: git
+#       name: Sage/pipeline-templates
+#       ref: main
+
+# stages:
+# - stage: 'Build'
+#   jobs:
+#   - job: 'BuildPack'
+#     displayName: "Build and package"
+#     pool:
+#       vmImage: ubuntu-latest
+#     steps:
+#     - task: NodeTool@0
+#       inputs:
+#         versionSpec: '14.x'
+#     - template: build.yml@pipeline-templates
+#     - template: package.yml@pipeline-templates
+#       parameters:
+#         extensionName: $(extensionName)
+#         outputPath: 'out'
+
+# - stage: 'DeployDev'
+#   displayName: 'Deploy to dev'
+#   dependsOn: Build
+#   condition: succeeded()
+#   jobs: 
+#   - template: deploy.yml@pipeline-templates
+#     parameters:
+#       environment: 'dev'
+#       extensionName: $(extensionName)
+#       marketplaceConnectedServiceName: $(marketplaceServiceConnection)
+#       publisherId: $(publisherId)
+#       publicExtensionName: $(publicExtensionName)
+
+# - stage: 'DeployTest'
+#   displayName: 'Deploy to Test'
+#   dependsOn: DeployDev
+#   condition: succeeded()
+#   jobs:
+#   - template: deploy.yml@pipeline-templates
+#     parameters:
+#       environment: 'test'
+#       extensionName: $(extensionName)
+#       marketplaceConnectedServiceName: $(marketplaceServiceConnection)
+#       publisherId: $(publisherId)
+#       publicExtensionName: $(publicExtensionName)
+
+# - stage: 'DeployRelease'
+#   displayName: 'Deploy Release'
+#   dependsOn: DeployTest
+#   condition: succeeded()
+#   jobs:
+#   - template: deploy.yml@pipeline-templates
+#     parameters:
+#       environment: 'public'
+#       extensionName: $(extensionName)
+#       marketplaceConnectedServiceName: $(marketplaceServiceConnection)
+#       publisherId: $(publisherId)
+#       publicExtensionName: $(publicExtensionName)
+#       extensionVisibility: 'public'
