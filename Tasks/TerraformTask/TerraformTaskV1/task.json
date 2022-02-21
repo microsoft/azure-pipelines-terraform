@@ -13,7 +13,7 @@
     "demands": [],
     "version": {
         "Major": "0",
-        "Minor": "195",
+        "Minor": "201",
         "Patch": "__SetPatchVersion__"
     },
     "instanceNameFormat": "Terraform : $(provider)",
