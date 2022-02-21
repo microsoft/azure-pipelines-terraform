@@ -1,0 +1,6 @@
+{
+    "id": "custom-terraform-tasks2",
+    "name": "Terraform (Dev)",
+    "public": false,
+    "publisher": "solidify-labs"
+}
