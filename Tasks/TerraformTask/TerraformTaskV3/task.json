@@ -1,6 +1,6 @@
 {
     "id": "FE504ACC-6115-40CB-89FF-191386B5E7BF",
-    "name": "TerraformTaskV2",
+    "name": "TerraformTaskV3",
     "friendlyName": "Terraform",
     "description": "Execute terraform commands to manage resources on AzureRM, Amazon Web Services(AWS) and Google Cloud Platform(GCP)",
     "author": "Microsoft Corporation",
@@ -13,7 +13,7 @@
     "demands": [],
     "version": {
         "Major": "3",
-        "Minor": "195",
+        "Minor": "201",
         "Patch": "0"
     },
     "instanceNameFormat": "Terraform : $(provider)",
@@ -72,7 +72,8 @@
                 "show": "show",
                 "apply": "apply",
                 "output": "output",
-                "destroy": "destroy"
+                "destroy": "destroy",
+                "custom": "custom"
             },
             "properties": {
                 "EditableOptions": "False"
@@ -92,12 +93,19 @@
             "label": "Additional command arguments",
             "helpMarkDown": "Any additional arguments for the selected command such as '-option=value' or '-flag'. Multiple options can also be provided delimited by spaces.<br><br>Examples:<br>-out=tfplan (for terraform plan)<br>tfplan -auto-approve (for terraform apply)",
             "required": false
+        },{
+            "name": "customCommand",
+            "type": "string",
+            "label": "Custom command",
+            "visibleRule": "command = custom",
+            "helpMarkDown": "The custom terraform command to execute.",
+            "required": true
         }, {
             "name": "outputType",
             "type": "pickList",
             "label": "Output type",
             "defaultValue": "console",
-            "visibleRule": "command = show",
+            "visibleRule": "command = show || command = custom",
             "helpMarkDown": "choose output to file or console. ",
             "options": {
                 "file": "file",
@@ -122,7 +130,7 @@
             "type": "string",
             "label": "Output Filename",
             "defaultValue": "tfplan.json",
-            "visibleRule": "command = show && outputType = file",
+            "visibleRule": "outputType = file",
             "required": true,
             "helpMarkDown": "filename of output"
 

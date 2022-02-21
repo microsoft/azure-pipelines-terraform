@@ -5,7 +5,7 @@ let terraformCommandHandlerAWS: TerraformCommandHandlerAWS = new TerraformComman
 
 export async function run() {
     try {
-        await terraformCommandHandlerAWS.onlyApply();
+        await terraformCommandHandlerAWS.apply();
     } catch(error) {
         tl.setResult(tl.TaskResult.Failed, 'AWSApplyFailEmptyWorkingDirectoryL0 should have succeeded but failed with error.');
     }

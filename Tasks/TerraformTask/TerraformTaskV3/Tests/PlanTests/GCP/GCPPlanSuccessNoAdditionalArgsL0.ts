@@ -5,7 +5,7 @@ let terraformCommandHandlerGCP: TerraformCommandHandlerGCP = new TerraformComman
 
 export async function run() {
     try {
-        const response = await terraformCommandHandlerGCP.onlyPlan();
+        const response = await terraformCommandHandlerGCP.plan();
         if (response === 0) {
             tl.setResult(tl.TaskResult.Succeeded, 'GCPPlanSuccessNoAdditionalArgsL0 should have succeeded.');
         } else{

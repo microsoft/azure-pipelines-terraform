@@ -5,7 +5,7 @@ let terraformCommandHandlerAzureRM: TerraformCommandHandlerAzureRM = new Terrafo
 
 export async function run() {
     try {
-        const response = await terraformCommandHandlerAzureRM.onlyPlan();
+        const response = await terraformCommandHandlerAzureRM.plan();
         if (response === 0) {
             tl.setResult(tl.TaskResult.Succeeded, 'AzurePlanSuccessAdditionalArgsL0 should have succeeded.');
         } else{

@@ -5,7 +5,7 @@ let terraformCommandHandlerGCP: TerraformCommandHandlerGCP = new TerraformComman
 
 export async function run() {
     try {
-        await terraformCommandHandlerGCP.onlyPlan();
+        await terraformCommandHandlerGCP.plan();
     } catch(error) {
         tl.setResult(tl.TaskResult.Failed, 'GCPPlanFailEmptyWorkingDirectoryL0 should have succeeded but failed with error.');
     }

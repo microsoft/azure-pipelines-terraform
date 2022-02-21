@@ -5,7 +5,7 @@ let terraformCommandHandlerAWS: TerraformCommandHandlerAWS = new TerraformComman
 
 export async function run() {
     try {
-        const response = await terraformCommandHandlerAWS.onlyPlan();
+        const response = await terraformCommandHandlerAWS.plan();
         if (response === 0) {
             tl.setResult(tl.TaskResult.Succeeded, 'AWSPlanSuccessNoAdditionalArgsL0 should have succeeded.');
         } else{

@@ -5,7 +5,7 @@ let terraformCommandHandlerAWS: TerraformCommandHandlerAWS = new TerraformComman
 
 export async function run() {
     try {
-        const response = await terraformCommandHandlerAWS.onlyApply();
+        const response = await terraformCommandHandlerAWS.apply();
         if (response === 0) {
             tl.setResult(tl.TaskResult.Succeeded, 'AWSApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
         } else{

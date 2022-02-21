@@ -88,32 +88,80 @@ export abstract class BaseTerraformCommandHandler {
             cwd: initCommand.workingDirectory
         });
     }
-
-    protected checkIfShowCommandSupportsJsonOutput(): number {
-        let terraformPath;
-        try {
-            terraformPath = tasks.which("terraform", true);
-        } catch(err) {
-            throw new Error(tasks.loc("TerraformToolNotFound"));
+    public async show(): Promise<number> {
+        let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
+        let cmd;
+        const outputType = tasks.getInput("outputType");
+        const outputFormat = tasks.getInput("outputFormat");
+        if (outputType == "console") { 
+            if (outputFormat == "json"){
+                cmd = `-json ${tasks.getInput("commandOptions")}`
+            }else{
+                cmd = tasks.getInput("commandOptions");
+            }
+        }else if (outputType == "file"){
+            cmd = `-json ${tasks.getInput("commandOptions")}`
         }
+        let showCommand = new TerraformAuthorizationCommandInitializer(
+            "show",
+            tasks.getInput("workingDirectory"),
+            tasks.getInput(serviceName, true),
+            cmd
+        );
+        let terraformTool;
+        terraformTool = this.terraformToolHandler.createToolRunner(showCommand);
+        this.handleProvider(showCommand);
         
-        let terraformToolRunner: ToolRunner = tasks.tool(terraformPath);
-        terraformToolRunner.arg("version");
-
-        let outputContents = terraformToolRunner.execSync(<IExecSyncOptions>{
-            cwd: tasks.getInput("workingDirectory")
-        }).stdout;
-
-        let outputLines: string[] = outputContents.split('\n');
-        // First line has the format "Terraform v0.12.1"
-        let firstLine = outputLines[0];
-        // Extract only the version information from the first line i.e. "0.12.1"
-        let currentVersion = firstLine.substring(11);
-        // Check to see if this version is greater than or equal to 0.12.0
-        return this.compareVersions(currentVersion, "0.12.0");
+        if(outputType == "console"){
+            return terraformTool.exec(<IExecOptions> {
+            cwd: showCommand.workingDirectory});
+        }else if(outputType == "file"){
+            let planFilePath = path.resolve(tasks.getInput("filename"));
+            const commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
+                cwd: showCommand.workingDirectory});
+            tasks.writeFile(planFilePath, commandOutput.stdout);
+            // Set the output variable to the json plan file path
+            tasks.setVariable('planFilePath', planFilePath);
+            return commandOutput;
+        }
     }
+    public async output(): Promise<number> {
+        let additionalArgs: string = `-json`
+        let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
+        let outputCommand = new TerraformAuthorizationCommandInitializer(
+            "output",
+            tasks.getInput("workingDirectory"),
+            tasks.getInput(serviceName, true),
+            tasks.getInput("commandOptions")
+        );
 
-    public async onlyPlan(): Promise<number> {
+        let terraformTool;
+        terraformTool = this.terraformToolHandler.createToolRunner(outputCommand);
+        this.handleProvider(outputCommand);
+
+        const jsonOutputVariablesFilePath = path.resolve(`output-${uuidV4()}.json`);
+        const tempFileForJsonOutputVariables = path.resolve(`temp-output-${uuidV4()}.json`);
+        const fileStream = fs.createWriteStream(tempFileForJsonOutputVariables);
+        let commandOutput = terraformTool.execSync(<IExecSyncOptions>{
+            cwd: outputCommand.workingDirectory,
+            outStream: fileStream
+        });
+
+        tasks.writeFile(jsonOutputVariablesFilePath, commandOutput.stdout);
+        tasks.setVariable('jsonOutputVariablesPath', jsonOutputVariablesFilePath);
+
+        // Delete the temp file as it is not needed further
+        if (tasks.exist(tempFileForJsonOutputVariables)) {
+            (async () => {
+                await del([tempFileForJsonOutputVariables]);
+            })();
+        }
+        return commandOutput;
+    
+
+    }
+    
+    public async plan(): Promise<number> {
         this.warnIfMultipleProviders();
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let planCommand = new TerraformAuthorizationCommandInitializer(
@@ -132,92 +180,39 @@ export abstract class BaseTerraformCommandHandler {
         });
     }
 
-    public setOutputVariableToPlanFilePath() {
-        // Do terraform version to check if version is >= 0.12.0
-        if (this.checkIfShowCommandSupportsJsonOutput() >= 0) {
-            let terraformTool;
-            let fileStream;
+    public async custom(): Promise<number> {
+        const outputType = tasks.getInput("outputType");
+        this.warnIfMultipleProviders();
+        let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
+        let customCommand = new TerraformAuthorizationCommandInitializer(
+            tasks.getInput("customCommand"),
+            tasks.getInput("workingDirectory"),
+            tasks.getInput(serviceName, true),
+            tasks.getInput("commandOptions")
+        );
+        
+        let terraformTool;
+        terraformTool = this.terraformToolHandler.createToolRunner(customCommand);
+        this.handleProvider(customCommand);
 
-            // Do terraform plan with -out flag to output the binary plan file
-            const binaryPlanFilePath = path.resolve(`plan-binary-${uuidV4()}.tfplan`);
-            const tempFileForPlanOutput = path.resolve(`temp-plan-${uuidV4()}.txt`);
 
-            let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
-            let planCommand = new TerraformAuthorizationCommandInitializer(
-                "plan",
-                tasks.getInput("workingDirectory"),
-                tasks.getInput(serviceName, true),
-                `${tasks.getInput("commandOptions")} -out=${binaryPlanFilePath}`
-            );
-            terraformTool = this.terraformToolHandler.createToolRunner(planCommand);
-            this.handleProvider(planCommand);
-            fileStream = fs.createWriteStream(tempFileForPlanOutput);
-            terraformTool.execSync(<IExecSyncOptions>{
-                cwd: planCommand.workingDirectory,
-                outStream: fileStream
-            });
-
-            // Do terraform show with -json flag to output the json plan file
-            const jsonPlanFilePath = path.resolve(`plan-json-${uuidV4()}.json`);
-            const tempFileForJsonPlanOutput = path.resolve(`temp-plan-json-${uuidV4()}.json`)
-            let commandOutput: IExecSyncResult;
-            let showCommand = new TerraformBaseCommandInitializer(
-                "show",
-                tasks.getInput("workingDirectory"),
-                `-json ${binaryPlanFilePath}`
-            );
-            terraformTool = this.terraformToolHandler.createToolRunner(showCommand);
-            fileStream = fs.createWriteStream(tempFileForJsonPlanOutput);
-            commandOutput = terraformTool.execSync(<IExecSyncOptions>{
-                cwd: showCommand.workingDirectory,
-                outStream: fileStream
-            });
-
-            // Write command output to the json plan file
-            tasks.writeFile(jsonPlanFilePath, commandOutput.stdout);
-            // Set the output variable to the json plan file path
-            tasks.setVariable('jsonPlanFilePath', jsonPlanFilePath);
-
-            // Delete all the files that are not needed any further
-            if (tasks.exist(binaryPlanFilePath)) {
-                (async () => {
-                    await del([binaryPlanFilePath]);
-                })();
+        if(outputType == "console"){
+            return terraformTool.exec(<IExecOptions> {
+            cwd: customCommand.workingDirectory});
+        }else if(outputType == "file"){
+            let filePath = path.resolve(tasks.getInput("filename"));
+            const commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
+                cwd: customCommand.workingDirectory});
+            tasks.writeFile(filePath, commandOutput.stdout);
+            // Set the output variable to the file path
+            tasks.setVariable('filePath', filePath);
+            return commandOutput;
             }
-
-            if (tasks.exist(tempFileForPlanOutput)) {
-                (async () => {
-                    await del([tempFileForPlanOutput]);
-                })();
-            }
-
-            if (tasks.exist(tempFileForJsonPlanOutput)) {
-                (async () => {
-                    await del([tempFileForJsonPlanOutput]);
-                })();
-            }
-
-        } else {
-            tasks.warning("Terraform show command does not support -json flag for terraform versions older than 0.12.0. The output variable named 'jsonPlanFilePath' was not set.")
-        }
     }
 
-    public async plan(): Promise<number> {
-        await this.onlyPlan();
-        this.setOutputVariableToPlanFilePath();
-
-        return Promise.resolve(0);
-    }
-
-    public async onlyApply(): Promise<number> {
+    public async apply(): Promise<number> {
         let terraformTool;
         this.warnIfMultipleProviders();
-        let validateCommand = new TerraformBaseCommandInitializer("validate", tasks.getInput("workingDirectory"), '');
-        terraformTool = this.terraformToolHandler.createToolRunner(validateCommand);
-        await terraformTool.exec(<IExecOptions> {
-            cwd: validateCommand.workingDirectory
-        });
-        
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let autoApprove: string = '-auto-approve';
         let additionalArgs: string = tasks.getInput("commandOptions") || autoApprove;
@@ -241,44 +236,7 @@ export abstract class BaseTerraformCommandHandler {
         });
     }
 
-    public setOutputVariableToJsonOutputVariablesFilesPath() {
-        let additionalArgs: string = `-json`
-        let outputCommand = new TerraformBaseCommandInitializer(
-            "output",
-            tasks.getInput("workingDirectory"),
-            additionalArgs
-        );
-
-        let terraformTool;
-        terraformTool = this.terraformToolHandler.createToolRunner(outputCommand);
-
-        const jsonOutputVariablesFilePath = path.resolve(`output-${uuidV4()}.json`);
-        const tempFileForJsonOutputVariables = path.resolve(`temp-output-${uuidV4()}.json`);
-        const fileStream = fs.createWriteStream(tempFileForJsonOutputVariables);
-        let commandOutput = terraformTool.execSync(<IExecSyncOptions>{
-            cwd: outputCommand.workingDirectory,
-            outStream: fileStream
-        });
-
-        tasks.writeFile(jsonOutputVariablesFilePath, commandOutput.stdout);
-        tasks.setVariable('jsonOutputVariablesPath', jsonOutputVariablesFilePath);
-
-        // Delete the temp file as it is not needed further
-        if (tasks.exist(tempFileForJsonOutputVariables)) {
-            (async () => {
-                await del([tempFileForJsonOutputVariables]);
-            })();
-        }
-    }
-
-    public async apply(): Promise<number> {
-        await this.onlyApply();
-        this.setOutputVariableToJsonOutputVariablesFilesPath();
-
-        return Promise.resolve(0);
-    };
-
-    public async destroy(): Promise<number> {
+        public async destroy(): Promise<number> {
         this.warnIfMultipleProviders();
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let autoApprove: string = '-auto-approve';
@@ -313,6 +271,7 @@ export abstract class BaseTerraformCommandHandler {
 
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(validateCommand);
+        
 
         return terraformTool.exec(<IExecOptions>{
             cwd: validateCommand.workingDirectory

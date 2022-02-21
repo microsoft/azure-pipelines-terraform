@@ -5,7 +5,7 @@ let terraformCommandHandlerAzureRM: TerraformCommandHandlerAzureRM = new Terrafo
 
 export async function run() {
     try {
-        await terraformCommandHandlerAzureRM.onlyApply();
+        await terraformCommandHandlerAzureRM.apply();
     } catch(error) {
         tl.setResult(tl.TaskResult.Failed, 'AzureApplyFailEmptyWorkingDirectoryL0 should have succeeded but failed with error.');
     }

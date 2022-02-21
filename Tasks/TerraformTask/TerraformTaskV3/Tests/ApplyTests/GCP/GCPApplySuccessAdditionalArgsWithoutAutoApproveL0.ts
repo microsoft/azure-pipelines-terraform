@@ -5,7 +5,7 @@ let terraformCommandHandlerGCP: TerraformCommandHandlerGCP = new TerraformComman
 
 export async function run() {
     try {
-        const response = await terraformCommandHandlerGCP.onlyApply();
+        const response = await terraformCommandHandlerGCP.apply();
         if (response === 0) {
             tl.setResult(tl.TaskResult.Succeeded, 'GCPApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
         } else{

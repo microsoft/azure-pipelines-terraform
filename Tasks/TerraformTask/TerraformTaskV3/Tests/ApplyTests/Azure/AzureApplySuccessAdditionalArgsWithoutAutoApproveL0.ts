@@ -5,7 +5,7 @@ let terraformCommandHandlerAzureRM: TerraformCommandHandlerAzureRM = new Terrafo
 
 export async function run() {
     try {
-        const response = await terraformCommandHandlerAzureRM.onlyApply();
+        const response = await terraformCommandHandlerAzureRM.apply();
         if (response === 0) {
             tl.setResult(tl.TaskResult.Succeeded, 'AzureApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
         } else{

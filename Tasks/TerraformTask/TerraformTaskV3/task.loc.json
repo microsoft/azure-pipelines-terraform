@@ -1,6 +1,6 @@
 {
   "id": "FE504ACC-6115-40CB-89FF-191386B5E7BF",
-  "name": "TerraformTaskV2",
+  "name": "TerraformTaskV3",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -13,7 +13,7 @@
   "demands": [],
   "version": {
     "Major": "3",
-    "Minor": "195",
+    "Minor": "201",
     "Patch": "0"
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -73,7 +73,8 @@
         "show": "show",
         "apply": "apply",
         "output": "output",
-        "destroy": "destroy"
+        "destroy": "destroy",
+        "custom": "custom"
       },
       "properties": {
         "EditableOptions": "False"
@@ -95,11 +96,19 @@
       "required": false
     },
     {
+      "name": "customCommand",
+      "type": "string",
+      "visibleRule": "command = custom",
+      "label": "ms-resource:loc.input.label.customCommand",
+      "helpMarkDown": "ms-resource:loc.input.help.customCommand",
+      "required": true
+    },
+    {
         "name": "outputType",
         "type": "pickList",
         "label": "ms-resource:loc.input.label.outputType",
         "defaultValue": "console",
-        "visibleRule": "command = show",
+        "visibleRule": "command = show || command = custom",
         "helpMarkDown": "ms-resource:loc.input.help.outputType",
         "options": {
             "file": "file",
@@ -125,7 +134,7 @@
         "type": "string",
         "label": "ms-resource:loc.input.label.fileName",
         "defaultValue": "tfplan.json",
-        "visibleRule": "command = show && outputType = file",
+        "visibleRule": "outputType = file",
         "required": true,
         "helpMarkDown": "ms-resource:loc.input.help.fileName"
 
