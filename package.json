@@ -8,9 +8,9 @@
         "package:dev": "tfx extension create --rev-version --manifest-globs azure-devops-extension.json task.json --overrides-file ./configs/dev.json --root ./build",
         "package:test": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/test.json --root ./build",
         "package:release": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/release.json --root ./build",
-        "deps:release": "npm --prefix ./Tasks/TerraformInstaller/ install && npm --prefix ./Tasks/TerraformTask/TerraformTaskV1 install  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV2 install",
-        "deps:prune": "npm --prefix ./Tasks/TerraformInstaller/ prune --production  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV1 prune --production  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV2 install --production",
-        "compile": "tsc -p ./Tasks/TerraformTask/TerraformTaskV1 && tsc -p ./Tasks/TerraformTask/TerraformTaskV2"
+        "deps:release": "npm --prefix ./Tasks/TerraformInstaller/ install && npm --prefix ./Tasks/TerraformTask/TerraformTaskV1 install  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV2 install  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV3 install",
+        "deps:prune": "npm --prefix ./Tasks/TerraformInstaller/ prune --production  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV1 prune --production  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV2 prune --production && npm --prefix ./Tasks/TerraformTask/TerraformTaskV3 prune --production",
+        "compile": "tsc -p ./Tasks/TerraformTask/TerraformTaskV1 && tsc -p ./Tasks/TerraformTask/TerraformTaskV2 && tsc -p ./Tasks/TerraformTask/TerraformTaskV3"
     },
     "devDependencies": {
         "azure-pipelines-task-lib": "^3.1.7",
