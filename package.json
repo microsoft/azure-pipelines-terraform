@@ -3,11 +3,11 @@
     "version": "1.0.0",
     "description": "",
     "scripts": {
-        "clean": "rimraf ./dist",
+        "clean": "rimraf ./build",
         "build:release": "npm run deps:release && npm run compile && npm run deps:prune && webpack",
-        "package:dev": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/dev.json --root ./dist",
-        "package:test": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/test.json --root ./dist",
-        "package:release": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/release.json --root ./dist",
+        "package:dev": "tfx extension create --rev-version --manifest-globs azure-devops-extension.json task.json --overrides-file ./configs/dev.json --root ./build",
+        "package:test": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/test.json --root ./build",
+        "package:release": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/release.json --root ./build",
         "deps:release": "npm --prefix ./Tasks/TerraformInstaller/ install && npm --prefix ./Tasks/TerraformTask/TerraformTaskV1 install  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV2 install",
         "deps:prune": "npm --prefix ./Tasks/TerraformInstaller/ prune --production  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV1 prune --production  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV2 install --production",
         "compile": "tsc -p ./Tasks/TerraformTask/TerraformTaskV1 && tsc -p ./Tasks/TerraformTask/TerraformTaskV2"

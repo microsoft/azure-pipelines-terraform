@@ -7,7 +7,7 @@ module.exports = {
         temp: './temp.js',
     },
     output: {
-        path: __dirname + '/dist',
+        path: __dirname + '/build',
     },
     plugins: [
         new CopyWebpackPlugin({
