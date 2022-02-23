@@ -127,7 +127,7 @@ export abstract class BaseTerraformCommandHandler {
         terraformTool = this.terraformToolHandler.createToolRunner(planCommand);
         this.handleProvider(planCommand);
     
-        let result = terraformTool.exec(<IExecOptions> {
+        let result = await terraformTool.exec(<IExecOptions> {
             cwd: planCommand.workingDirectory,
             ignoreReturnCode: true
         });
