@@ -265,6 +265,7 @@
     }
   ],
   "messages": {
-    "TerraformToolNotFound": "ms-resource:loc.messages.TerraformToolNotFound"
+    "TerraformToolNotFound": "ms-resource:loc.messages.TerraformToolNotFound",
+    "TerraformPlanFailed": "ms-resource:loc.messages.TerraformPlanFailed"
   }
 }

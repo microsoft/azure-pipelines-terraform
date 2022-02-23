@@ -126,9 +126,16 @@ export abstract class BaseTerraformCommandHandler {
         terraformTool = this.terraformToolHandler.createToolRunner(planCommand);
         this.handleProvider(planCommand);
     
-        return terraformTool.exec(<IExecOptions> {
-            cwd: planCommand.workingDirectory
+        let result = terraformTool.exec(<IExecOptions> {
+            cwd: planCommand.workingDirectory,
+            ignoreReturnCode: true
         });
+        
+        if (result !== 0 && result !== 2) {
+            throw new Error(tasks.loc("TerraformPlanFailed", result));
+        }
+        
+        return result;
     }
 
     public setOutputVariableToPlanFilePath() {

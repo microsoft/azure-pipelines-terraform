@@ -264,6 +264,7 @@
         }
     ],
     "messages": {
-        "TerraformToolNotFound": "Failed to find terraform tool in paths"
+        "TerraformToolNotFound": "Failed to find terraform tool in paths",
+        "TerraformPlanFailed": "Terraform Plan failed with exit code: %s"
     }
 }
