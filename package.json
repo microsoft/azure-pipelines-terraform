@@ -10,7 +10,7 @@
         "package:release": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/release.json --root ./build",
         "deps:release": "npm --prefix ./Tasks/TerraformInstaller/ install && npm --prefix ./Tasks/TerraformTask/TerraformTaskV1 install  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV2 install",
         "deps:prune": "npm --prefix ./Tasks/TerraformInstaller/ prune --production  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV1 prune --production  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV2 install --production",
-        "compile": "tsc -p ./Tasks/TerraformTask/TerraformTaskV1 && tsc -p ./Tasks/TerraformTask/TerraformTaskV2"
+        "compile": "tsc -p ./Tasks/TerraformInstaller && tsc -p ./Tasks/TerraformTask/TerraformTaskV1 && tsc -p ./Tasks/TerraformTask/TerraformTaskV2"
     },
     "devDependencies": {
         "azure-pipelines-task-lib": "^3.1.7",
