@@ -12,8 +12,6 @@ const terraformToolName = "terraform";
 const isWindows = os.type().match(/^Win/);
 const proxy = tasks.getHttpProxyConfiguration();
 
-//process.env.HTTP_PROXY = proxy.proxyUrl;
-// console.log(process.env.HTTP_PROXY);
 export async function downloadTerraform(inputVersion: string): Promise<string> {
     var latestVersion: string = "";
     if(inputVersion.toLowerCase() === 'latest') {
