@@ -77,6 +77,7 @@ Options specific to **terraform plan, apply and destroy** commands
 - **Google Cloud Platform connection (only if "gcp" provider is selected)\*:** Select the GCP connection to use for managing the resources used by the plan, apply and destroy commands
 
 ## Output Variables
+* **changesPresent:** This varaible is set to true if the plan command finds changes to apply. Can be used by subsequent tasks. Give the producing task a reference name. Then, in a downstream step, you can use the form $(\<ReferenceName\>.changesPresent) to refer to it.
 
 * **Terraform plan json file path:** This variable refers to the location of the terraform plan file in JSON format that was created. This file can be used by tasks which are written for tools such as [Open Policy Agent](https://www.openpolicyagent.org/docs/latest/terraform/)<br><br>Note: This variable will only be set if 'command' input is set to 'plan'.
 * **Terraform output variables json file path:** The location of the JSON file which contains the output variables set by the user in the terraform config files.<br><br>Note: This variable will only be set if 'command' input is set to 'apply'.
