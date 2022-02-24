@@ -120,16 +120,23 @@ export abstract class BaseTerraformCommandHandler {
             "plan",
             tasks.getInput("workingDirectory"),
             tasks.getInput(serviceName, true),
-            tasks.getInput("commandOptions")
+            `${tasks.getInput("commandOptions")} -detailed-exitcode`
         );
         
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(planCommand);
         this.handleProvider(planCommand);
     
-        return terraformTool.exec(<IExecOptions> {
-            cwd: planCommand.workingDirectory
+        let result = await terraformTool.exec(<IExecOptions> {
+            cwd: planCommand.workingDirectory,
+            ignoreReturnCode: true
         });
+        
+        if (result !== 0 && result !== 2) {
+            throw new Error(tasks.loc("TerraformPlanFailed", result));
+        }
+        
+        return result;
     }
 
     public setOutputVariableToPlanFilePath() {
@@ -203,7 +210,8 @@ export abstract class BaseTerraformCommandHandler {
     }
 
     public async plan(): Promise<number> {
-        await this.onlyPlan();
+        let exitCode = await this.onlyPlan();
+        tasks.setVariable('changesPresent', (exitCode === 2).toString());
         this.setOutputVariableToPlanFilePath();
 
         return Promise.resolve(0);
