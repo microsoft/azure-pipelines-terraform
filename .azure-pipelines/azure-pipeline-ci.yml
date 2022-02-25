@@ -1,0 +1,52 @@
+variables:
+- name: major
+  value: '0'
+- name: minor
+  value: '1'
+- name: extensionName
+  value: 'Terraform'
+- name: marketplaceServiceConnection
+  value: 'marketplaceServiceConnection'
+- name: publisherId
+  value: 'ms-devlabs'
+- name: publicExtensionName
+  value: "Terraform"
+
+name: $(major).$(minor)$(rev:.r)
+
+trigger:
+  branches:
+    include:
+    - main
+
+pr: 
+  branches:
+    include:
+    - feature/*
+    - bug/*
+    - issue/*
+
+resources:
+  repositories:
+    - repository: pipeline-templates
+      type: git
+      name: Sage/pipeline-templates
+      ref: main
+
+stages:
+- stage: 'Build'
+  jobs:
+  - job: 'BuildPack'
+    displayName: "Build and package"
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '16.x'
+    - template: build.yml@pipeline-templates
+    - template: package.yml@pipeline-templates
+      parameters:
+        extensionName: $(extensionName)
+        outputPath: 'out'
+        rootPath: './build'

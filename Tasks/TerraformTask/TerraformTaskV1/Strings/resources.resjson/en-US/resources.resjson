@@ -42,5 +42,6 @@
   "loc.input.help.backendGCPBucketName": "The name of the GCP storage bucket for storing the Terraform remote state file.",
   "loc.input.label.backendGCPPrefix": "Prefix of state file",
   "loc.input.help.backendGCPPrefix": "The relative path to the state file inside the GCP bucket. For example, if you give the input as 'terraform', then the state file, named default.tfstate, will be stored inside an object called terraform.",
-  "loc.messages.TerraformToolNotFound": "Failed to find terraform tool in paths"
+  "loc.messages.TerraformToolNotFound": "Failed to find terraform tool in paths",
+  "loc.messages.TerraformPlanFailed": "Terraform Plan failed with exit code: %s"
 }
