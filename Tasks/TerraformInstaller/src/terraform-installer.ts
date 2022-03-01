@@ -29,7 +29,8 @@ export async function downloadTerraform(inputVersion: string): Promise<string> {
         }
         else
         {
-            var proxyAgent = new HttpsProxyAgent(proxy.proxyUrl);
+            var proxyUrl = proxy.proxyUsername !="" ? proxy.proxyUrl.split("://")[0] + '://' + proxy.proxyUsername + ':' + proxy.proxyPassword + '@' + proxy.proxyUrl.split("://")[1]:proxy.proxyUrl;
+            var proxyAgent = new HttpsProxyAgent(proxyUrl);
             await fetch('https://checkpoint-api.hashicorp.com/v1/check/terraform', { agent: proxyAgent})
             .then((response: { json: () => any; }) => response.json())
             .then((data: { [x: string]: any; }) => {
