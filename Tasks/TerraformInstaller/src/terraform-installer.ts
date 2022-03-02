@@ -11,9 +11,6 @@ const HttpsProxyAgent = require('https-proxy-agent');
 const terraformToolName = "terraform";
 const isWindows = os.type().match(/^Win/);
 const proxy = tasks.getHttpProxyConfiguration();
-
-//process.env.HTTP_PROXY = proxy.proxyUrl;
-// console.log(process.env.HTTP_PROXY);
 export async function downloadTerraform(inputVersion: string): Promise<string> {
     var latestVersion: string = "";
     if(inputVersion.toLowerCase() === 'latest') {
@@ -26,12 +23,15 @@ export async function downloadTerraform(inputVersion: string): Promise<string> {
             })
             .catch((exception: any) => {
                 console.warn(tasks.loc("TerraformVersionNotFound"));
-                latestVersion = '1.1.15';
+
+                latestVersion = '1.1.6';
             })
         }
         else
         {
-            var proxyAgent = new HttpsProxyAgent(proxy.proxyUrl);
+
+            var proxyUrl = proxy.proxyUsername !="" ? proxy.proxyUrl.split("://")[0] + '://' + proxy.proxyUsername + ':' + proxy.proxyPassword + '@' + proxy.proxyUrl.split("://")[1]:proxy.proxyUrl;
+            var proxyAgent = new HttpsProxyAgent(proxyUrl);
             await fetch('https://checkpoint-api.hashicorp.com/v1/check/terraform', { agent: proxyAgent})
             .then((response: { json: () => any; }) => response.json())
             .then((data: { [x: string]: any; }) => {
@@ -39,7 +39,7 @@ export async function downloadTerraform(inputVersion: string): Promise<string> {
             })
             .catch((exception: any) => {
                 console.warn(tasks.loc("TerraformVersionNotFound"));
-                latestVersion = '1.1.15';
+                latestVersion = '1.1.6';
             })
         }
     }
@@ -129,4 +129,5 @@ function getExecutableExtension(): string {
     }
 
     return "";
+
 }
