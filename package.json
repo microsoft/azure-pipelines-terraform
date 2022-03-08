@@ -4,24 +4,33 @@
     "description": "",
     "scripts": {
         "clean": "rimraf ./build",
-        "build:release": "npm run deps:release && npm run compile && npm run deps:prune && webpack",
+        "build:release": "npm run clean && npm run deps && npm run compile && npm run deps:prune && webpack",
         "package:dev": "tfx extension create --rev-version --manifest-globs azure-devops-extension.json task.json --overrides-file ./configs/dev.json --root ./build",
         "package:test": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/test.json --root ./build",
         "package:release": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/release.json --root ./build",
 
-        "deps:release": "npm --prefix ./Tasks/TerraformInstaller/ install && npm --prefix ./Tasks/TerraformTask/TerraformTaskV1 install  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV2 install",
-        "deps:prune": "npm --prefix ./Tasks/TerraformInstaller/ prune --production  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV1 prune --production  && npm --prefix ./Tasks/TerraformTask/TerraformTaskV2 install --production",
-        "compile": "tsc -p ./Tasks/TerraformInstaller && tsc -p ./Tasks/TerraformTask/TerraformTaskV1 && tsc -p ./Tasks/TerraformTask/TerraformTaskV2"
+        "deps": "npm run deps:npm:inst && npm run deps:npm:tasks",
+        "deps:npm:tasks": "glob-exec --parallel --foreach \"Tasks/TerraformTask/*/tsconfig.json\" -- \"cd {{file.dir}} && npm install --no-update-notifier --no-progress\"",
+        "deps:npm:inst": "npm --prefix ./Tasks/TerraformInstaller/ install --no-update-notifier --no-progress",
+
+        "deps:prune": "npm run deps:prune:inst && npm run deps:prune:tasks",
+        "deps:prune:tasks": "glob-exec --parallel --foreach \"Tasks/TerraformTask/*/tsconfig.json\" -- \"cd {{file.dir}} && npm prune --production --no-update-notifier --no-progress\"",
+        "deps:prune:inst": "npm --prefix ./Tasks/TerraformInstaller/ prune --production --no-update-notifier --no-progress",
+
+        "compile": "npm run compile:inst && npm run compile:tasks",
+        "compile:tasks": "glob-exec \"Tasks/TerraformTask/*/tsconfig.json\" -- \"tsc -b {{files.join(' ')}}\"",
+        "compile:inst": "tsc -p ./Tasks/TerraformInstaller",
+      
+        "webpack": "webpack --config webpack.config.js --progress"
     },
     "devDependencies": {
         "azure-pipelines-task-lib": "^3.1.7",
         "azure-pipelines-tool-lib": "^0.13.0",
+        "copy-webpack-plugin": "^6.3.2",
+        "glob-exec": "^0.1.1",
+        "tfx-cli": "0.9.3",
         "ts-loader": "^5.2.2",
         "webpack": "^4.46.0",
-        "webpack-cli": "^4.9.2",
-        "copy-webpack-plugin": "^6.3.2",
-        "tfx-cli": "0.9.3"
+        "webpack-cli": "^4.9.2"
     }
 }
-
-
