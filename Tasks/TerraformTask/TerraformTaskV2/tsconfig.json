@@ -1,7 +1,8 @@
 {
-    "compilerOptions": {
-        "target": "ES6",
-        "module": "commonjs",
-        "skipLibCheck": true
-    }
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "skipLibCheck": true
+  },
+  "exclude": ["Tests"]
 }
