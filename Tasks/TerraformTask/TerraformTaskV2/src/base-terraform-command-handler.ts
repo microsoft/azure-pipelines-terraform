@@ -116,11 +116,12 @@ export abstract class BaseTerraformCommandHandler {
     public async onlyPlan(): Promise<number> {
         this.warnIfMultipleProviders();
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
+        let commandOptions = tasks.getInput("commandOptions") != null ? `${tasks.getInput("commandOptions")} -detailed-exitcode`:`-detailed-exitcode`
         let planCommand = new TerraformAuthorizationCommandInitializer(
             "plan",
             tasks.getInput("workingDirectory"),
             tasks.getInput(serviceName, true),
-            `${tasks.getInput("commandOptions")} -detailed-exitcode`
+            commandOptions
         );
         
         let terraformTool;
@@ -150,11 +151,13 @@ export abstract class BaseTerraformCommandHandler {
             const tempFileForPlanOutput = path.resolve(`temp-plan-${uuidV4()}.txt`);
 
             let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
+            let commandOptions = tasks.getInput("commandOptions") != null ? `${tasks.getInput("commandOptions")} -out=${binaryPlanFilePath}`:`-out=${binaryPlanFilePath}`
+            
             let planCommand = new TerraformAuthorizationCommandInitializer(
                 "plan",
                 tasks.getInput("workingDirectory"),
                 tasks.getInput(serviceName, true),
-                `${tasks.getInput("commandOptions")} -out=${binaryPlanFilePath}`
+                commandOptions
             );
             terraformTool = this.terraformToolHandler.createToolRunner(planCommand);
             this.handleProvider(planCommand);
