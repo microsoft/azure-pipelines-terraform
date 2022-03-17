@@ -213,7 +213,7 @@ export abstract class BaseTerraformCommandHandler {
 
     public async plan(): Promise<number> {
         let exitCode = await this.onlyPlan();
-        tasks.setVariable('changesPresent', (exitCode === 2).toString());
+        tasks.setVariable('changesPresent', (exitCode === 2).toString(), false, true);
         this.setOutputVariableToPlanFilePath();
 
         return Promise.resolve(0);
