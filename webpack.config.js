@@ -7,7 +7,7 @@ module.exports = {
         temp: './temp.js',
     },
     output: {
-        path: __dirname + '/build',
+        path: __dirname + '/build'
     },
     plugins: [
         new CopyWebpackPlugin({
@@ -20,7 +20,7 @@ module.exports = {
                     globOptions: {
                         dot: true,
                         gitignore: false,
-                        ignore: ["**/Tests/**","**/*.ts"],
+                        ignore: ["**/Tests/**", "**/*.ts"],
                     },
                     to: "Tasks"
                 },
