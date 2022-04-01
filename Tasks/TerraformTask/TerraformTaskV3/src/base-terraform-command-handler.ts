@@ -95,12 +95,12 @@ export abstract class BaseTerraformCommandHandler {
         const outputFormat = tasks.getInput("outputFormat");
         if (outputType == "console") { 
             if (outputFormat == "json"){
-                cmd = `-json ${tasks.getInput("commandOptions")}`
+                cmd = tasks.getInput("commandOptions") != null ? `-json  ${tasks.getInput("commandOptions")}`:`-json`;
             }else{
-                cmd = tasks.getInput("commandOptions");
+                cmd = tasks.getInput("commandOptions") != null ? tasks.getInput("commandOptions"):``;
             }
         }else if (outputType == "file"){
-            cmd = `-json ${tasks.getInput("commandOptions")}`
+            cmd = tasks.getInput("commandOptions") != null ? `-json ${tasks.getInput("commandOptions")}`:`-json`;
         }
         let showCommand = new TerraformAuthorizationCommandInitializer(
             "show",
@@ -126,7 +126,6 @@ export abstract class BaseTerraformCommandHandler {
         }
     }
     public async output(): Promise<number> {
-        let additionalArgs: string = `-json`
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let outputCommand = new TerraformAuthorizationCommandInitializer(
             "output",
@@ -164,20 +163,27 @@ export abstract class BaseTerraformCommandHandler {
     public async plan(): Promise<number> {
         this.warnIfMultipleProviders();
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
+        let commandOptions = tasks.getInput("commandOptions") != null ? `${tasks.getInput("commandOptions")} -detailed-exitcode`:`-detailed-exitcode`
         let planCommand = new TerraformAuthorizationCommandInitializer(
             "plan",
             tasks.getInput("workingDirectory"),
             tasks.getInput(serviceName, true),
-            tasks.getInput("commandOptions")
+            commandOptions
         );
         
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(planCommand);
         this.handleProvider(planCommand);
     
-        return terraformTool.exec(<IExecOptions> {
-            cwd: planCommand.workingDirectory
+        let result = await terraformTool.exec(<IExecOptions> {
+            cwd: planCommand.workingDirectory,
+            ignoreReturnCode: true
         });
+
+        if (result !== 0 && result !== 2) {
+            throw new Error(tasks.loc("TerraformPlanFailed", result));
+        }
+        return result;
     }
 
     public async custom(): Promise<number> {
