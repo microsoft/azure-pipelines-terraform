@@ -93,17 +93,10 @@
             "label": "Additional command arguments",
             "helpMarkDown": "Any additional arguments for the selected command such as '-option=value' or '-flag'. Multiple options can also be provided delimited by spaces.<br><br>Examples:<br>-out=tfplan (for terraform plan)<br>tfplan -auto-approve (for terraform apply)",
             "required": false
-        },{
-            "name": "customCommand",
-            "type": "string",
-            "label": "Custom command",
-            "visibleRule": "command = custom",
-            "helpMarkDown": "The custom terraform command to execute.",
-            "required": true
         }, {
-            "name": "outputType",
+            "name": "outputTo",
             "type": "pickList",
-            "label": "Output type",
+            "label": "Output to",
             "defaultValue": "console",
             "visibleRule": "command = show || command = custom",
             "helpMarkDown": "choose output to file or console. ",
@@ -112,16 +105,25 @@
                 "console": "console"
             },
             "required": true
-        },{
+        },
+        {
+            "name": "customCommand",
+            "type": "string",
+            "label": "Custom command",
+            "visibleRule": "command = custom",
+            "helpMarkDown": "The custom terraform command to execute.",
+            "required": true
+        },
+        {
             "name": "outputFormat",
             "type": "pickList",
             "label": "Output format",
             "defaultValue": "json",
-            "visibleRule": "command = show && outputType = console",
+            "visibleRule": "command = show && outputTo = console",
             "helpMarkDown": "choose format of ouput for show cmd. ",
             "options": {
                 "json": "json",
-                "standard": "standard"
+                "default": "default"
             },
             "required": true
         },
@@ -129,8 +131,7 @@
             "name": "fileName",
             "type": "string",
             "label": "Output Filename",
-            "defaultValue": "tfplan.json",
-            "visibleRule": "outputType = file",
+            "visibleRule": "outputTo = file",
             "required": true,
             "helpMarkDown": "filename of output"
 

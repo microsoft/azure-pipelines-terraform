@@ -87,15 +87,7 @@
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
       "required": false
-    },
-    {
-      "name": "commandOptions",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.commandOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.commandOptions",
-      "required": false
-    },
-    {
+    },{
       "name": "customCommand",
       "type": "string",
       "visibleRule": "command = custom",
@@ -104,12 +96,20 @@
       "required": true
     },
     {
-        "name": "outputType",
+      "name": "commandOptions",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.commandOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.commandOptions",
+      "required": false
+    },
+    
+    {
+        "name": "outputTo",
         "type": "pickList",
-        "label": "ms-resource:loc.input.label.outputType",
+        "label": "ms-resource:loc.input.label.outputTo",
         "defaultValue": "console",
         "visibleRule": "command = show || command = custom",
-        "helpMarkDown": "ms-resource:loc.input.help.outputType",
+        "helpMarkDown": "ms-resource:loc.input.help.outputTo",
         "options": {
             "file": "file",
             "console": "console"
@@ -121,11 +121,11 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.outputFormat",
       "defaultValue": "standard",
-      "visibleRule": "command = show && outputType = console",
+      "visibleRule": "command = show && outputTo = console",
       "helpMarkDown": "ms-resource:loc.input.help.outputFormat",
       "options": {
           "json": "json",
-          "standard": "standard"
+          "default": "default"
       },
       "required": true
   },
@@ -133,8 +133,7 @@
         "name": "fileName",
         "type": "string",
         "label": "ms-resource:loc.input.label.fileName",
-        "defaultValue": "tfplan.json",
-        "visibleRule": "outputType = file",
+        "visibleRule": "outputTo = file",
         "required": true,
         "helpMarkDown": "ms-resource:loc.input.help.fileName"
 
