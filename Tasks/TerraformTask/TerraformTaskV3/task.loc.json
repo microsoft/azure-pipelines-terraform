@@ -120,7 +120,7 @@
       "name": "outputFormat",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.outputFormat",
-      "defaultValue": "standard",
+      "defaultValue": "default",
       "visibleRule": "command = show && outputTo = console",
       "helpMarkDown": "ms-resource:loc.input.help.outputFormat",
       "options": {
