@@ -27,7 +27,7 @@ Please report a problem at [Developer Community Forum](https://developercommunit
 ## Pre-requisites for the task
 
 
-The only pre-requisite for the task is that Terraform must be installed on the Azure Pipelines build agent. If you want an exact version of Terraform on the agent then you can use the [Terraform tool installer task](https://aka.ms/AAf1a0p). Terraform Task V2 only supports `terraform >= 0.12`.
+The only pre-requisite for the task is that Terraform must be installed on the Azure Pipelines build agent. If you want an exact version of Terraform on the agent then you can use the [Terraform tool installer task](https://aka.ms/AAf1a0p). Terraform Task V3 only supports `terraform >= 0.12`.
 
 
 ## Parameters of the task
