@@ -116,12 +116,14 @@ export abstract class BaseTerraformCommandHandler {
             return terraformTool.exec(<IExecOptions> {
             cwd: showCommand.workingDirectory});
         }else if(outputTo == "file"){
-            let planFilePath = path.resolve(tasks.getInput("filename"));
+            const showFilePath = path.resolve(tasks.getInput("filename"));
             let commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
-                cwd: showCommand.workingDirectory});
-            tasks.writeFile(planFilePath, commandOutput.stdout);
-            // Set the output variable to the json plan file path
-            tasks.setVariable('planFilePath', planFilePath);
+                cwd: showCommand.workingDirectory,
+            });
+            
+            tasks.writeFile(showFilePath, commandOutput.stdout);
+            tasks.setVariable('showFilePath', showFilePath);
+            
             return commandOutput;
         }
     }
@@ -200,12 +202,12 @@ export abstract class BaseTerraformCommandHandler {
             return terraformTool.exec(<IExecOptions> {
             cwd: customCommand.workingDirectory});
         }else if(outputTo == "file"){
-            let filePath = path.resolve(tasks.getInput("filename"));
-            const commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
+            const customFilePath = path.resolve(tasks.getInput("filename"));
+            let commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
                 cwd: customCommand.workingDirectory});
-            tasks.writeFile(filePath, commandOutput.stdout);
-            // Set the output variable to the file path
-            tasks.setVariable('filePath', filePath);
+            
+            tasks.writeFile(customFilePath, commandOutput.stdout);
+            tasks.setVariable('customFilePath', customFilePath);
             return commandOutput;
             }
     }
