@@ -76,11 +76,11 @@ Options specific to **terraform init** command
 	- **Bucket\*:** Select the name of the GCP storage bucket in which you want to store the terraform remote state file
 	- **Prefix of state file:** Specify the relative path to the state file inside the GCP bucket. For example, if you give the input as "terraform", then the state file, named default.tfstate, will be stored inside an object called terraform.
 
-Options specific to **terraform plan, apply and destroy** commands
+Options specific to **terraform plan, apply, show, output, custom and destroy** commands
 
-- **Azure subscription (only if "azurerm" provider is selected)\*:** Select the AzureRM subscription to use for managing the resources used by the plan, apply and destroy commands
-- **Amazon Web Services connection (only if "aws" provider is selected)\*:** Select the AWS connection to use for managing the resources used by the plan, apply and destroy commands
-- **Google Cloud Platform connection (only if "gcp" provider is selected)\*:** Select the GCP connection to use for managing the resources used by the plan, apply and destroy commands
+- **Azure subscription (only if "azurerm" provider is selected)\*:** Select the AzureRM subscription to use for managing the resources used by the plan, apply, show, output, custom and destroy commands
+- **Amazon Web Services connection (only if "aws" provider is selected)\*:** Select the AWS connection to use for managing the resources used by the plan, apply, show, output, custom and destroy commands
+- **Google Cloud Platform connection (only if "gcp" provider is selected)\*:** Select the GCP connection to use for managing the resources used by the plan, apply, show, output, custom and destroy commands
 
 Options specifc to  **show**  
 - **outputTo\*:** (console or file). You can choose to save output to file or only show output in console (i.e log) 
