@@ -84,9 +84,10 @@ Options specific to **terraform plan, apply and destroy** commands
 
 Options specifc to  **custom**  
 When selecting custom you can use any command that is supported natively by terraform.
-- **customCommand\*:** pass any command that is supported natively by terraform.
+- **customCommand\*:** pass any command that is supported natively by terraform. You can choose to save output to file or only show output in console (i.e log) 
 
 ## Output Variables
+* **changesPresent:** This varaible is set to true if the plan command finds changes to apply. Can be used by subsequent tasks. Give the producing task a reference name. Then, in a downstream step, you can use the form $(\<ReferenceName\>.changesPresent) to refer to it.
 
-* **Terraform plan json file path:** This variable refers to the location of the terraform plan file in JSON format that was created. This file can be used by tasks which are written for tools such as [Open Policy Agent](https://www.openpolicyagent.org/docs/latest/terraform/)<br><br>Note: This variable will only be set if 'command' input is set to 'show'.
-* **Terraform output variables json file path:** The location of the JSON file which contains the output variables set by the user in the terraform config files.<br><br>Note: This variable will only be set if 'command' input is set to 'output'.
+* **jsonPlanFilePath:** This variable refers to the location of the terraform plan file in JSON format that was created. This file can be used by tasks which are written for tools such as [Open Policy Agent](https://www.openpolicyagent.org/docs/latest/terraform/)<br><br>Note: This variable will only be set if 'command' input is set to 'show'.
+* **jsonOutputVariablesPath:** The location of the JSON file which contains the output variables set by the user in the terraform config files.<br><br>Note: This variable will only be set if 'command' input is set to 'output'.
