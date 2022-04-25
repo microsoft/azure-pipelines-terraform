@@ -94,7 +94,7 @@ When selecting custom you can use any command that is supported natively by terr
 ## Output Variables
 * **changesPresent:** This varaible is set to true if the plan command finds changes to apply. Can be used by subsequent tasks. Give the producing task a reference name. Then, in a downstream step, you can use the form $(\<ReferenceName\>.changesPresent) to refer to it.
 
-* **customFilePath:** This variable refers to the location of the file that was created. <br><br>Note: This variable will only be set if 'command' input is set to 'custom' and if you select **outputTo\*:** 'file'.
+* **customFilePath:** This variable refers to the location of the file that was created with use of the 'custom' command. <br><br>Note: This variable will only be set if 'command' input is set to 'custom' and if you select **outputTo\*:** 'file'.
 
 * **showFilePath:** This variable refers to the location of the file that was created. This file can be used by tasks which are written for tools such as [Open Policy Agent](https://www.openpolicyagent.org/docs/latest/terraform/)<br><br>Note: This variable will only be set if 'command' input is set to 'show'.
 * **jsonOutputVariablesPath:** The location of the JSON file which contains the output variables set by the user in the terraform config files.<br><br>Note: This variable will only be set if 'command' input is set to 'output'.
