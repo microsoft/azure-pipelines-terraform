@@ -117,7 +117,7 @@ export abstract class BaseTerraformCommandHandler {
             cwd: showCommand.workingDirectory});
         }else if(outputTo == "file"){
             let planFilePath = path.resolve(tasks.getInput("filename"));
-            const commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
+            let commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
                 cwd: showCommand.workingDirectory});
             tasks.writeFile(planFilePath, commandOutput.stdout);
             // Set the output variable to the json plan file path
