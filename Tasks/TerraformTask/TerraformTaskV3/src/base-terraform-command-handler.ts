@@ -93,20 +93,17 @@ export abstract class BaseTerraformCommandHandler {
         let cmd;
         const outputTo = tasks.getInput("outputTo");
         const outputFormat = tasks.getInput("outputFormat");
-        if (outputTo == "console") { 
-            if (outputFormat == "json"){
+        if (outputFormat == "json"){
                 cmd = tasks.getInput("commandOptions") != null ? `-json  ${tasks.getInput("commandOptions")}`:`-json`;
             }else{
                 cmd = tasks.getInput("commandOptions") != null ? tasks.getInput("commandOptions"):``;
             }
-        }else if (outputTo == "file"){
-            cmd = tasks.getInput("commandOptions") != null ? `-json ${tasks.getInput("commandOptions")}`:`-json`;
-        }
+    
         let showCommand = new TerraformAuthorizationCommandInitializer(
             "show",
             tasks.getInput("workingDirectory"),
             tasks.getInput(serviceName, true),
-            tasks.getInput("commandOptions")
+            cmd
         );
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(showCommand);
