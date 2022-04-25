@@ -121,7 +121,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.outputFormat",
       "defaultValue": "default",
-      "visibleRule": "command = show && outputTo = console",
+      "visibleRule": "command = show",
       "helpMarkDown": "ms-resource:loc.input.help.outputFormat",
       "options": {
           "json": "json",
