@@ -118,8 +118,8 @@
             "name": "outputFormat",
             "type": "pickList",
             "label": "Output format",
-            "defaultValue": "json",
-            "visibleRule": "command = show && outputTo = console",
+            "defaultValue": "default",
+            "visibleRule": "command = show",
             "helpMarkDown": "choose format of ouput for show cmd. ",
             "options": {
                 "json": "json",
