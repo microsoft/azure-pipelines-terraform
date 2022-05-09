@@ -61,7 +61,7 @@ stages:
       publisherId: $(publisherId)
       publicExtensionName: $(publicExtensionName)
       updateTaskVersion: true
-      extensionId: '$(extensionId)-dev'
+      extensionId: $(extensionId)
 
 - stage: 'DeployTest'
   displayName: 'Deploy to Test'
@@ -76,7 +76,7 @@ stages:
       publisherId: $(publisherId)
       publicExtensionName: $(publicExtensionName)
       updateTaskVersion: true
-      extensionId: '$(extensionId)-test'
+      extensionId: $(extensionId)
 
 - stage: 'DeployRelease'
   displayName: 'Deploy Release'
