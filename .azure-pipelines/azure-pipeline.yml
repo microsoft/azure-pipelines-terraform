@@ -11,6 +11,8 @@ variables:
   value: 'ms-devlabs'
 - name: publicExtensionName
   value: "Terraform"
+- name: extensionId
+  value: "custom-terraform-tasks"
 
 name: $(major).$(minor)$(rev:.r)
 
@@ -59,6 +61,7 @@ stages:
       publisherId: $(publisherId)
       publicExtensionName: $(publicExtensionName)
       updateTaskVersion: true
+      extensionId: '$(extensionId)-dev'
 
 - stage: 'DeployTest'
   displayName: 'Deploy to Test'
@@ -73,6 +76,7 @@ stages:
       publisherId: $(publisherId)
       publicExtensionName: $(publicExtensionName)
       updateTaskVersion: true
+      extensionId: '$(extensionId)-test'
 
 - stage: 'DeployRelease'
   displayName: 'Deploy Release'
@@ -88,3 +92,4 @@ stages:
       publicExtensionName: $(publicExtensionName)
       extensionVisibility: 'public'
       updateTaskVersion: true
+      extensionId: $(extensionId)
