@@ -13,5 +13,4 @@
   "loc.messages.TerraformDownloadFailed": "Failed to download Terraform from url %s. Error %s",
   "loc.messages.TerraformVersionNotFound": "Unable to get latest version: using 1.1.6",
   "loc.messages.GettingLatestTerraformVersion": "Getting latest Terraform version."
-
 }
