@@ -176,6 +176,7 @@ export abstract class BaseTerraformCommandHandler {
         if (result !== 0 && result !== 2) {
             throw new Error(tasks.loc("TerraformPlanFailed", result));
         }
+        tasks.setVariable('changesPresent', (result === 2).toString(), false, true);
         return result;
     }
 
