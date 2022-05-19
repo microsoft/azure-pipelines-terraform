@@ -182,7 +182,6 @@ export abstract class BaseTerraformCommandHandler {
 
     public async custom(): Promise<number> {
         const outputTo = tasks.getInput("outputTo");
-        this.warnIfMultipleProviders();
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let customCommand = new TerraformAuthorizationCommandInitializer(
             tasks.getInput("customCommand"),
