@@ -15,8 +15,11 @@ The Terraform tool installer task acquires a specified version of [Terraform](ht
 The Terraform task enables running Terraform commands as part of Azure Build and Release Pipelines providing support for the following Terraform commands
 - init
 - validate
+- show
 - plan
 - apply
+- output
+- custom (any command terraform CLI supports natively) 
 - destroy
 
 This extension is intended to run on **Windows**, **Linux** and **MacOS** agents.
