@@ -82,11 +82,11 @@ Options specific to **terraform plan, apply, show, output, custom and destroy** 
 - **Amazon Web Services connection (only if "aws" provider is selected)\*:** Select the AWS connection to use for managing the resources used by the plan, apply, show, output, custom and destroy commands
 - **Google Cloud Platform connection (only if "gcp" provider is selected)\*:** Select the GCP connection to use for managing the resources used by the plan, apply, show, output, custom and destroy commands
 
-Options specifc to  **show**  
+Options specific to  **show**  
 - **outputTo\*:** (console or file). You can choose to save output to file or only show output in console (i.e log) 
 - **outputFormat\*:** (json or default) . Output in json or default format
 
-Options specifc to  **custom**  
+Options specific to  **custom**  
 When selecting custom you can use any command that is supported natively by terraform.
 - **customCommand\*:** pass any command that is supported natively by terraform
 - **outputTo\*:** (console or file).You can choose to save output to file or only show output in console (i.e log)
