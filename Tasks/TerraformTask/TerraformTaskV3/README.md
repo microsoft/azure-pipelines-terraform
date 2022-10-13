@@ -98,3 +98,38 @@ When selecting custom you can use any command that is supported natively by terr
 
 * **showFilePath:** This variable refers to the location of the file that was created. This file can be used by tasks which are written for tools such as [Open Policy Agent](https://www.openpolicyagent.org/docs/latest/terraform/)<br><br>Note: This variable will only be set if 'command' input is set to 'show'.
 * **jsonOutputVariablesPath:** The location of the JSON file which contains the output variables set by the user in the terraform config files.<br><br>Note: This variable will only be set if 'command' input is set to 'output'.
+
+## Example Task Usage
+Below is a basic example usage of a few commands within the TerraformTaskV3 task.
+
+```yaml
+- task: TerraformTaskV3@3
+  displayName: Initialize Terraform
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    backendServiceArm: 'your-service-connection'
+    backendAzureRmResourceGroupName: 'your-rg-name'
+    backendAzureRmStorageAccountName: 'your-stg-name'
+    backendAzureRmContainerName: 'your-container-name'
+    backendAzureRmKey: 'state.tfstate'
+
+- task: TerraformTaskV3@3
+  name: terraformPlan
+  displayName: Create Terraform Plan
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    commandOptions: '-out main.tfplan'
+    environmentServiceNameAzureRM: 'your-service-connection'
+
+# Only runs if the 'terraformPlan' task has detected changes the in state. 
+- task: TerraformTaskV3@3
+  displayName: Apply Terraform Plan
+  condition: eq(variables['terraformPlan.changesPresent'], 'true')
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    commandOptions: 'main.tfplan'
+    environmentServiceNameAzureRM: 'your-service-connection'
+```
