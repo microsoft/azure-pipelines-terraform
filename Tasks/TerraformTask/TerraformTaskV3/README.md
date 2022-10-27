@@ -121,7 +121,7 @@ Below is a basic example usage of a few commands within the TerraformTaskV3 task
     provider: 'azurerm'
     command: 'plan'
     commandOptions: '-out main.tfplan'
-    environmentServiceNameAzureRM: 'your-service-connection'
+    environmentServiceNameAzureRM: 'your-environment-service-connection'
 
 # Only runs if the 'terraformPlan' task has detected changes the in state. 
 - task: TerraformTaskV3@3
