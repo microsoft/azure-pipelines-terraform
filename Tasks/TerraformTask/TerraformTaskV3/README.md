@@ -108,7 +108,7 @@ Below is a basic example usage of a few commands within the TerraformTaskV3 task
   inputs:
     provider: 'azurerm'
     command: 'init'
-    backendServiceArm: 'your-service-connection'
+    backendServiceArm: 'your-backend-service-connection'
     backendAzureRmResourceGroupName: 'your-rg-name'
     backendAzureRmStorageAccountName: 'your-stg-name'
     backendAzureRmContainerName: 'your-container-name'
