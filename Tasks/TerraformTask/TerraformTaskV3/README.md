@@ -131,5 +131,5 @@ Below is a basic example usage of a few commands within the TerraformTaskV3 task
     provider: 'azurerm'
     command: 'apply'
     commandOptions: 'main.tfplan'
-    environmentServiceNameAzureRM: 'your-service-connection'
+    environmentServiceNameAzureRM: 'your-environment-service-connection'
 ```
