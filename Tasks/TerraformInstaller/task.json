@@ -30,6 +30,9 @@
     "execution": {
         "Node10": {
             "target": "src/index.js"
+        },
+        "Node16": {
+            "target": "src/index.js"
         }
     },
     "outputVariables": [
