@@ -25,8 +25,8 @@
         "copy-webpack-plugin": "^6.3.2",
         "glob-exec": "^0.1.1",
         "tfx-cli": "0.12.0",
-        "ts-loader": "^5.2.2",
-        "webpack": "^4.46.0",
+        "ts-loader": "^9.4.2",
+        "webpack": "^5.75.0",
         "webpack-cli": "^4.9.2",
         "glob-parent": ">=6.0.2"
     }
