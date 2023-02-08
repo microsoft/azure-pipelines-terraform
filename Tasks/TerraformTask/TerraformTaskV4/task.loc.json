@@ -1,6 +1,6 @@
 {
   "id": "FE504ACC-6115-40CB-89FF-191386B5E7BF",
-  "name": "TerraformTaskV3",
+  "name": "TerraformTaskV4",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -13,7 +13,7 @@
   "demands": [],
   "version": {
     "Major": "4",
-    "Minor": "216",
+    "Minor": "218",
     "Patch": "0"
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
