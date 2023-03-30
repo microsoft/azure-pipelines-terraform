@@ -92,7 +92,7 @@ When selecting custom you can use any command that is supported natively by terr
 - **outputTo\*:** (console or file).You can choose to save output to file or only show output in console (i.e log)
 
 ## Output Variables
-* **changesPresent:** This varaible is set to true if the plan command finds changes to apply. Can be used by subsequent tasks. Give the producing task a reference name. Then, in a downstream step, you can use the form $(\<ReferenceName\>.changesPresent) to refer to it.
+* **changesPresent:** This variable is set to true if the plan command finds changes to apply. Can be used by subsequent tasks. Give the producing task a reference name. Then, in a downstream step, you can use the form $(\<ReferenceName\>.changesPresent) to refer to it.
 
 * **customFilePath:** This variable refers to the location of the file that was created with use of the 'custom' command. <br><br>Note: This variable will only be set if 'command' input is set to 'custom' and if you select **outputTo\*:** 'file'.
 
