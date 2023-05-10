@@ -18,7 +18,7 @@ The tasks are capable of running on the following build agent operating systems:
 For more detailed information about the tasks, see the README for each from the below links:
 
 - [Terraform tool installer](https://aka.ms/AAf1a0p)
-- [Terraform](https://aka.ms/AAf0uqr)
+- [Terraform](https://github.com/microsoft/azure-pipelines-terraform/tree/main/Tasks/TerraformTask/TerraformTaskV4)
 
 
 ## Contact Information
