@@ -14,6 +14,8 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
     private setupBackend(backendServiceName: string) {
         var authorizationScheme : AuthorizatonScheme = AuthorizatonScheme[tasks.getEndpointAuthorizationScheme(backendServiceName, false).toLowerCase()];
 
+        tasks.debug('Setting up provider for authorization scheme: ' + authorizationScheme + '.');
+
         switch(authorizationScheme) {
             case AuthorizatonScheme.ServicePrincipal:
                 var servicePrincipalCredentials : ServicePrincipalCredentials = this.getServicePrincipalCredentials(backendServiceName);
@@ -53,6 +55,8 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
     public handleProvider(command: TerraformAuthorizationCommandInitializer) {
         if (command.serviceProvidername) {
             var authorizationScheme : AuthorizatonScheme = AuthorizatonScheme[tasks.getEndpointAuthorizationScheme(command.serviceProvidername, false).toLowerCase()];
+
+            tasks.debug('Setting up provider for authorization scheme: ' + authorizationScheme + '.');
 
             switch(authorizationScheme) {
                 case AuthorizatonScheme.ServicePrincipal:
