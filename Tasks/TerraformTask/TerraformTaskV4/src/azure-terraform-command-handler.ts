@@ -12,22 +12,22 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
     }
 
     private setupBackend(backendServiceName: string) {
-        var authorizationScheme : AuthorizatonScheme = AuthorizatonScheme[tasks.getEndpointAuthorizationScheme(backendServiceName, false).toLowerCase()];
+        var authorizationScheme : AuthorizationScheme = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(backendServiceName, false).toLowerCase()];
 
         tasks.debug('Setting up provider for authorization scheme: ' + authorizationScheme + '.');
 
         switch(authorizationScheme) {
-            case AuthorizatonScheme.ServicePrincipal:
+            case AuthorizationScheme.ServicePrincipal:
                 var servicePrincipalCredentials : ServicePrincipalCredentials = this.getServicePrincipalCredentials(backendServiceName);
                 this.backendConfig.set('client_id', servicePrincipalCredentials.servicePrincipalId);
                 this.backendConfig.set('client_secret', servicePrincipalCredentials.servicePrincipalKey);
                 break;
 
-            case AuthorizatonScheme.ManagedServiceIdentity:
+            case AuthorizationScheme.ManagedServiceIdentity:
                 this.backendConfig.set('use_msi', 'true');
                 break;
 
-            case AuthorizatonScheme.WorkloadIdentityFederation:
+            case AuthorizationScheme.WorkloadIdentityFederation:
                 var workloadIdentityFederationCredentials : WorkloadIdentityFederationCredentials = this.getWorkloadIdentityFederationCredentials(backendServiceName);
                 this.backendConfig.set('client_id', workloadIdentityFederationCredentials.servicePrincipalId);
                 this.backendConfig.set('oidc_token', workloadIdentityFederationCredentials.idToken);
@@ -54,22 +54,22 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
     public handleProvider(command: TerraformAuthorizationCommandInitializer) {
         if (command.serviceProvidername) {
-            var authorizationScheme : AuthorizatonScheme = AuthorizatonScheme[tasks.getEndpointAuthorizationScheme(command.serviceProvidername, false).toLowerCase()];
+            var authorizationScheme : AuthorizationScheme = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(command.serviceProvidername, false).toLowerCase()];
 
             tasks.debug('Setting up provider for authorization scheme: ' + authorizationScheme + '.');
 
             switch(authorizationScheme) {
-                case AuthorizatonScheme.ServicePrincipal:
+                case AuthorizationScheme.ServicePrincipal:
                     var servicePrincipalCredentials : ServicePrincipalCredentials = this.getServicePrincipalCredentials(command.serviceProvidername);
                     process.env['ARM_CLIENT_ID'] = servicePrincipalCredentials.servicePrincipalId;
                     process.env['ARM_CLIENT_SECRET'] = servicePrincipalCredentials.servicePrincipalKey;
                     break;
     
-                case AuthorizatonScheme.ManagedServiceIdentity:
+                case AuthorizationScheme.ManagedServiceIdentity:
                     process.env['ARM_USE_MSI'] = 'true';
                     break;
     
-                case AuthorizatonScheme.WorkloadIdentityFederation:
+                case AuthorizationScheme.WorkloadIdentityFederation:
                     var workloadIdentityFederationCredentials : WorkloadIdentityFederationCredentials = this.getWorkloadIdentityFederationCredentials(command.serviceProvidername);
                     process.env['ARM_CLIENT_ID'] = workloadIdentityFederationCredentials.servicePrincipalId;
                     process.env['ARM_OIDC_TOKEN'] = workloadIdentityFederationCredentials.idToken;
@@ -141,7 +141,7 @@ interface WorkloadIdentityFederationCredentials {
     idToken: string;
 }
 
-enum AuthorizatonScheme {
+enum AuthorizationScheme {
     ServicePrincipal = "serviceprincipal",
     ManagedServiceIdentity = "managedserviceidentity",
     WorkloadIdentityFederation = "workloadidentityfederation"   
