@@ -9,12 +9,32 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
     constructor() {
         super();
         this.providerName = "azurerm";
+        this.authorisationSchemeBackend = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(tasks.getInput("backendServiceArm", true), false)];
+        this.authorisationSchemeEnvironment = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(tasks.getInput("environmentServiceNameAzureRM", true), false)];
+        if(this.authorisationSchemeBackend == AuthorizationScheme.WorkloadIdentityFederation) {
+            this.callIdToken("backendServiceArm", true);
+        }
+        if(this.authorisationSchemeEnvironment == AuthorizationScheme.WorkloadIdentityFederation) {
+            this.callIdToken("environmentServiceNameAzureRM", true);
+        }
     }
 
+    backendIdToken: string;
+    environmentIdToken: string;
+    authorisationSchemeBackend: AuthorizationScheme;
+    authorisationSchemeEnvironment: AuthorizationScheme;
+
     private setupBackend(backendServiceName: string) {
-        var authorizationScheme : AuthorizationScheme = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(backendServiceName, false).toLowerCase()];
+        const authorizationScheme = this.authorisationSchemeBackend;
 
         tasks.debug('Setting up provider for authorization scheme: ' + authorizationScheme + '.');
+
+        this.backendConfig.set('storage_account_name', tasks.getInput("backendAzureRmStorageAccountName", true));
+        this.backendConfig.set('container_name', tasks.getInput("backendAzureRmContainerName", true));
+        this.backendConfig.set('key', tasks.getInput("backendAzureRmKey", true));
+        this.backendConfig.set('resource_group_name', tasks.getInput("backendAzureRmResourceGroupName", true));
+        this.backendConfig.set('subscription_id', tasks.getEndpointDataParameter(backendServiceName, "subscriptionid", true));
+        this.backendConfig.set('tenant_id', tasks.getEndpointAuthorizationParameter(backendServiceName, "tenantid", true));
 
         switch(authorizationScheme) {
             case AuthorizationScheme.ServicePrincipal:
@@ -34,13 +54,6 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                 this.backendConfig.set('use_oidc', 'true');
                 break;
         }
-
-        this.backendConfig.set('storage_account_name', tasks.getInput("backendAzureRmStorageAccountName", true));
-        this.backendConfig.set('container_name', tasks.getInput("backendAzureRmContainerName", true));
-        this.backendConfig.set('key', tasks.getInput("backendAzureRmKey", true));
-        this.backendConfig.set('resource_group_name', tasks.getInput("backendAzureRmResourceGroupName", true));
-        this.backendConfig.set('subscription_id', tasks.getEndpointDataParameter(backendServiceName, "subscriptionid", true));
-        this.backendConfig.set('tenant_id', tasks.getEndpointAuthorizationParameter(backendServiceName, "tenantid", true));
     }
 
     public handleBackend(terraformToolRunner: ToolRunner): void {
@@ -54,9 +67,12 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
     public handleProvider(command: TerraformAuthorizationCommandInitializer) {
         if (command.serviceProvidername) {
-            var authorizationScheme : AuthorizationScheme = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(command.serviceProvidername, false).toLowerCase()];
+            const authorizationScheme  = this.authorisationSchemeEnvironment;
 
             tasks.debug('Setting up provider for authorization scheme: ' + authorizationScheme + '.');
+
+            process.env['ARM_SUBSCRIPTION_ID']  = tasks.getEndpointDataParameter(command.serviceProvidername, "subscriptionid", false);
+            process.env['ARM_TENANT_ID']        = tasks.getEndpointAuthorizationParameter(command.serviceProvidername, "tenantid", false);
 
             switch(authorizationScheme) {
                 case AuthorizationScheme.ServicePrincipal:
@@ -76,9 +92,6 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                     process.env['ARM_USE_OIDC'] = 'true';
                     break;
             }
-
-            process.env['ARM_SUBSCRIPTION_ID']  = tasks.getEndpointDataParameter(command.serviceProvidername, "subscriptionid", false);
-            process.env['ARM_TENANT_ID']        = tasks.getEndpointAuthorizationParameter(command.serviceProvidername, "tenantid", false);
         }
     }
 
@@ -89,14 +102,23 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         return servicePrincipalCredentials;
     }
 
-    private getWorkloadIdentityFederationCredentials(connectionName: string) : WorkloadIdentityFederationCredentials {
+    private  getWorkloadIdentityFederationCredentials(connectionName: string, isBackend : boolean = false) : WorkloadIdentityFederationCredentials {
         var workloadIdentityFederationCredentials : WorkloadIdentityFederationCredentials;
         workloadIdentityFederationCredentials.servicePrincipalId = tasks.getEndpointAuthorizationParameter(connectionName, "serviceprincipalid", true);
-        var connectedService: string = tasks.getInput(connectionName, true);
-        var idToken : string;
-        this.getIdToken(connectedService).then((token) => { idToken = token; });
-        workloadIdentityFederationCredentials.idToken = idToken;
+        workloadIdentityFederationCredentials.idToken = isBackend ? this.backendIdToken : this.environmentIdToken;
         return workloadIdentityFederationCredentials;
+    }
+
+    private setIdToken(token: string, isBackend: boolean = false) {
+        if(isBackend) {
+            this.backendIdToken = token;
+        } else {
+            this.environmentIdToken = token;
+        }
+    }
+
+    private callIdToken(connectedService: string, isBackend : boolean = false) {
+        this.getIdToken(tasks.getInput(connectedService, true)).then((token) => { this.setIdToken(token, isBackend); });
     }
 
     private async getIdToken(connectedService: string) : Promise<string> {

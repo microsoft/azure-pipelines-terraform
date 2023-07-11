@@ -1,3 +1,4 @@
 node_modules
 build
 Tasks/**/*.js
+Tasks/TerraformTask/TerraformTaskV4/.taskkey
