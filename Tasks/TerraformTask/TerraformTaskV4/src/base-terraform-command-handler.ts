@@ -12,8 +12,8 @@ export abstract class BaseTerraformCommandHandler {
     terraformToolHandler: ITerraformToolHandler;
     backendConfig: Map<string, string>;
 
-    abstract handleBackend(terraformToolRunner: ToolRunner);
-    abstract handleProvider(command: TerraformAuthorizationCommandInitializer);
+    abstract handleBackend(terraformToolRunner: ToolRunner) : Promise<void>;
+    abstract handleProvider(command: TerraformAuthorizationCommandInitializer) : Promise<void>;
     
     constructor() {
         this.providerName = "";
@@ -82,7 +82,7 @@ export abstract class BaseTerraformCommandHandler {
         let terraformTool;
         
         terraformTool = this.terraformToolHandler.createToolRunner(initCommand);
-        this.handleBackend(terraformTool);
+        await this.handleBackend(terraformTool);
         
         return terraformTool.exec(<IExecOptions> {
             cwd: initCommand.workingDirectory

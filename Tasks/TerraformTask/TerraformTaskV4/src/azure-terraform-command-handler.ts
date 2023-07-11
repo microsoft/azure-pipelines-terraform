@@ -9,23 +9,13 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
     constructor() {
         super();
         this.providerName = "azurerm";
-        this.authorisationSchemeBackend = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(tasks.getInput("backendServiceArm", true), false)];
-        this.authorisationSchemeEnvironment = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(tasks.getInput("environmentServiceNameAzureRM", true), false)];
-        if(this.authorisationSchemeBackend == AuthorizationScheme.WorkloadIdentityFederation) {
-            this.callIdToken("backendServiceArm", true);
-        }
-        if(this.authorisationSchemeEnvironment == AuthorizationScheme.WorkloadIdentityFederation) {
-            this.callIdToken("environmentServiceNameAzureRM", true);
-        }
     }
 
     backendIdToken: string;
     environmentIdToken: string;
-    authorisationSchemeBackend: AuthorizationScheme;
-    authorisationSchemeEnvironment: AuthorizationScheme;
 
-    private setupBackend(backendServiceName: string) {
-        const authorizationScheme = this.authorisationSchemeBackend;
+    private async setupBackend(backendServiceName: string) : Promise<void> {
+        const authorizationScheme = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(tasks.getInput("backendServiceArm", true), false)];
 
         tasks.debug('Setting up provider for authorization scheme: ' + authorizationScheme + '.');
 
@@ -48,7 +38,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                 break;
 
             case AuthorizationScheme.WorkloadIdentityFederation:
-                var workloadIdentityFederationCredentials : WorkloadIdentityFederationCredentials = this.getWorkloadIdentityFederationCredentials(backendServiceName);
+                var workloadIdentityFederationCredentials = await this.getWorkloadIdentityFederationCredentials(backendServiceName);
                 this.backendConfig.set('client_id', workloadIdentityFederationCredentials.servicePrincipalId);
                 this.backendConfig.set('oidc_token', workloadIdentityFederationCredentials.idToken);
                 this.backendConfig.set('use_oidc', 'true');
@@ -56,18 +46,18 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         }
     }
 
-    public handleBackend(terraformToolRunner: ToolRunner): void {
+    public async handleBackend(terraformToolRunner: ToolRunner): Promise<void> {
         let backendServiceName = tasks.getInput("backendServiceArm", true);
-        this.setupBackend(backendServiceName);
+        await this.setupBackend(backendServiceName);
 
         for (let [key, value] of this.backendConfig.entries()) {
             terraformToolRunner.arg(`-backend-config=${key}=${value}`);
         }
     }
 
-    public handleProvider(command: TerraformAuthorizationCommandInitializer) {
+    public async handleProvider(command: TerraformAuthorizationCommandInitializer) : Promise<void> {
         if (command.serviceProvidername) {
-            const authorizationScheme  = this.authorisationSchemeEnvironment;
+            const authorizationScheme  = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(tasks.getInput("environmentServiceNameAzureRM", true), false)];
 
             tasks.debug('Setting up provider for authorization scheme: ' + authorizationScheme + '.');
 
@@ -76,7 +66,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
             switch(authorizationScheme) {
                 case AuthorizationScheme.ServicePrincipal:
-                    var servicePrincipalCredentials : ServicePrincipalCredentials = this.getServicePrincipalCredentials(command.serviceProvidername);
+                    var servicePrincipalCredentials = this.getServicePrincipalCredentials(command.serviceProvidername);
                     process.env['ARM_CLIENT_ID'] = servicePrincipalCredentials.servicePrincipalId;
                     process.env['ARM_CLIENT_SECRET'] = servicePrincipalCredentials.servicePrincipalKey;
                     break;
@@ -86,7 +76,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                     break;
     
                 case AuthorizationScheme.WorkloadIdentityFederation:
-                    var workloadIdentityFederationCredentials : WorkloadIdentityFederationCredentials = this.getWorkloadIdentityFederationCredentials(command.serviceProvidername);
+                    var workloadIdentityFederationCredentials = await this.getWorkloadIdentityFederationCredentials(command.serviceProvidername);
                     process.env['ARM_CLIENT_ID'] = workloadIdentityFederationCredentials.servicePrincipalId;
                     process.env['ARM_OIDC_TOKEN'] = workloadIdentityFederationCredentials.idToken;
                     process.env['ARM_USE_OIDC'] = 'true';
@@ -102,23 +92,11 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         return servicePrincipalCredentials;
     }
 
-    private  getWorkloadIdentityFederationCredentials(connectionName: string, isBackend : boolean = false) : WorkloadIdentityFederationCredentials {
+    private async getWorkloadIdentityFederationCredentials(connectionName: string) : Promise<WorkloadIdentityFederationCredentials> {
         var workloadIdentityFederationCredentials : WorkloadIdentityFederationCredentials;
         workloadIdentityFederationCredentials.servicePrincipalId = tasks.getEndpointAuthorizationParameter(connectionName, "serviceprincipalid", true);
-        workloadIdentityFederationCredentials.idToken = isBackend ? this.backendIdToken : this.environmentIdToken;
+        workloadIdentityFederationCredentials.idToken = await this.getIdToken(connectionName)
         return workloadIdentityFederationCredentials;
-    }
-
-    private setIdToken(token: string, isBackend: boolean = false) {
-        if(isBackend) {
-            this.backendIdToken = token;
-        } else {
-            this.environmentIdToken = token;
-        }
-    }
-
-    private callIdToken(connectedService: string, isBackend : boolean = false) {
-        this.getIdToken(tasks.getInput(connectedService, true)).then((token) => { this.setIdToken(token, isBackend); });
     }
 
     private async getIdToken(connectedService: string) : Promise<string> {
