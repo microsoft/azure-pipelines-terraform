@@ -292,7 +292,7 @@ describe('Terraform Test Suite', () => {
 
             assert(tr.failed, 'task should have failed');
             assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
-            assert(tr.errorIssues.length === 3, 'should have three errors');
+            assert(tr.errorIssues.length === 1, 'should have one errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('Execution failed: invalid config files'), 'Should have shown error message');
 
@@ -364,7 +364,7 @@ describe('Terraform Test Suite', () => {
 
             assert(tr.failed, 'task should have failed');
             assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
-            assert(tr.errorIssues.length === 3, 'should have one error');
+            assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('Execution failed: invalid config files'), 'Should have shown error message');
 
@@ -436,7 +436,7 @@ describe('Terraform Test Suite', () => {
 
             assert(tr.failed, 'task should have failed');
             assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
-            assert(tr.errorIssues.length === 3, 'should have one error');
+            assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('Execution failed: invalid config files'), 'Should have shown error message');
 

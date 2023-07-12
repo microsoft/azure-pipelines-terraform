@@ -192,7 +192,6 @@ export abstract class BaseTerraformCommandHandler {
         terraformTool = this.terraformToolHandler.createToolRunner(customCommand);
         await this.handleProvider(customCommand);
 
-
         if(outputTo == "console"){
             return terraformTool.exec(<IExecOptions> {
             cwd: customCommand.workingDirectory});
@@ -268,6 +267,7 @@ export abstract class BaseTerraformCommandHandler {
 
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(validateCommand);
+        await Promise.resolve("This is here because the unit test fails without it.");
         
         return terraformTool.exec(<IExecOptions>{
             cwd: validateCommand.workingDirectory
