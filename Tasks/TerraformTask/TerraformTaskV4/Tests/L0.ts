@@ -5,6 +5,7 @@ import * as path from 'path';
 describe('Terraform Test Suite', () => {
 
     before(() => {
+        //NOTE: This is here because when debugging in VSCode this is populated and the spawn() method in the testing framework which starts a new NodeJS process does not handle the path with spaces that is set in it.
         delete process.env.NODE_OPTIONS
     });
 
