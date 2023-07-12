@@ -29,7 +29,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
             "code": 0,
             "stdout": "provider azurerm"
         },
-        "terraform plan -no-color": {
+        "terraform plan -no-color -detailed-exitcode": {
             "code": 0,
             "stdout": "Executed successfully"
         }

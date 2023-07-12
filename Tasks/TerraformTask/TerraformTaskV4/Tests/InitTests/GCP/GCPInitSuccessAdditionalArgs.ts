@@ -21,7 +21,7 @@ process.env['ENDPOINT_AUTH_PARAMETER_GCP_AUDIENCE'] = 'DummyAudience';
 process.env['ENDPOINT_AUTH_PARAMETER_GCP_PRIVATEKEY'] = 'DummyPrivateKey';
 process.env['ENDPOINT_AUTH_PARAMETER_GCP_SCOPE'] = 'DummyScope';
 
-let credentialsFilePath = path.join(__dirname, '..', '..', '..', '..', '..', '..', 'Tests', 'credentials-123.json');
+let credentialsFilePath = path.join(__dirname, '..', '..', '..', 'credentials-123.json');
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "which": {

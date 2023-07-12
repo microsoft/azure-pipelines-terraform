@@ -15,9 +15,9 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
     environmentIdToken: string;
 
     private async setupBackend(backendServiceName: string) : Promise<void> {
-        const authorizationScheme = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(tasks.getInput("backendServiceArm", true), false)];
+        const authorizationScheme = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(tasks.getInput("backendServiceArm", true), false) as keyof typeof AuthorizationScheme];
 
-        tasks.debug('Setting up provider for authorization scheme: ' + authorizationScheme + '.');
+        tasks.debug('Setting up backend for authorization scheme: ' + authorizationScheme + '.');
 
         this.backendConfig.set('storage_account_name', tasks.getInput("backendAzureRmStorageAccountName", true));
         this.backendConfig.set('container_name', tasks.getInput("backendAzureRmContainerName", true));
@@ -28,7 +28,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
         switch(authorizationScheme) {
             case AuthorizationScheme.ServicePrincipal:
-                var servicePrincipalCredentials : ServicePrincipalCredentials = this.getServicePrincipalCredentials(backendServiceName);
+                var servicePrincipalCredentials = this.getServicePrincipalCredentials(backendServiceName);
                 this.backendConfig.set('client_id', servicePrincipalCredentials.servicePrincipalId);
                 this.backendConfig.set('client_secret', servicePrincipalCredentials.servicePrincipalKey);
                 break;
@@ -44,6 +44,8 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                 this.backendConfig.set('use_oidc', 'true');
                 break;
         }
+
+        tasks.debug('Finished up backend for authorization scheme: ' + authorizationScheme + '.');
     }
 
     public async handleBackend(terraformToolRunner: ToolRunner): Promise<void> {
@@ -57,7 +59,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
     public async handleProvider(command: TerraformAuthorizationCommandInitializer) : Promise<void> {
         if (command.serviceProvidername) {
-            const authorizationScheme  = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(tasks.getInput("environmentServiceNameAzureRM", true), false)];
+            const authorizationScheme  = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(tasks.getInput("environmentServiceNameAzureRM", true), false) as keyof typeof AuthorizationScheme];
 
             tasks.debug('Setting up provider for authorization scheme: ' + authorizationScheme + '.');
 
@@ -82,20 +84,24 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                     process.env['ARM_USE_OIDC'] = 'true';
                     break;
             }
+
+            tasks.debug('Finished up provider for authorization scheme: ' + authorizationScheme + '.');
         }
     }
 
     private getServicePrincipalCredentials(connectionName: string) : ServicePrincipalCredentials {
-        var servicePrincipalCredentials : ServicePrincipalCredentials;
-        servicePrincipalCredentials.servicePrincipalId = tasks.getEndpointAuthorizationParameter(connectionName, "serviceprincipalid", true);
-        servicePrincipalCredentials.servicePrincipalKey = tasks.getEndpointAuthorizationParameter(connectionName, "serviceprincipalkey", true);
+        let servicePrincipalCredentials : ServicePrincipalCredentials = {
+            servicePrincipalId: tasks.getEndpointAuthorizationParameter(connectionName, "serviceprincipalid", true),
+            servicePrincipalKey: tasks.getEndpointAuthorizationParameter(connectionName, "serviceprincipalkey", true)
+        }
         return servicePrincipalCredentials;
     }
 
     private async getWorkloadIdentityFederationCredentials(connectionName: string) : Promise<WorkloadIdentityFederationCredentials> {
-        var workloadIdentityFederationCredentials : WorkloadIdentityFederationCredentials;
-        workloadIdentityFederationCredentials.servicePrincipalId = tasks.getEndpointAuthorizationParameter(connectionName, "serviceprincipalid", true);
-        workloadIdentityFederationCredentials.idToken = await this.getIdToken(connectionName)
+        let workloadIdentityFederationCredentials : WorkloadIdentityFederationCredentials = {
+            servicePrincipalId: tasks.getEndpointAuthorizationParameter(connectionName, "serviceprincipalid", true),
+            idToken: await this.getIdToken(connectionName)
+        }
         return workloadIdentityFederationCredentials;
     }
 

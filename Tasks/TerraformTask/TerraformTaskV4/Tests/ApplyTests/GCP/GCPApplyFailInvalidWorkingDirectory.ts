@@ -30,10 +30,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
             "code": 0,
             "stdout": "Executed successfully"
         },
-        "terraform validate": {
-            "code": 1,
-            "stdout": "Execution failed: invalid config files"
-        },
         "terraform apply -auto-approve": {
             "code": 1,
             "stdout": "Execution failed: invalid config files"

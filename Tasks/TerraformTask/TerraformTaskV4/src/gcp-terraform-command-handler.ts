@@ -36,12 +36,14 @@ export class TerraformCommandHandlerGCP extends BaseTerraformCommandHandler {
     }
 
     public async handleBackend(terraformToolRunner: ToolRunner) : Promise<void> {
+        tasks.debug('Setting up backend GCP.');
         let backendServiceName = tasks.getInput("backendServiceGCP", true);
         this.setupBackend(backendServiceName);
 
         for (let [key, value] of this.backendConfig.entries()) {
             terraformToolRunner.arg(`-backend-config=${key}=${value}`);
         }
+        tasks.debug('Finished setting up backend GCP.');
     }
 
     public async handleProvider(command: TerraformAuthorizationCommandInitializer) : Promise<void> {

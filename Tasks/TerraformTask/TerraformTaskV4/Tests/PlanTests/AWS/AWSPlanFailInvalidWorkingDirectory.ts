@@ -28,7 +28,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
             "code": 0,
             "stdout": "provider aws"
         },
-        "terraform plan -no-color": {
+        "terraform plan -no-color -detailed-exitcode": {
             "code": 1,
             "stdout": "Execution failed: invalid config files"
         }
