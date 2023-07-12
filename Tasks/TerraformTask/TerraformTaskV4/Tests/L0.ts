@@ -30,6 +30,42 @@ describe('Terraform Test Suite', () => {
         }
     });
 
+    it('azure init should succeed with authentication scheme ManagedServiceIdentity', (done: MochaDone) => {
+        let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessAuthenticationSchemeManagedServiceIdentity.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.warningIssues.length === 0, 'should have no warnings');
+            assert(tr.stdOutContained('AzureInitSuccessAuthenticationSchemeManagedServiceIdentityL0 should have succeeded.'), 'Should have printed: AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationL0 should have succeeded.');
+
+            done();
+        } catch(error) {
+            done(error);
+        }
+    });
+
+    it('azure init should succeed with authentication scheme WorkloadIdentityFederation', (done: MochaDone) => {
+        let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederation.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.warningIssues.length === 0, 'should have no warnings');
+            assert(tr.stdOutContained('AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationL0 should have succeeded.'), 'Should have printed: AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationL0 should have succeeded.');
+
+            done();
+        } catch(error) {
+            done(error);
+        }
+    });
+
     it('azure init should succeed with additional args', (done: MochaDone) => {
         let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessAdditionalArgs.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -677,6 +713,42 @@ describe('Terraform Test Suite', () => {
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('AzureApplySuccessNoAdditionalArgsL0 should have succeeded.'), 'Should have printed: AzureApplySuccessNoAdditionalArgsL0 should have succeeded.');
+
+            done();
+        } catch(error) {
+            done(error);
+        }
+    });
+
+    it('azure apply should succeed with authentication scheme ManagedServiceIdentity', (done: MochaDone) => {
+        let tp = path.join(__dirname, './ApplyTests/Azure/AzureApplySuccessAuthenticationSchemeManagedServiceIdentity.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.warningIssues.length === 0, 'should have no warnings');
+            assert(tr.stdOutContained('AzureApplySuccessAuthenticationSchemeManagedServiceIdentityL0 should have succeeded.'), 'Should have printed: AzureApplySuccessAuthenticationSchemeManagedServiceIdentityL0 should have succeeded.');
+
+            done();
+        } catch(error) {
+            done(error);
+        }
+    });
+
+    it('azure apply should succeed with authentication scheme WorkloadIdentityFederation', (done: MochaDone) => {
+        let tp = path.join(__dirname, './ApplyTests/Azure/AzureApplySuccessAuthenticationSchemeWorkloadIdentityFederation.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.warningIssues.length === 0, 'should have no warnings');
+            assert(tr.stdOutContained('AzureApplySuccessAuthenticationSchemeWorkloadIdentityFederationL0 should have succeeded.'), 'Should have printed: AzureApplySuccessAuthenticationSchemeWorkloadIdentityFederationL0 should have succeeded.');
 
             done();
         } catch(error) {

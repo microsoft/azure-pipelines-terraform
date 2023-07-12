@@ -267,7 +267,7 @@ export abstract class BaseTerraformCommandHandler {
 
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(validateCommand);
-        await Promise.resolve("This is here because the unit test fails without it.");
+        await Promise.resolve("This is here because the unit tests fail without it.");
         
         return terraformTool.exec(<IExecOptions>{
             cwd: validateCommand.workingDirectory

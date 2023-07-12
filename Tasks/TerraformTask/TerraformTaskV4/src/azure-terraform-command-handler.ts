@@ -2,8 +2,7 @@ import tasks = require('azure-pipelines-task-lib/task');
 import {ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
 import {TerraformAuthorizationCommandInitializer} from './terraform-commands';
 import {BaseTerraformCommandHandler} from './base-terraform-command-handler';
-import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
-import { ITaskApi } from "azure-devops-node-api/TaskApi";
+import {generateIdToken} from './id-token-generator';
 
 export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler {
     constructor() {
@@ -78,6 +77,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                     break;
     
                 case AuthorizationScheme.WorkloadIdentityFederation:
+                    tasks.debug('I_AM_HERE_0!!!');
                     var workloadIdentityFederationCredentials = await this.getWorkloadIdentityFederationCredentials(command.serviceProvidername);
                     process.env['ARM_CLIENT_ID'] = workloadIdentityFederationCredentials.servicePrincipalId;
                     process.env['ARM_OIDC_TOKEN'] = workloadIdentityFederationCredentials.idToken;
@@ -97,43 +97,12 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         return servicePrincipalCredentials;
     }
 
-    private async getWorkloadIdentityFederationCredentials(connectionName: string) : Promise<WorkloadIdentityFederationCredentials> {
+    private async getWorkloadIdentityFederationCredentials(connectionName: string) : Promise<WorkloadIdentityFederationCredentials> {       
         let workloadIdentityFederationCredentials : WorkloadIdentityFederationCredentials = {
             servicePrincipalId: tasks.getEndpointAuthorizationParameter(connectionName, "serviceprincipalid", true),
-            idToken: await this.getIdToken(connectionName)
+            idToken: await generateIdToken(connectionName)
         }
         return workloadIdentityFederationCredentials;
-    }
-
-    private async getIdToken(connectedService: string) : Promise<string> {
-        const jobId = tasks.getVariable("System.JobId");
-        const planId = tasks.getVariable("System.PlanId");
-        const projectId = tasks.getVariable("System.TeamProjectId");
-        const hub = tasks.getVariable("System.HostType");
-        const uri = tasks.getVariable("System.CollectionUri");
-        const token = this.getSystemAccessToken();
-
-        const authHandler = getHandlerFromToken(token);
-        const connection = new WebApi(uri, authHandler);
-        const api: ITaskApi = await connection.getTaskApi();
-        const response = await api.createOidcToken({}, projectId, hub, planId, jobId, connectedService);
-        if (response == null) {
-            return null;
-        }
-
-        return response.oidcToken;
-    }
-
-    private getSystemAccessToken() : string {
-        tasks.debug('Getting credentials for local feeds');
-        const auth = tasks.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
-        if (auth.scheme === 'OAuth') {
-            tasks.debug('Got auth token');
-            return auth.parameters['AccessToken'];
-        }
-        else {
-            tasks.warning('Could not determine credentials to use');
-        }
     }
 }
 
