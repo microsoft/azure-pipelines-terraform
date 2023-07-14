@@ -15,7 +15,7 @@ If you want to get started developing this task, then there are a few setup step
 
 ## Deploying
 
-1. If you haven't already, setup a https://marketplace.visualstudio.com/manage account and publisher following these steps: https://learn.microsoft.com/en-us/azure/devops/extend/publish/overview?toc=%2Fazure%2Fdevops%2Fmarketplace-extensibility%2Ftoc.json&view=azure-devops#create-a-publisher
+1. If you haven't already, setup a https://marketplace.visualstudio.com/manage account and publisher following [these](https://learn.microsoft.com/en-us/azure/devops/extend/publish/overview?toc=%2Fazure%2Fdevops%2Fmarketplace-extensibility%2Ftoc.json&view=azure-devops#create-a-publisher) steps.
 1. Run `npm install -include=dev`.
 1. (If Powershell): Run `$env:NODE_OPTIONS = "--openssl-legacy-provider"`.
 1. (If Bash): Run `export NODE_OPTIONS=--openssl-legacy-provider`.
