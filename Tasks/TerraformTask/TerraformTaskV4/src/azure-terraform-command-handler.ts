@@ -22,7 +22,10 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         this.backendConfig.set('container_name', tasks.getInput("backendAzureRmContainerName", true));
         this.backendConfig.set('key', tasks.getInput("backendAzureRmKey", true));
         this.backendConfig.set('resource_group_name', tasks.getInput("backendAzureRmResourceGroupName", true));
-        this.backendConfig.set('subscription_id', tasks.getEndpointDataParameter(backendServiceName, "subscriptionid", true));
+        const subscriptionId = tasks.getEndpointDataParameter(backendServiceName, "subscriptionid", true);
+        if(subscriptionId) {
+            this.backendConfig.set('subscription_id', tasks.getEndpointDataParameter(backendServiceName, "subscriptionid", true));
+        }
         this.backendConfig.set('tenant_id', tasks.getEndpointAuthorizationParameter(backendServiceName, "tenantid", true));
 
         switch(authorizationScheme) {
@@ -62,8 +65,11 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
             tasks.debug('Setting up provider for authorization scheme: ' + authorizationScheme + '.');
 
-            process.env['ARM_SUBSCRIPTION_ID']  = tasks.getEndpointDataParameter(command.serviceProvidername, "subscriptionid", false);
-            process.env['ARM_TENANT_ID']        = tasks.getEndpointAuthorizationParameter(command.serviceProvidername, "tenantid", false);
+            const subscriptionId = tasks.getEndpointDataParameter(command.serviceProvidername, "subscriptionid", true);
+            if(subscriptionId) {
+                process.env['ARM_SUBSCRIPTION_ID']  = tasks.getEndpointDataParameter(command.serviceProvidername, "subscriptionid", false);
+            }
+            process.env['ARM_TENANT_ID'] = tasks.getEndpointAuthorizationParameter(command.serviceProvidername, "tenantid", false);
 
             switch(authorizationScheme) {
                 case AuthorizationScheme.ServicePrincipal:
