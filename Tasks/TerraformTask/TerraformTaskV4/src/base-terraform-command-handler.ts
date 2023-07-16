@@ -119,7 +119,7 @@ export abstract class BaseTerraformCommandHandler {
             });
             
             tasks.writeFile(showFilePath, commandOutput.stdout);
-            tasks.setVariable('showFilePath', showFilePath);
+            tasks.setVariable('showFilePath', showFilePath, false, true);
             
             return commandOutput;
         }
@@ -146,7 +146,7 @@ export abstract class BaseTerraformCommandHandler {
         });
 
         tasks.writeFile(jsonOutputVariablesFilePath, commandOutput.stdout);
-        tasks.setVariable('jsonOutputVariablesPath', jsonOutputVariablesFilePath);
+        tasks.setVariable('jsonOutputVariablesPath', jsonOutputVariablesFilePath, false, true);
 
         return commandOutput;
     
@@ -204,7 +204,7 @@ export abstract class BaseTerraformCommandHandler {
                 cwd: customCommand.workingDirectory});
             
             tasks.writeFile(customFilePath, commandOutput.stdout);
-            tasks.setVariable('customFilePath', customFilePath);
+            tasks.setVariable('customFilePath', customFilePath, false, true);
             return commandOutput;
             }
     }
