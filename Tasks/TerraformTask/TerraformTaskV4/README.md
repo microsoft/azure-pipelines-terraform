@@ -100,10 +100,10 @@ When selecting custom you can use any command that is supported natively by terr
 * **jsonOutputVariablesPath:** The location of the JSON file which contains the output variables set by the user in the terraform config files.<br><br>Note: This variable will only be set if 'command' input is set to 'output'.
 
 ## Example Task Usage
-Below is a basic example usage of a few commands within the TerraformTaskV3 task.
+Below is a basic example usage of a few commands within the TerraformTaskV4 task.
 
 ```yaml
-- task: TerraformTaskV3@3
+- task: TerraformTaskV4@4
   displayName: Initialize Terraform
   inputs:
     provider: 'azurerm'
@@ -114,7 +114,7 @@ Below is a basic example usage of a few commands within the TerraformTaskV3 task
     backendAzureRmContainerName: 'your-container-name'
     backendAzureRmKey: 'state.tfstate'
 
-- task: TerraformTaskV3@3
+- task: TerraformTaskV4@4
   name: terraformPlan
   displayName: Create Terraform Plan
   inputs:
@@ -124,7 +124,7 @@ Below is a basic example usage of a few commands within the TerraformTaskV3 task
     environmentServiceNameAzureRM: 'your-environment-service-connection'
 
 # Only runs if the 'terraformPlan' task has detected changes the in state. 
-- task: TerraformTaskV3@3
+- task: TerraformTaskV4@4
   displayName: Apply Terraform Plan
   condition: eq(variables['terraformPlan.changesPresent'], 'true')
   inputs:

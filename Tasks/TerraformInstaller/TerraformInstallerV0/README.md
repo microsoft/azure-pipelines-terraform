@@ -4,7 +4,7 @@
 ### Overview
 
 The Terraform Tool Installer task acquires a specified version of [Terraform](https://www.terraform.io/) from the Internet or the tools cache and prepends it to the PATH of the Azure Pipelines Agent (hosted or private). Use this task to change the version of Terraform used in subsequent tasks like [Terraform](https://aka.ms/AAf0uqr).
-Adding this task before the [Teraform task](https://aka.ms/AAf0uqr) in a build definition ensures you are using that task with the right Terraform version.
+Adding this task before the [Terraform task](https://aka.ms/AAf0uqr) in a build definition ensures you are using that task with the right Terraform version.
 
 
 ### Contact Information
@@ -25,7 +25,7 @@ The task can run on the following build agent operating systems:
 
 * **Display name\*:** Provide a name to identify the task among others in your pipeline.
 
-* **Version\*:** Specify the keyword 'latest' to get the latest released version or specify exact version of Teraform to install.  
+* **Version\*:** Specify the keyword 'latest' to get the latest released version or specify exact version of Terraform to install.  
 Example: 
     To install latest Terraform version use keyword: latest.  To install specific version Ex. 1.0.8, use 1.0.8.
 For getting more details about exact version, refer [this link](https://releases.hashicorp.com/terraform/)
