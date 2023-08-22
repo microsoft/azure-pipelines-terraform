@@ -41,11 +41,11 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                 break;
             
             case AuthorizationScheme.ServicePrincipal:
-                default:
-                    var servicePrincipalCredentials = this.getServicePrincipalCredentials(backendServiceName);
-                    this.backendConfig.set('client_id', servicePrincipalCredentials.servicePrincipalId);
-                    this.backendConfig.set('client_secret', servicePrincipalCredentials.servicePrincipalKey);
-                    break;
+            default:
+                var servicePrincipalCredentials = this.getServicePrincipalCredentials(backendServiceName);
+                this.backendConfig.set('client_id', servicePrincipalCredentials.servicePrincipalId);
+                this.backendConfig.set('client_secret', servicePrincipalCredentials.servicePrincipalKey);
+                break;
         }
 
         tasks.debug('Finished up backend for authorization scheme: ' + authorizationScheme + '.');
@@ -86,11 +86,11 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                     break;
 
                 case AuthorizationScheme.ServicePrincipal:
-                    default:
-                        var servicePrincipalCredentials = this.getServicePrincipalCredentials(command.serviceProvidername);
-                        process.env['ARM_CLIENT_ID'] = servicePrincipalCredentials.servicePrincipalId;
-                        process.env['ARM_CLIENT_SECRET'] = servicePrincipalCredentials.servicePrincipalKey;
-                        break;
+                default:
+                    var servicePrincipalCredentials = this.getServicePrincipalCredentials(command.serviceProvidername);
+                    process.env['ARM_CLIENT_ID'] = servicePrincipalCredentials.servicePrincipalId;
+                    process.env['ARM_CLIENT_SECRET'] = servicePrincipalCredentials.servicePrincipalKey;
+                    break;
             }
 
             tasks.debug('Finished up provider for authorization scheme: ' + authorizationScheme + '.');
