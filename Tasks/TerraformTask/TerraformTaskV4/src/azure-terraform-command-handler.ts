@@ -14,7 +14,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
     environmentIdToken: string;
 
     private async setupBackend(backendServiceName: string) : Promise<void> {
-        const authorizationScheme = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(tasks.getInput("backendServiceArm", true), false) as keyof typeof AuthorizationScheme];
+        const authorizationScheme = this.mapAuthorizationScheme(tasks.getEndpointAuthorizationScheme(tasks.getInput("backendServiceArm", true), true));
 
         tasks.debug('Setting up backend for authorization scheme: ' + authorizationScheme + '.');
 
@@ -41,7 +41,6 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                 break;
             
             case AuthorizationScheme.ServicePrincipal:
-            default:
                 var servicePrincipalCredentials = this.getServicePrincipalCredentials(backendServiceName);
                 this.backendConfig.set('client_id', servicePrincipalCredentials.servicePrincipalId);
                 this.backendConfig.set('client_secret', servicePrincipalCredentials.servicePrincipalKey);
@@ -62,7 +61,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
     public async handleProvider(command: TerraformAuthorizationCommandInitializer) : Promise<void> {
         if (command.serviceProvidername) {
-            const authorizationScheme  = AuthorizationScheme[tasks.getEndpointAuthorizationScheme(tasks.getInput("environmentServiceNameAzureRM", true), false) as keyof typeof AuthorizationScheme];
+            const authorizationScheme = this.mapAuthorizationScheme(tasks.getEndpointAuthorizationScheme(tasks.getInput("environmentServiceNameAzureRM", true), true));
 
             tasks.debug('Setting up provider for authorization scheme: ' + authorizationScheme + '.');
 
@@ -85,7 +84,6 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                     break;
 
                 case AuthorizationScheme.ServicePrincipal:
-                default:
                     var servicePrincipalCredentials = this.getServicePrincipalCredentials(command.serviceProvidername);
                     process.env['ARM_CLIENT_ID'] = servicePrincipalCredentials.servicePrincipalId;
                     process.env['ARM_CLIENT_SECRET'] = servicePrincipalCredentials.servicePrincipalKey;
@@ -110,6 +108,29 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
             idToken: await generateIdToken(connectionName)
         }
         return workloadIdentityFederationCredentials;
+    }
+
+    private mapAuthorizationScheme(authorizationScheme: string) : AuthorizationScheme {
+        if(authorizationScheme == undefined)
+        {
+            tasks.debug('The authorization scheme is missing, using ServicePrincipal by default, but this could cause issues.');
+            return AuthorizationScheme.ServicePrincipal;
+        }
+
+        if(authorizationScheme.toLowerCase() == AuthorizationScheme.ServicePrincipal){
+            return AuthorizationScheme.ServicePrincipal;
+        }
+
+        if(authorizationScheme.toLowerCase() == AuthorizationScheme.ManagedServiceIdentity){
+            return AuthorizationScheme.ManagedServiceIdentity;
+        }
+
+        if(authorizationScheme.toLowerCase() == AuthorizationScheme.WorkloadIdentityFederation){
+            return AuthorizationScheme.WorkloadIdentityFederation;
+        }
+
+        tasks.debug('No matching authorization scheme was found, using ServicePrincipal by default, but this could cause issues.');
+        return AuthorizationScheme.ServicePrincipal;
     }
 }
 

@@ -31,6 +31,61 @@ describe('Terraform Test Suite', () => {
         }
     });
 
+    it('azure init should succeed with lower case authentication scheme', (done: MochaDone) => {
+        let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessLowerCaseAuthenticationScheme.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.warningIssues.length === 0, 'should have no warnings');
+            assert(tr.stdOutContained('AzureInitSuccessLowerCaseAuthenticationSchemeL0 should have succeeded.'), 'Should have printed: AzureInitSuccessLowerCaseAuthenticationSchemeL0 should have succeeded.');
+
+            done();
+        } catch(error) {
+            done(error);
+        }
+    });
+
+    it('azure init should succeed with missing authentication scheme', (done: MochaDone) => {
+        let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessMissingAuthenticationScheme.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.warningIssues.length === 0, 'should have no warnings');
+            assert(tr.stdOutContained('AzureInitSuccessMissingAuthenticationSchemeL0 should have succeeded.'), 'Should have printed: AzureInitSuccessMissingAuthenticationSchemeL0 should have succeeded.');
+
+            done();
+        } catch(error) {
+            done(error);
+        }
+    });
+
+    
+    it('azure init should succeed with malformed authentication scheme', (done: MochaDone) => {
+        let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessMalformedAuthenticationScheme.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.warningIssues.length === 0, 'should have no warnings');
+            assert(tr.stdOutContained('AzureInitSuccessMalformedAuthenticationSchemeL0 should have succeeded.'), 'Should have printed: AzureInitSuccessMalformedAuthenticationSchemeL0 should have succeeded.');
+
+            done();
+        } catch(error) {
+            done(error);
+        }
+    });
+
     it('azure init should succeed with authentication scheme ManagedServiceIdentity', (done: MochaDone) => {
         let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessAuthenticationSchemeManagedServiceIdentity.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
