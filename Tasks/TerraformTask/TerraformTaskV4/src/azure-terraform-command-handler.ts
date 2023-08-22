@@ -78,7 +78,6 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                     break;
     
                 case AuthorizationScheme.WorkloadIdentityFederation:
-                    tasks.debug('I_AM_HERE_0!!!');
                     var workloadIdentityFederationCredentials = await this.getWorkloadIdentityFederationCredentials(command.serviceProvidername);
                     process.env['ARM_CLIENT_ID'] = workloadIdentityFederationCredentials.servicePrincipalId;
                     process.env['ARM_OIDC_TOKEN'] = workloadIdentityFederationCredentials.idToken;
