@@ -111,21 +111,20 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
     }
 
     private mapAuthorizationScheme(authorizationScheme: string) : AuthorizationScheme {
-        if(authorizationScheme == undefined)
-        {
+        if(authorizationScheme == undefined) {
             tasks.debug('The authorization scheme is missing, using ServicePrincipal by default, but this could cause issues.');
             return AuthorizationScheme.ServicePrincipal;
         }
 
-        if(authorizationScheme.toLowerCase() == AuthorizationScheme.ServicePrincipal){
+        if(authorizationScheme.toLowerCase() == AuthorizationScheme.ServicePrincipal) {
             return AuthorizationScheme.ServicePrincipal;
         }
 
-        if(authorizationScheme.toLowerCase() == AuthorizationScheme.ManagedServiceIdentity){
+        if(authorizationScheme.toLowerCase() == AuthorizationScheme.ManagedServiceIdentity) {
             return AuthorizationScheme.ManagedServiceIdentity;
         }
 
-        if(authorizationScheme.toLowerCase() == AuthorizationScheme.WorkloadIdentityFederation){
+        if(authorizationScheme.toLowerCase() == AuthorizationScheme.WorkloadIdentityFederation) {
             return AuthorizationScheme.WorkloadIdentityFederation;
         }
 
