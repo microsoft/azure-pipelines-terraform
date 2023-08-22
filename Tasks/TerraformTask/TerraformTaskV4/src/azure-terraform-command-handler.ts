@@ -29,12 +29,6 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         this.backendConfig.set('tenant_id', tasks.getEndpointAuthorizationParameter(backendServiceName, "tenantid", true));
 
         switch(authorizationScheme) {
-            case AuthorizationScheme.ServicePrincipal:
-                var servicePrincipalCredentials = this.getServicePrincipalCredentials(backendServiceName);
-                this.backendConfig.set('client_id', servicePrincipalCredentials.servicePrincipalId);
-                this.backendConfig.set('client_secret', servicePrincipalCredentials.servicePrincipalKey);
-                break;
-
             case AuthorizationScheme.ManagedServiceIdentity:
                 this.backendConfig.set('use_msi', 'true');
                 break;
@@ -45,6 +39,13 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                 this.backendConfig.set('oidc_token', workloadIdentityFederationCredentials.idToken);
                 this.backendConfig.set('use_oidc', 'true');
                 break;
+            
+            case AuthorizationScheme.ServicePrincipal:
+                default:
+                    var servicePrincipalCredentials = this.getServicePrincipalCredentials(backendServiceName);
+                    this.backendConfig.set('client_id', servicePrincipalCredentials.servicePrincipalId);
+                    this.backendConfig.set('client_secret', servicePrincipalCredentials.servicePrincipalKey);
+                    break;
         }
 
         tasks.debug('Finished up backend for authorization scheme: ' + authorizationScheme + '.');
@@ -72,12 +73,6 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
             process.env['ARM_TENANT_ID'] = tasks.getEndpointAuthorizationParameter(command.serviceProvidername, "tenantid", false);
 
             switch(authorizationScheme) {
-                case AuthorizationScheme.ServicePrincipal:
-                    var servicePrincipalCredentials = this.getServicePrincipalCredentials(command.serviceProvidername);
-                    process.env['ARM_CLIENT_ID'] = servicePrincipalCredentials.servicePrincipalId;
-                    process.env['ARM_CLIENT_SECRET'] = servicePrincipalCredentials.servicePrincipalKey;
-                    break;
-    
                 case AuthorizationScheme.ManagedServiceIdentity:
                     process.env['ARM_USE_MSI'] = 'true';
                     break;
@@ -89,6 +84,13 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                     process.env['ARM_OIDC_TOKEN'] = workloadIdentityFederationCredentials.idToken;
                     process.env['ARM_USE_OIDC'] = 'true';
                     break;
+
+                case AuthorizationScheme.ServicePrincipal:
+                    default:
+                        var servicePrincipalCredentials = this.getServicePrincipalCredentials(command.serviceProvidername);
+                        process.env['ARM_CLIENT_ID'] = servicePrincipalCredentials.servicePrincipalId;
+                        process.env['ARM_CLIENT_SECRET'] = servicePrincipalCredentials.servicePrincipalKey;
+                        break;
             }
 
             tasks.debug('Finished up provider for authorization scheme: ' + authorizationScheme + '.');
