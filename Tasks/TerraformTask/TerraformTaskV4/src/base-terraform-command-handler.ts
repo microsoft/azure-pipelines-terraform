@@ -12,8 +12,8 @@ export abstract class BaseTerraformCommandHandler {
     terraformToolHandler: ITerraformToolHandler;
     backendConfig: Map<string, string>;
 
-    abstract handleBackend(terraformToolRunner: ToolRunner);
-    abstract handleProvider(command: TerraformAuthorizationCommandInitializer);
+    abstract handleBackend(terraformToolRunner: ToolRunner) : Promise<void>;
+    abstract handleProvider(command: TerraformAuthorizationCommandInitializer) : Promise<void>;
     
     constructor() {
         this.providerName = "";
@@ -82,7 +82,7 @@ export abstract class BaseTerraformCommandHandler {
         let terraformTool;
         
         terraformTool = this.terraformToolHandler.createToolRunner(initCommand);
-        this.handleBackend(terraformTool);
+        await this.handleBackend(terraformTool);
         
         return terraformTool.exec(<IExecOptions> {
             cwd: initCommand.workingDirectory
@@ -107,7 +107,7 @@ export abstract class BaseTerraformCommandHandler {
         );
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(showCommand);
-        this.handleProvider(showCommand);
+        await this.handleProvider(showCommand);
         
         if(outputTo == "console"){
             return terraformTool.exec(<IExecOptions> {
@@ -138,7 +138,7 @@ export abstract class BaseTerraformCommandHandler {
 
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(outputCommand);
-        this.handleProvider(outputCommand);
+        await this.handleProvider(outputCommand);
 
         const jsonOutputVariablesFilePath = path.resolve(`output-${uuidV4()}.json`);
         let commandOutput = await terraformTool.execSync(<IExecSyncOptions>{
@@ -149,8 +149,6 @@ export abstract class BaseTerraformCommandHandler {
         tasks.setVariable('jsonOutputVariablesPath', jsonOutputVariablesFilePath, false, true);
 
         return commandOutput;
-    
-
     }
     
     public async plan(): Promise<number> {
@@ -166,7 +164,7 @@ export abstract class BaseTerraformCommandHandler {
         
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(planCommand);
-        this.handleProvider(planCommand);
+        await this.handleProvider(planCommand);
     
         let result = await terraformTool.exec(<IExecOptions> {
             cwd: planCommand.workingDirectory,
@@ -192,8 +190,7 @@ export abstract class BaseTerraformCommandHandler {
         
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(customCommand);
-        this.handleProvider(customCommand);
-
+        await this.handleProvider(customCommand);
 
         if(outputTo == "console"){
             return terraformTool.exec(<IExecOptions> {
@@ -228,14 +225,14 @@ export abstract class BaseTerraformCommandHandler {
         );
 
         terraformTool = this.terraformToolHandler.createToolRunner(applyCommand);
-        this.handleProvider(applyCommand);
+        await this.handleProvider(applyCommand);
 
         return terraformTool.exec(<IExecOptions> {
             cwd: applyCommand.workingDirectory
         });
     }
 
-        public async destroy(): Promise<number> {
+    public async destroy(): Promise<number> {
         this.warnIfMultipleProviders();
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let autoApprove: string = '-auto-approve';
@@ -254,7 +251,7 @@ export abstract class BaseTerraformCommandHandler {
 
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(destroyCommand);
-        this.handleProvider(destroyCommand);
+        await this.handleProvider(destroyCommand);
 
         return terraformTool.exec(<IExecOptions> {
             cwd: destroyCommand.workingDirectory
@@ -270,8 +267,8 @@ export abstract class BaseTerraformCommandHandler {
 
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(validateCommand);
+        await Promise.resolve("This is here because the unit tests fail without it.");
         
-
         return terraformTool.exec(<IExecOptions>{
             cwd: validateCommand.workingDirectory
         });
