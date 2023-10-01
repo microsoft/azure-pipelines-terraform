@@ -1,0 +1,38 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}\\Tasks\\TerraformTask\\TerraformTaskV4\\Tests\\L0.ts",
+      "outFiles": [
+        "${workspaceFolder}/**/*.js"
+      ]
+    },
+    {            
+          "name": "mocha tests direct",
+          "type": "node",
+          "protocol": "inspector",
+          "request": "launch",
+          "program": "node_modules/mocha/bin/_mocha",
+          "stopOnEntry": false,
+          "args": [ "-r", "ts-node/register", "Tests/**/*.ts", "--no-timeouts"],
+          "cwd": "${workspaceRoot}/Tasks/TerraformTask/TerraformTaskV4"
+      },
+      {            
+        "name": "mocha tests npm",
+        "type": "node",
+        "request": "launch",
+        "runtimeExecutable": "npm",
+        "runtimeArgs": [ "run-script", "test" ],
+        "cwd": "${workspaceRoot}/Tasks/TerraformTask/TerraformTaskV4"
+    }
+  ]
+}
