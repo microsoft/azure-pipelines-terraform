@@ -37,6 +37,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                 var workloadIdentityFederationCredentials = await this.getWorkloadIdentityFederationCredentials(backendServiceName);
                 this.backendConfig.set('client_id', workloadIdentityFederationCredentials.servicePrincipalId);
                 this.backendConfig.set('oidc_token', workloadIdentityFederationCredentials.idToken);
+                console.log('##vso[task.setsecret]oidc_token');
                 this.backendConfig.set('use_oidc', 'true');
                 break;
             
