@@ -14,7 +14,7 @@
     "version": {
         "Major": "4",
         "Minor": "227",
-        "Patch": "1"
+        "Patch": "4"
     },
     "instanceNameFormat": "Terraform : $(provider)",
     "execution": {
