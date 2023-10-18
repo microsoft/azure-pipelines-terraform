@@ -11,6 +11,8 @@ export interface ITokenGenerator {
 
 export class TokenGenerator implements ITokenGenerator {
     public async generate(connectedService : string): Promise<string> {
-        return await getFederatedToken(connectedService);
+        const token = await getFederatedToken(connectedService);
+        console.log('##vso[task.setsecret]' + token);
+        return token;
     }
 }
