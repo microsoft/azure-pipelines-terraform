@@ -10,6 +10,7 @@
     "Build",
     "Release"
   ],
+  "showEnvironmentVariables": true,
   "demands": [],
   "version": {
     "Major": "4",
