@@ -34,3 +34,13 @@ For getting more details about exact version, refer [this link](https://releases
 ### Output Variables
 
 * **Terraform location:** This variable can be used to refer to the location of the terraform binary that was installed on the agent in subsequent tasks.
+
+### Example Task Usage
+Below is a basic example usage of a few commands within the TerraformInstaller task.
+
+```yaml
+- task: TerraformInstaller@1
+  displayName: Install Terraform 1.5.7
+  inputs:
+    terraformVersion: 1.5.7
+```
