@@ -35,16 +35,18 @@ export class TerraformCommandHandlerGCP extends BaseTerraformCommandHandler {
         this.backendConfig.set('credentials', jsonKeyFilePath);
     }
 
-    public handleBackend(terraformToolRunner: ToolRunner): void {
+    public async handleBackend(terraformToolRunner: ToolRunner) : Promise<void> {
+        tasks.debug('Setting up backend GCP.');
         let backendServiceName = tasks.getInput("backendServiceGCP", true);
         this.setupBackend(backendServiceName);
 
         for (let [key, value] of this.backendConfig.entries()) {
             terraformToolRunner.arg(`-backend-config=${key}=${value}`);
         }
+        tasks.debug('Finished setting up backend GCP.');
     }
 
-    public handleProvider(command: TerraformAuthorizationCommandInitializer) {
+    public async handleProvider(command: TerraformAuthorizationCommandInitializer) : Promise<void> {
         if (command.serviceProvidername) {
             let jsonKeyFilePath = this.getJsonKeyFilePath(command.serviceProvidername);
 

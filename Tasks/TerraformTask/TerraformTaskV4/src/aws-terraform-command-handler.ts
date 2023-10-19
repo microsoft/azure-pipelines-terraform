@@ -17,7 +17,7 @@ export class TerraformCommandHandlerAWS extends BaseTerraformCommandHandler {
         this.backendConfig.set('secret_key', tasks.getEndpointAuthorizationParameter(backendServiceName, "password", true));
     }
 
-    public handleBackend(terraformToolRunner: ToolRunner): void {
+    public async handleBackend(terraformToolRunner: ToolRunner) : Promise<void> {
         let backendServiceName = tasks.getInput("backendServiceAWS", true);
         this.setupBackend(backendServiceName);
 
@@ -26,7 +26,7 @@ export class TerraformCommandHandlerAWS extends BaseTerraformCommandHandler {
         }
     }
 
-    public handleProvider(command: TerraformAuthorizationCommandInitializer) {
+    public async handleProvider(command: TerraformAuthorizationCommandInitializer) : Promise<void> {
         if (command.serviceProvidername) {
             process.env['AWS_ACCESS_KEY_ID']  = tasks.getEndpointAuthorizationParameter(command.serviceProvidername, "username", false);
             process.env['AWS_SECRET_ACCESS_KEY']  = tasks.getEndpointAuthorizationParameter(command.serviceProvidername, "password", false);            
