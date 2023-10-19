@@ -10,11 +10,12 @@
         "Build",
         "Release"
     ],
+    "showEnvironmentVariables": true,
     "demands": [],
     "version": {
         "Major": "4",
-        "Minor": "227",
-        "Patch": "4"
+        "Minor": "228",
+        "Patch": "0"
     },
     "instanceNameFormat": "Terraform : $(provider)",
     "execution": {
@@ -45,7 +46,8 @@
             "visibleRule": "provider = gcp && command = init"
         }
     ],
-    "inputs": [{
+    "inputs": [
+        {
             "name": "provider",
             "type": "picklist",
             "label": "Provider",
@@ -96,7 +98,8 @@
             "label": "Additional command arguments",
             "helpMarkDown": "Any additional arguments for the selected command such as '-option=value' or '-flag'. Multiple options can also be provided delimited by spaces.<br><br>Examples:<br>-out=tfplan (for terraform plan)<br>tfplan -auto-approve (for terraform apply)",
             "required": false
-        }, {
+        },
+        {
             "name": "outputTo",
             "type": "pickList",
             "label": "Output to",
@@ -137,7 +140,6 @@
             "visibleRule": "outputTo = file",
             "required": true,
             "helpMarkDown": "filename of output"
-
         },
         {
             "name": "environmentServiceNameAzureRM",

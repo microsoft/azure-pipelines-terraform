@@ -13,8 +13,8 @@
   "demands": [],
   "version": {
     "Major": "4",
-    "Minor": "227",
-    "Patch": "4"
+    "Minor": "228",
+    "Patch": "0"
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
@@ -23,7 +23,7 @@
     },
     "Node16": {
       "target": "src/index.js"
-  }
+    }
   },
   "groups": [
     {
@@ -90,7 +90,8 @@
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
       "required": false
-    },{
+    },
+    {
       "name": "customCommand",
       "type": "string",
       "visibleRule": "command = custom",
@@ -105,19 +106,18 @@
       "helpMarkDown": "ms-resource:loc.input.help.commandOptions",
       "required": false
     },
-    
     {
-        "name": "outputTo",
-        "type": "pickList",
-        "label": "ms-resource:loc.input.label.outputTo",
-        "defaultValue": "console",
-        "visibleRule": "command = show || command = custom",
-        "helpMarkDown": "ms-resource:loc.input.help.outputTo",
-        "options": {
-            "file": "file",
-            "console": "console"
-        },
-        "required": true
+      "name": "outputTo",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.outputTo",
+      "defaultValue": "console",
+      "visibleRule": "command = show || command = custom",
+      "helpMarkDown": "ms-resource:loc.input.help.outputTo",
+      "options": {
+        "file": "file",
+        "console": "console"
+      },
+      "required": true
     },
     {
       "name": "outputFormat",
@@ -127,19 +127,18 @@
       "visibleRule": "command = show",
       "helpMarkDown": "ms-resource:loc.input.help.outputFormat",
       "options": {
-          "json": "json",
-          "default": "default"
+        "json": "json",
+        "default": "default"
       },
       "required": true
-  },
+    },
     {
-        "name": "fileName",
-        "type": "string",
-        "label": "ms-resource:loc.input.label.fileName",
-        "visibleRule": "outputTo = file",
-        "required": true,
-        "helpMarkDown": "ms-resource:loc.input.help.fileName"
-
+      "name": "fileName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.fileName",
+      "visibleRule": "outputTo = file",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.fileName"
     },
     {
       "name": "environmentServiceNameAzureRM",
