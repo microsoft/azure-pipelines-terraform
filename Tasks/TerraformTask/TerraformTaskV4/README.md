@@ -62,8 +62,8 @@ Options specific to **terraform init** command
 - Options specific to **AzureRM backend configuration**
 	- **Azure subscription\*:** Select the Azure subscription to use for AzureRM backend configuration
 	- **Resource group\*:** Select the name of the resource group in which you want to store the terraform remote state file
-	- **Storage account\*:** Select the name of the storage account belonging to the selected resource group in which you want to store the terrafor remote state file
-	- **Container\*:** Select the name of the Azure Blob container belonging to the storage account in which you want to store the terrafor remote state file
+	- **Storage account\*:** Select the name of the storage account belonging to the selected resource group in which you want to store the terraform remote state file
+	- **Container\*:** Select the name of the Azure Blob container belonging to the storage account in which you want to store the terraform remote state file
 	- **Key\*:** Specify the relative path to the state file inside the selected container. For example, if you want to store the state file, named terraform.tfstate, inside a folder, named tf, then give the input "tf/terraform.tfstate"
 
 - Options specific to **Amazon Web Services(AWS) backend configuration**
