@@ -35,3 +35,4 @@ jobs:
         ls src
         ls Tests
         ls -a node_modules
+        ls -a node_modules/.bin
