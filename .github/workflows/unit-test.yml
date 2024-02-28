@@ -34,4 +34,4 @@ jobs:
 
         ls src
         ls Tests
-        ls node_modules
+        ls -a node_modules
