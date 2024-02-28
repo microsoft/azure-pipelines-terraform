@@ -27,7 +27,9 @@ jobs:
         npm install -g typescript
         npm install -g mocha
         tsc -v
-        ls src
+        
         cd Tasks/TerraformTask/TerraformTaskV4
         npm install -include=dev
+        tsc -b tsconfig.json
+        ls src
         npm test
