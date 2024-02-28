@@ -22,10 +22,6 @@ jobs:
         node-version: '14'
     - name: Run Unit Tests
       run: |
-        node -v
-        npm -v
-        tsc -v
-        
         cd Tasks/TerraformTask/TerraformTaskV4
         npm install -include=dev
         node -v
