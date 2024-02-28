@@ -24,12 +24,11 @@ jobs:
       run: |
         node -v
         npm -v
-        npm install -g typescript
-        npm install -g mocha
         tsc -v
         
         cd Tasks/TerraformTask/TerraformTaskV4
         npm install -include=dev
-        tsc -b tsconfig.json
-        ls src
+        node -v
+        npm -v
+
         npm test
