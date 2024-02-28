@@ -28,3 +28,7 @@ jobs:
         npm -v
 
         npm test
+
+        ls src
+        ls Tests
+        ls node_modules
