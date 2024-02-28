@@ -23,7 +23,7 @@ jobs:
     - name: Run Unit Tests
       run: |
         cd Tasks/TerraformTask/TerraformTaskV4
-        npm install -include=dev
+        sudo npm install -include=dev
         node -v
         npm -v
 
