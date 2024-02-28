@@ -16,23 +16,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16'
     - name: Run Unit Tests
       run: |
         cd Tasks/TerraformTask/TerraformTaskV4
-        sudo npm install -include=dev
-        node -v
-        npm -v
-
-        npm bin
-        npm config list --json
+        npm install -include=dev
         npm test
-        
-
-        ls src
-        ls Tests
-        ls -a node_modules
-        ls -a node_modules/.bin
