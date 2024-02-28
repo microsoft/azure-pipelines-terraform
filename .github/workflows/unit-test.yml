@@ -24,7 +24,7 @@ jobs:
       run: |
         node -v
         npm -v
-        
+        sudo apt install node-typescript
         tsc -v
         cd Tasks/TerraformTask/TerraformTaskV4
         npm install -include=dev
