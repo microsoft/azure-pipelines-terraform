@@ -35,9 +35,10 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
             case AuthorizationScheme.WorkloadIdentityFederation:
                 var workloadIdentityFederationCredentials = await this.getWorkloadIdentityFederationCredentials(backendServiceName);
-                this.backendConfig.set('client_id', workloadIdentityFederationCredentials.servicePrincipalId);
-                this.backendConfig.set('oidc_token', workloadIdentityFederationCredentials.idToken);
-                this.backendConfig.set('use_oidc', 'true');
+                tasks.debug('Workload identity federation notice. Due to limitations in the Terraform azurerm backend, we are setting the ARM_CLIENT_ID and ARM_OIDC_TOKEN as environment variables. This is to avoid them being cached in the plan file. However this means that during the plan and apply stages this task will use the service connection supplied for the environmentServiceNameAzureRM input as opposed to the backendServiceArm input to connect to the storage account.')
+                process.env['ARM_CLIENT_ID'] = workloadIdentityFederationCredentials.servicePrincipalId;
+                process.env['ARM_OIDC_TOKEN'] = workloadIdentityFederationCredentials.idToken;
+                process.env['ARM_USE_OIDC'] = 'true';
                 break;
             
             case AuthorizationScheme.ServicePrincipal:
@@ -102,7 +103,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         return servicePrincipalCredentials;
     }
 
-    private async getWorkloadIdentityFederationCredentials(connectionName: string) : Promise<WorkloadIdentityFederationCredentials> {       
+    private async getWorkloadIdentityFederationCredentials(connectionName: string) : Promise<WorkloadIdentityFederationCredentials> {
         let workloadIdentityFederationCredentials : WorkloadIdentityFederationCredentials = {
             servicePrincipalId: tasks.getEndpointAuthorizationParameter(connectionName, "serviceprincipalid", true),
             idToken: await generateIdToken(connectionName)
@@ -146,5 +147,5 @@ interface WorkloadIdentityFederationCredentials {
 enum AuthorizationScheme {
     ServicePrincipal = "serviceprincipal",
     ManagedServiceIdentity = "managedserviceidentity",
-    WorkloadIdentityFederation = "workloadidentityfederation"   
+    WorkloadIdentityFederation = "workloadidentityfederation"
 }
