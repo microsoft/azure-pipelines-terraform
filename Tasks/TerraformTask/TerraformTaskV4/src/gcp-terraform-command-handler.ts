@@ -3,7 +3,7 @@ import {ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
 import {TerraformAuthorizationCommandInitializer} from './terraform-commands';
 import {BaseTerraformCommandHandler} from './base-terraform-command-handler';
 import path = require('path');
-import * as uuidV4 from 'uuid/v4';
+import * as uuidV5 from 'uuid/v5';
 
 export class TerraformCommandHandlerGCP extends BaseTerraformCommandHandler {
     constructor() {
@@ -13,7 +13,7 @@ export class TerraformCommandHandlerGCP extends BaseTerraformCommandHandler {
 
     private getJsonKeyFilePath(serviceName: string) {
         // Get credentials for json file
-        const jsonKeyFilePath = path.resolve(`credentials-${uuidV4()}.json`);
+        const jsonKeyFilePath = path.resolve(`credentials-${uuidV5(serviceName, uuidV5.URL)}.json`);
 
         let clientEmail = tasks.getEndpointAuthorizationParameter(serviceName, "Issuer", false);
         let tokenUri = tasks.getEndpointAuthorizationParameter(serviceName, "Audience", false);
