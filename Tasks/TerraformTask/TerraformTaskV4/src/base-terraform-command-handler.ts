@@ -126,7 +126,6 @@ export abstract class BaseTerraformCommandHandler {
     }
     public async output(): Promise<number> {
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
-        let additionalArgs: string = `-json`
         let commandOptions = tasks.getInput("commandOptions") != null ? `${tasks.getInput("commandOptions")} -json`:`-json`
         
         let outputCommand = new TerraformAuthorizationCommandInitializer(
@@ -152,7 +151,6 @@ export abstract class BaseTerraformCommandHandler {
     }
     
     public async plan(): Promise<number> {
-        this.warnIfMultipleProviders();
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let commandOptions = tasks.getInput("commandOptions") != null ? `${tasks.getInput("commandOptions")} -detailed-exitcode`:`-detailed-exitcode`
         let planCommand = new TerraformAuthorizationCommandInitializer(
@@ -165,6 +163,7 @@ export abstract class BaseTerraformCommandHandler {
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(planCommand);
         await this.handleProvider(planCommand);
+        this.warnIfMultipleProviders();
     
         let result = await terraformTool.exec(<IExecOptions> {
             cwd: planCommand.workingDirectory,
@@ -208,7 +207,6 @@ export abstract class BaseTerraformCommandHandler {
 
     public async apply(): Promise<number> {
         let terraformTool;
-        this.warnIfMultipleProviders();
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let autoApprove: string = '-auto-approve';
         let additionalArgs: string = tasks.getInput("commandOptions") || autoApprove;
@@ -226,6 +224,7 @@ export abstract class BaseTerraformCommandHandler {
 
         terraformTool = this.terraformToolHandler.createToolRunner(applyCommand);
         await this.handleProvider(applyCommand);
+        this.warnIfMultipleProviders();
 
         return terraformTool.exec(<IExecOptions> {
             cwd: applyCommand.workingDirectory
@@ -233,7 +232,7 @@ export abstract class BaseTerraformCommandHandler {
     }
 
     public async destroy(): Promise<number> {
-        this.warnIfMultipleProviders();
+        
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let autoApprove: string = '-auto-approve';
         let additionalArgs: string = tasks.getInput("commandOptions") || autoApprove;
@@ -252,6 +251,7 @@ export abstract class BaseTerraformCommandHandler {
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(destroyCommand);
         await this.handleProvider(destroyCommand);
+        this.warnIfMultipleProviders();
 
         return terraformTool.exec(<IExecOptions> {
             cwd: destroyCommand.workingDirectory
