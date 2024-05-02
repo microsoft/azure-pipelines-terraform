@@ -2,7 +2,7 @@ import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
-let tp = path.join(__dirname, './AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationL0.js');
+let tp = path.join(__dirname, './AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndDefaultSettingsL0.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
 
 tr.setInput('provider', 'azurerm');
@@ -15,6 +15,8 @@ tr.setInput('backendAzureRmResourceGroupName', 'DummyResourceGroup');
 tr.setInput('backendAzureRmStorageAccountName', 'DummyStorageAccount');
 tr.setInput('backendAzureRmContainerName', 'DummyContainer');
 tr.setInput('backendAzureRmKey', 'DummyKey');
+tr.setInput('backendAzureRmUseEnvironmentVariablesForAuthentication', 'true');
+tr.setInput('backendAzureRmUseEntraIdForAuthentication', 'true');
 
 process.env['ENDPOINT_AUTH_SCHEME_AzureRM'] = 'WorkloadIdentityFederation';
 process.env['ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID'] = 'DummmySubscriptionId';
@@ -29,7 +31,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         "terraform": true
     },
     "exec": {
-        "terraform init -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=resource_group_name=DummyResourceGroup -backend-config=subscription_id=DummmySubscriptionId -backend-config=tenant_id=DummyTenantId -backend-config=client_id=DummyServicePrincipalId -backend-config=oidc_token=12345 -backend-config=use_oidc=true": {
+        "terraform init -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=resource_group_name=DummyResourceGroup -backend-config=subscription_id=DummmySubscriptionId -backend-config=tenant_id=DummyTenantId -backend-config=use_azuread_auth=true -backend-config=use_oidc=true": {
             "code": 0,
             "stdout": "Executed Successfully"
         }

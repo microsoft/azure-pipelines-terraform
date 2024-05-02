@@ -4,7 +4,7 @@
     "friendlyName": "Terraform",
     "description": "Execute terraform commands to manage resources on AzureRM, Amazon Web Services(AWS) and Google Cloud Platform(GCP)",
     "author": "Microsoft Corporation",
-    "helpMarkDown": "[Learn more about this task](https://aka.ms/AAf0uqr)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/devlabs/ado/tf/task/v4)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -14,8 +14,8 @@
     "demands": [],
     "version": {
         "Major": "4",
-        "Minor": "238",
-        "Patch": "0"
+        "Minor": "239",
+        "Patch": "3"
     },
     "instanceNameFormat": "Terraform : $(provider)",
     "execution": {
@@ -32,6 +32,12 @@
             "displayName": "AzureRM backend configuration",
             "isExpanded": true,
             "visibleRule": "provider = azurerm && command = init"
+        },
+        {
+            "name": "providerAzureRm",
+            "displayName": "Azure provider configuration (AzureRM, AzureAD and AzAPI)",
+            "isExpanded": true,
+            "visibleRule": "provider = azurerm && command != init"
         },
         {
             "name": "backendAWS",
@@ -144,10 +150,11 @@
         {
             "name": "environmentServiceNameAzureRM",
             "type": "connectedService:AzureRM",
-            "label": "Azure subscription",
+            "label": "Azure Provider Service Connection",
             "required": true,
             "visibleRule": "provider = azurerm && command != init && command != validate",
-            "helpMarkDown": "Select an Azure Resource Manager subscription for the deployment"
+            "helpMarkDown": "Select an Azure Resource Manager Service Connection for the Azure providers",
+            "groupName": "providerAzureRm"
         },
         {
             "name": "environmentServiceNameAWS",
@@ -168,9 +175,9 @@
         {
             "name": "backendServiceArm",
             "type": "connectedService:AzureRM",
-            "label": "Azure subscription",
+            "label": "Azure Backend Service Connection",
             "required": true,
-            "helpMarkDown": "Azure resource manager subscription for the terraform backend configuration",
+            "helpMarkDown": "Select an Azure Resource Manager Service Connection for the terraform azurerm backend configuration",
             "groupName": "backendAzureRm"
         },
         {
@@ -212,6 +219,24 @@
             "label": "Key",
             "required": true,
             "helpMarkDown": "The path to the Terraform remote state file inside the container.<br>For example, if you want to store the state file, named terraform.tfstate, inside a folder, named tf, then give the input 'tf/terraform.tfstate'",
+            "groupName": "backendAzureRm"
+        },
+        {
+            "name": "backendAzureRmUseEnvironmentVariablesForAuthentication",
+            "type": "boolean",
+            "label": "Use Env Vars for Authentication",
+            "required": true,
+            "defaultValue": true,
+            "helpMarkDown": "Choose whether to use environment variables for azurerm backend authentication. If selected, the principal details will be created as environment variables for 'ARM_CLIENT_ID' and 'ARM_CLIENT_SECRET' or 'ARM_OIDC_TOKEN'.",
+            "groupName": "backendAzureRm"
+        },
+        {
+            "name": "backendAzureRmUseEntraIdForAuthentication",
+            "type": "boolean",
+            "label": "Use Entra ID for Authentication",
+            "required": true,
+            "defaultValue": true,
+            "helpMarkDown": "Choose whether to use Entra Id authentication to the storage account. If selected, 'use_azuread_auth = true' will be passed to the backend config.",
             "groupName": "backendAzureRm"
         },
         {

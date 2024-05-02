@@ -31,6 +31,24 @@ describe('Terraform Test Suite', () => {
         }
     });
 
+    it('azure init should succeed with no additional args and default settings', (done: MochaDone) => {
+        let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessNoAdditionalArgsAndDefaultSettings.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.warningIssues.length === 0, 'should have no warnings');
+            assert(tr.stdOutContained('AzureInitSuccessNoAdditionalArgsAndDefaultSettingsL0 should have succeeded.'), 'Should have printed: AzureInitSuccessNoAdditionalArgsL0 should have succeeded.');
+
+            done();
+        } catch(error) {
+            done(error);
+        }
+    });
+
     it('azure init should succeed with lower case authentication scheme', (done: MochaDone) => {
         let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessLowerCaseAuthenticationScheme.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -104,6 +122,24 @@ describe('Terraform Test Suite', () => {
         }
     });
 
+    it('azure init should succeed with authentication scheme ManagedServiceIdentity and DefaultSettings', (done: MochaDone) => {
+        let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessAuthenticationSchemeManagedServiceIdentityAndDefaultSettings.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.warningIssues.length === 0, 'should have no warnings');
+            assert(tr.stdOutContained('AzureInitSuccessAuthenticationSchemeManagedServiceIdentityAndDefaultSettingsL0 should have succeeded.'), 'Should have printed: AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndDefaultSettingsL0 should have succeeded.');
+
+            done();
+        } catch(error) {
+            done(error);
+        }
+    });
+
     it('azure init should succeed with authentication scheme WorkloadIdentityFederation', (done: MochaDone) => {
         let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederation.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -115,6 +151,24 @@ describe('Terraform Test Suite', () => {
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationL0 should have succeeded.'), 'Should have printed: AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationL0 should have succeeded.');
+
+            done();
+        } catch(error) {
+            done(error);
+        }
+    });
+
+    it('azure init should succeed with authentication scheme WorkloadIdentityFederation and default settings', (done: MochaDone) => {
+        let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndDefaultSettings.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.warningIssues.length === 0, 'should have no warnings');
+            assert(tr.stdOutContained('AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndDefaultSettingsL0 should have succeeded.'), 'Should have printed: AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationL0 should have succeeded.');
 
             done();
         } catch(error) {

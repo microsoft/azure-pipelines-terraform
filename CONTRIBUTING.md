@@ -18,19 +18,19 @@ If you want to get started developing this task, then there are a few setup step
 1. Navigate to the root folder of the repo.
 1. If you haven't already, setup a https://marketplace.visualstudio.com/manage account and publisher following [these](https://learn.microsoft.com/en-us/azure/devops/extend/publish/overview?toc=%2Fazure%2Fdevops%2Fmarketplace-extensibility%2Ftoc.json&view=azure-devops#create-a-publisher) steps.
 1. Run `npm install -include=dev`.
-1. (If Powershell): Run `$env:NODE_OPTIONS = "--openssl-legacy-provider"`.
-1. (If Bash): Run `export NODE_OPTIONS=--openssl-legacy-provider`.
-1. Run `npm run build:release`.
 1. Create a file called `self.json` inside the `configs folder`. The file contents should look like the following, but replace the `publisher` field with the publisher you setup earlier.
 ```json
 {
     "id": "custom-terraform-tasks",
     "name": "Terraform (Dev - Individual)",
     "public": false,
-    "publisher": "<replace-me-with-your-publisher>"
+    "publisher": "<replace-me-with-your-publisher>",
+    "version": "0.1.0"
 }
 ```
-6. Run `npm run package:self`.
+5. Replace the `version` with the version prior to the one you are want to publish.
+5. Run `npm run build:release`.
+1. Run `npm run package:self`.
 1. This will generate a `.vsix` file prefixed with your published name.
 1. Navigate to your publisher portal: https://marketplace.visualstudio.com/manage/publishers
 1. Choose your publisher and select  `New extension` and choose `Azure DevOps`.

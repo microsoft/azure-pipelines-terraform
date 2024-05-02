@@ -28,6 +28,13 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         }
         this.backendConfig.set('tenant_id', tasks.getEndpointAuthorizationParameter(backendServiceName, "tenantid", true));
 
+        const useEnvironmentVariables = tasks.getBoolInput("backendAzureRmUseEnvironmentVariablesForAuthentication", false);
+        const useEntraIdAuthenticator = tasks.getBoolInput("backendAzureRmUseEntraIdForAuthentication", false);
+
+        if(useEntraIdAuthenticator) {
+            this.backendConfig.set('use_azuread_auth', 'true');
+        }
+        
         switch(authorizationScheme) {
             case AuthorizationScheme.ManagedServiceIdentity:
                 this.backendConfig.set('use_msi', 'true');
@@ -35,16 +42,30 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
             case AuthorizationScheme.WorkloadIdentityFederation:
                 var workloadIdentityFederationCredentials = await this.getWorkloadIdentityFederationCredentials(backendServiceName);
-                tasks.debug('Workload identity federation notice. Due to limitations in the Terraform azurerm backend, we are setting the ARM_CLIENT_ID and ARM_OIDC_TOKEN as environment variables. This is to avoid them being cached in the plan file. However this means that during the plan and apply stages this task will use the service connection supplied for the environmentServiceNameAzureRM input as opposed to the backendServiceArm input to connect to the storage account.')
-                process.env['ARM_CLIENT_ID'] = workloadIdentityFederationCredentials.servicePrincipalId;
-                process.env['ARM_OIDC_TOKEN'] = workloadIdentityFederationCredentials.idToken;
-                process.env['ARM_USE_OIDC'] = 'true';
+
+                if(useEnvironmentVariables) {
+                    tasks.debug('azurerm backend auth warning. Due to limitations in the Terraform azurerm backend, we are setting the ARM_CLIENT_ID and ARM_OIDC_TOKEN as environment variables. This is to avoid them being cached in the plan file. However this means that during the plan and apply stages this task will use the service connection supplied for the environmentServiceNameAzureRM input as opposed to the backendServiceArm input to connect to the storage account.')
+                    process.env['ARM_CLIENT_ID'] = workloadIdentityFederationCredentials.servicePrincipalId;
+                    process.env['ARM_OIDC_TOKEN'] = workloadIdentityFederationCredentials.idToken;
+                } else {
+                    this.backendConfig.set('client_id', workloadIdentityFederationCredentials.servicePrincipalId);
+                    this.backendConfig.set('oidc_token', workloadIdentityFederationCredentials.idToken);
+                }
+                
+                this.backendConfig.set('use_oidc', 'true');
                 break;
             
             case AuthorizationScheme.ServicePrincipal:
                 var servicePrincipalCredentials = this.getServicePrincipalCredentials(backendServiceName);
-                this.backendConfig.set('client_id', servicePrincipalCredentials.servicePrincipalId);
-                this.backendConfig.set('client_secret', servicePrincipalCredentials.servicePrincipalKey);
+
+                if(useEnvironmentVariables) {
+                    tasks.debug('azurerm backend auth warning. Due to limitations in the Terraform azurerm backend, we are setting the ARM_CLIENT_ID and ARM_CLIENT_SECRET as environment variables. This is to avoid them being cached in the plan file. However this means that during the plan and apply stages this task will use the service connection supplied for the environmentServiceNameAzureRM input as opposed to the backendServiceArm input to connect to the storage account.')
+                    process.env['ARM_CLIENT_ID'] = servicePrincipalCredentials.servicePrincipalId;
+                    process.env['ARM_CLIENT_SECRET'] = servicePrincipalCredentials.servicePrincipalKey;
+                } else {
+                    this.backendConfig.set('client_id', servicePrincipalCredentials.servicePrincipalId);
+                    this.backendConfig.set('client_secret', servicePrincipalCredentials.servicePrincipalKey);
+                }
                 break;
         }
 
