@@ -28,8 +28,8 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         }
         this.backendConfig.set('tenant_id', tasks.getEndpointAuthorizationParameter(backendServiceName, "tenantid", true));
 
-        const useEnvironmentVariables = tasks.getBoolInput("backendAzureRmUseEnvironmentVariablesForAuthentication", false);
-        const useEntraIdAuthenticator = tasks.getBoolInput("backendAzureRmUseEntraIdForAuthentication", false);
+        const useEnvironmentVariables = tasks.getInput("backendAzureRmUseEnvironmentVariablesForAuthentication", false) == "true";
+        const useEntraIdAuthenticator = tasks.getInput("backendAzureRmUseEntraIdForAuthentication", false) == "true";
 
         if(useEntraIdAuthenticator) {
             this.backendConfig.set('use_azuread_auth', 'true');
