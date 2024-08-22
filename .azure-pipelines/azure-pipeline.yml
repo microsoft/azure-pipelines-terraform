@@ -51,6 +51,8 @@ stages:
 - stage: 'DeployDev'
   displayName: 'Deploy to dev'
   dependsOn: Build
+  pool:
+      vmImage: ubuntu-20.04
   condition: succeeded()
   jobs: 
   - template: deploy.yml@pipeline-templates
