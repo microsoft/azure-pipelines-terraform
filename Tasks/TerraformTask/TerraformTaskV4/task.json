@@ -50,6 +50,12 @@
             "displayName": "Google Cloud Platform(GCP) backend configuration",
             "isExpanded": true,
             "visibleRule": "provider = gcp && command = init"
+        },
+        {
+            "name": "backendOCI",
+            "displayName": "Oracle Cloud Infrastructure(OCI) backend configuration",
+            "isExpanded": true,
+            "visibleRule": "provider = oci && command = init"
         }
     ],
     "inputs": [
@@ -63,7 +69,8 @@
             "options": {
                 "azurerm": "azurerm",
                 "aws": "aws",
-                "gcp": "gcp"
+                "gcp": "gcp",
+                "oci": "oci"
             },
             "properties": {
                 "EditableOptions": "False"
@@ -171,6 +178,14 @@
             "required": true,
             "visibleRule": "provider = gcp && command != init && command != validate",
             "helpMarkDown": "Select a Google Cloud Platform connection for the deployment.<br><br>Note: If your connection is not listed or if you want to use an existing connection, you can setup a Google Cloud Platform service connection using the 'Add' or 'Manage' button."
+        },
+        {
+            "name": "environmentServiceNameOCI",
+            "type": "connectedService:OracleCloudServiceEndpoint",
+            "label": "Oracle Cloud Platform connection",
+            "required": true,
+            "visibleRule": "provider = oci && command != init && command != validate",
+            "helpMarkDown": "Select a Oracle Cloud Platform connection for the deployment.<br><br>Note: If your connection is not listed or if you want to use an existing connection, you can setup a Oracle Cloud Platform service connection using the 'Add' or 'Manage' button."
         },
         {
             "name": "backendAzureRmUseEnvironmentVariablesForAuthentication",
@@ -294,6 +309,35 @@
             "required": false,
             "helpMarkDown": "The relative path to the state file inside the GCP bucket. For example, if you give the input as 'terraform', then the state file, named default.tfstate, will be stored inside an object called terraform.",
             "groupName": "backendGCP"
+        },
+        {
+            "name": "backendServiceOCI",
+            "type": "connectedService:OracleCloudServiceEndpoint",
+            "label": "Oracle Cloud Platform connection",
+            "required": true,
+            "helpMarkDown": "Oracle Cloud Platform connection for the terraform backend configuration.<br><br>Note: If your connection is not listed or if you want to use an existing connection, you can setup a Oracle Cloud Platform service connection using the 'Add' or 'Manage' button.",
+            "groupName": "backendOCI"
+        },
+        {
+            "name": "backendOCIBucketPar",
+            "type": "string",
+            "label": "Bucket PAR for Terraform remote state file",
+            "required": false,
+            "helpMarkDown": "The OCI storage bucket PAR configuration for the Terraform remote state file (optional)",
+            "groupName": "backendOCI"
+        },
+        {
+            "name": "backendOCIBucketConfigGenerate",
+            "type": "pickList",
+            "label": "Generate the Terraform remote state file config (Use Yes when not included in TF files)",
+            "required": true,
+            "defaultValue": "yes",
+            "helpMarkDown": "Generates the Terraform remote state file config, select Yes when not included in TF files, othwerwise No.",
+            "groupName": "backendOCI",
+            "options": {
+                "yes": "yes",
+                "no": "no"
+            }
         }
     ],
     "dataSourceBindings": [

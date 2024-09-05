@@ -54,7 +54,7 @@ export abstract class BaseTerraformCommandHandler {
             cwd: tasks.getInput("workingDirectory")
         });
 
-        let countProviders = ["aws", "azurerm", "google"].filter(provider => commandOutput.stdout.includes(provider)).length;
+        let countProviders = ["aws", "azurerm", "google", "oracle"].filter(provider => commandOutput.stdout.includes(provider)).length;
         
         tasks.debug(countProviders.toString());
         if (countProviders > 1) {
@@ -69,6 +69,7 @@ export abstract class BaseTerraformCommandHandler {
             case "azurerm": return "AzureRM";
             case "aws"    : return "AWS";
             case "gcp"    : return "GCP";
+            case "oci"    : return "OCI";
         }
     }
 
