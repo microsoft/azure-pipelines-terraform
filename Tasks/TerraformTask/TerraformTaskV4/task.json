@@ -24,6 +24,9 @@
         },
         "Node16": {
             "target": "src/index.js"
+        },
+        "Node20_1": {
+            "target": "src/index.js"
         }
     },
     "groups": [
