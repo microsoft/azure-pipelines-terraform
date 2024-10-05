@@ -19,6 +19,7 @@
         "Azure",
         "AWS",
         "GCP",
+        "OCI",
         "Release", 
         "DevOps"
     ],
@@ -261,6 +262,96 @@
                         "description": "The project id of the GCP project in which your resources will be managed",
                         "inputMode": "textbox",
                         "isConfidential": false,
+                        "validation": {
+                            "isRequired": true,
+                            "dataType": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": "oracle-cloud-service-endpoint",
+            "description": "Credentials for connecting to Oracle Cloud Platform",
+            "type": "ms.vss-endpoint.service-endpoint-type",
+            "targets": [
+                "ms.vss-endpoint.endpoint-types"
+            ],
+            "properties": {
+                "name": "OracleCloudServiceEndpoint",
+                "displayName": "OCI for Terraform",
+                "helpMarkDown": "",
+                "url": {
+                    "displayName": "Server Url",
+                    "helpText": "OCI homepage",
+                    "value": "https://www.oracle.com/cloud/sign-in.html",
+                    "isVisible": "false"
+                },
+                "authenticationSchemes": [
+                    {
+                        "id": "endpoint-auth-scheme-none",
+                        "description": "OCI endpoint authentication scheme with no authentication.",
+                        "type": "ms.vss-endpoint.endpoint-auth-scheme-none",
+                        "targets": [
+                            "ms.vss-endpoint.endpoint-auth-schemes"
+                        ],
+                        "properties": {
+                            "name": "None",
+                            "displayName": "OCI No authentication for PAR url"
+                        }
+                    }
+                ],
+                "inputDescriptors": [
+                    {
+                        "id": "user",
+                        "name": "User OCID",
+                        "description": "OCI user OCID",
+                        "inputMode": "textbox",
+                        "isConfidential": false,
+                        "validation": {
+                            "isRequired": true,
+                            "dataType": "string"
+                        }
+                    },
+                    {
+                        "id": "tenancy",
+                        "name": "Tenancy OCID",
+                        "description": "OCI tenancy OCID",
+                        "inputMode": "textbox",
+                        "isConfidential": true,
+                        "validation": {
+                            "isRequired": true,
+                            "dataType": "string"
+                        }
+                    },
+                    {
+                        "id": "region",
+                        "name": "Region",
+                        "description": "OCI region",
+                        "inputMode": "textbox",
+                        "isConfidential": false,
+                        "validation": {
+                            "isRequired": true,
+                            "dataType": "string"
+                        }
+                    },
+                    {
+                        "id": "fingerprint",
+                        "name": "Key fingerprint",
+                        "description": "The OCI private key fingerprint",
+                        "inputMode": "textbox",
+                        "isConfidential": false,
+                        "validation": {
+                            "isRequired": true,
+                            "dataType": "string"
+                        }
+                    },
+                    {
+                        "id": "privatekey",
+                        "name": "Private key",
+                        "description": "The OCI secret private key",
+                        "inputMode": "passwordbox",
+                        "isConfidential": true,
                         "validation": {
                             "isRequired": true,
                             "dataType": "string"
