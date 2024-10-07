@@ -318,7 +318,7 @@
                         "name": "Tenancy OCID",
                         "description": "OCI tenancy OCID",
                         "inputMode": "textbox",
-                        "isConfidential": true,
+                        "isConfidential": false,
                         "validation": {
                             "isRequired": true,
                             "dataType": "string"

@@ -35,12 +35,12 @@ export class TerraformCommandHandlerOCI extends BaseTerraformCommandHandler {
         //PAR = OCI Object Storage preauthenticated request (for the statefile bucket)
 
         // Instead, will create a backend.tf config file for it in-flight when generate option was selected 'yes' (the default setting)
-        if(tasks.getInput("backendOCIBucketConfigGenerate", true) == 'yes')
+        if(tasks.getInput("backendOCIConfigGenerate", true) == 'yes')
         {
             tasks.debug('Generating backend tf statefile config.');
             var config = "";
             config = config + "terraform {\n backend \"http\" {\n";
-            config = config + " address = \"" + tasks.getInput("backendOCIBucketPar", true) + "\"\n";
+            config = config + " address = \"" + tasks.getInput("backendOCIPar", true) + "\"\n";
             config = config + " update_method = \"PUT\"\n }\n }\n";
 
             const workingDirectory = tasks.getInput("workingDirectory");
