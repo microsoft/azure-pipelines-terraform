@@ -185,6 +185,7 @@
         {
             "name": "environmentServiceNameOCI",
             "type": "connectedService:OracleCloudInfrastructureServiceEndpoint",
+
             "label": "Oracle Cloud Platform connection",
             "required": true,
             "visibleRule": "provider = oci && command != init && command != validate",
