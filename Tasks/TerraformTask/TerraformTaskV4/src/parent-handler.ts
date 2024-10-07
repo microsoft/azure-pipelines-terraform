@@ -2,6 +2,7 @@ import { BaseTerraformCommandHandler } from './base-terraform-command-handler';
 import { TerraformCommandHandlerAzureRM } from './azure-terraform-command-handler';
 import { TerraformCommandHandlerAWS } from './aws-terraform-command-handler';
 import { TerraformCommandHandlerGCP } from './gcp-terraform-command-handler';
+import { TerraformCommandHandlerOCI } from './oci-terraform-command-handler';
 
 export interface IParentCommandHandler {
     execute(providerName: string, command: string): Promise<number>;
@@ -23,6 +24,10 @@ export class ParentCommandHandler implements IParentCommandHandler {
             
             case "gcp":
                 provider = new TerraformCommandHandlerGCP();
+                break;
+            
+            case "oci":
+                provider = new TerraformCommandHandlerOCI();
                 break;
         }
 
