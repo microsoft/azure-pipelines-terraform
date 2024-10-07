@@ -322,15 +322,15 @@
             "groupName": "backendOCI"
         },
         {
-            "name": "backendOCIBucketPar",
+            "name": "backendOCIPar",
             "type": "string",
-            "label": "Bucket PAR for Terraform remote state file",
+            "label": "PAR for Terraform remote state file",
             "required": false,
-            "helpMarkDown": "The OCI storage bucket PAR configuration for the Terraform remote state file (optional)",
+            "helpMarkDown": "The OCI object storage PAR configuration for the Terraform remote state file (optional)",
             "groupName": "backendOCI"
         },
         {
-            "name": "backendOCIBucketConfigGenerate",
+            "name": "backendOCIConfigGenerate",
             "type": "pickList",
             "label": "Generate the Terraform remote state file config (Use Yes when not included in TF files)",
             "required": true,
