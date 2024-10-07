@@ -278,7 +278,7 @@
                 "ms.vss-endpoint.endpoint-types"
             ],
             "properties": {
-                "name": "OCIServiceEndpoint",
+                "name": "OracleCloudInfrastructureServiceEndpoint",
                 "displayName": "OCI for Terraform",
                 "helpMarkDown": "",
                 "url": {
