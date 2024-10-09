@@ -141,7 +141,7 @@ Examples:
 ### Setting up OCI backend configuration
 
 - **Oracle Cloud Infrastructure connection\*:** Select the OCI connection to use for OCI backend configuration
-- **PAR for Terraform remote state file\*:** Enter the object storage PAR (preauthenticated request) URL pointing to the Terraform statefile. If the file does not exist it will be created. e.g. https://objectstorage.eu-frankfurt-1.oraclecloud.com/p/z93gZjNS0uDL...DarLRlA8uN/n/tenancy-namespace/b/object-storage-bucket/o/terraform.tfstate
-- **Generate the Terraform remote state file config:** Select 'yes' to automatically create the remote Terraform state file configuration. Select 'no' when the remote Terraform state file configuration is included in the supplied Terraform files (or it is not needed for any reason).
+- **PAR for Terraform remote state file:** Enter the object storage PAR (preauthenticated request) URL pointing to the Terraform statefile. If the file does not exist it will be created. e.g. https://objectstorage.eu-frankfurt-1.oraclecloud.com/p/z93gZjNS0uDL...DarLRlA8uN/n/tenancy-namespace/b/object-storage-bucket/o/terraform.tfstate
+- **Generate the Terraform remote state file config\*:** Select 'yes' to automatically create the remote Terraform state file configuration. When 'yes' the PAR above needs to be specified. Select 'no' when the remote Terraform state file configuration is included in the supplied Terraform files (or it is not needed for any reason). Whn 'no' the PAR can be left blank.
 
 **NOTE:** If your connection is not listed or if you want to use an existing connection, you can setup a service connection, using the 'Add' or 'Manage' button.
