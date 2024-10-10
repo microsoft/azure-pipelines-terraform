@@ -54,7 +54,7 @@
             "path": "images/7_Terraform_plan_apply_destroy.png"
         },
         {
-            "path": "images/8_OCI_service_endpoint.png"
+            "path": "images/8_OCI_service_endpoint.PNG"
         }
     ],
     "content": {
@@ -98,7 +98,7 @@
             "addressable": true
         },
         {
-            "path": "images/8_OCI_service_endpoint.png",
+            "path": "images/8_OCI_service_endpoint.PNG",
             "addressable": true
         }
     ],
