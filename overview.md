@@ -7,6 +7,7 @@ Terraform is an open-source tool created by HashiCorp for developing, changing a
 This extension provides the following components:
 - A service connection for connecting to an Amazon Web Services(AWS) account
 - A service connection for connecting to a Google Cloud Platform(GCP) account
+- A service connection for connecting to a Oracle Cloud Infrastructure(OCI) account
 - A task for installing a specific version of Terraform, if not already installed, on the agent
 - A task for executing the core Terraform commands
 
@@ -60,6 +61,23 @@ The Terraform task requires a GCP service connection for setting up the credenti
 
 ![Creating a GCP service connection](images/2_GCP_service_endpoint.PNG)
 
+## Create a new service connection for connecting to a OCI account
+
+The Terraform task requires a OCI service connection for setting up the credentials to connect to an OCI account. For setting up a new OCI service connection:
+
+- Using OCI Console add an API Key by generating it (https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#two) and download it
+- On the project page, go to **Project settings** and choose **Service connections**.
+- In the **New service connection** list, choose **OCI for Terraform**.
+- Enter the following details to set up the service connection:
+	- **Connection name\*:** Enter a unique name of the service connection to identify it within the project
+	- **User OCID\*:** Enter the OCI account **user OCID** copying it from your OCI Console User Profile information
+	- **Tenancy OCID\*:** Enter the OCI **tenancy OCID** copying it from your OCI Console Tenancy information
+	- **Region\*:** Enter the value of the **region** you want to manage with Terraform e.g. eu-frankfurt-1
+	- **Key fingerprint\*:** Enter the value of the API Key **fingerprint** copying it from OCI Console generated in the first step
+	- **Private key\*:** Enter the value of the contents of the **private_key** file generated and downloaded in the first step
+
+![Creating a GCP service connection](images/8_OCI_service_endpoint.PNG)
+
 ## Terraform tool installer task
 
 - Search for **Terraform tool installer** and click on **Add**
@@ -80,6 +98,7 @@ The Terraform task requires a GCP service connection for setting up the credenti
 	- **azurerm** - Azure Resource Manager
 	- **aws** - Amazon Web Services
 	- **gcp** - Google Cloud Platform
+	- **oci** - Oracle Cloud Infrastructure
 - From the **Command** list, select the terraform command to execute.
 - In the **Configuration directory** input, select the path to the directory that contains all the relevant terraform config (.tf) files. The task intends to use Terraform to build infrastructure on one provider at a time. So, all the config files in the configuration directory together should not specify more than one provider.
 - In the **Additional command arguments** input, provide any additional arguments for the selected command either as key-value pairs(-key=value) or as command line flags(-flag). Multiple options can also be provided delimited by spaces(-key1=value1 -key2=value2 -flag1 -flag2).
@@ -93,6 +112,7 @@ Examples:
     - **Azure Provider Service Connection (only if "azurerm" provider is selected)\*:** Select the AzureRM Service Connection to use for managing the resources used by the plan, apply, show, output, custom and destroy commands
 	- **Amazon Web Services connection (only if "aws" provider is selected)\*:** Select the AWS connection to use for managing the resources used by the plan, apply and destroy commands.
 	- **Google Cloud Platform connection (only if "gcp" provider is selected)\*:** Select the GCP connection to use for managing the resources used by the plan, apply and destroy commands.
+	- **Oracle Cloud Infrastructure connection (only if "oci" provider is selected)\*:** Select the OCI connection to use for managing the resources used by the plan, apply and destroy commands.
 
 ![Plan, apply, destroy](images/7_Terraform_plan_apply_destroy.png)
 
@@ -117,5 +137,11 @@ Examples:
 - **Google Cloud Platform connection\*:** Select the GCP connection to use for GCP backend configuration
 - **Bucket\*:** Select the name of the GCP storage bucket in which you want to store the terraform remote state file
 - **Prefix of state file:** Specify the relative path to the state file inside the GCP bucket. For example, if you give the input as "terraform", then the state file, named default.tfstate, will be stored inside an object called terraform.
+
+### Setting up OCI backend configuration
+
+- **Oracle Cloud Infrastructure connection\*:** Select the OCI connection to use for OCI backend configuration
+- **PAR for Terraform remote state file:** Enter the OCI object storage PAR (preauthenticated request) URL pointing to the Terraform statefile. If the file does not exist it will be created. e.g. https://objectstorage.eu-frankfurt-1.oraclecloud.com/p/z93gZjNS0uDL...DarLRlA8uN/n/tenancy-namespace/b/object-storage-bucket/o/terraform.tfstate
+- **Generate the Terraform remote state file config\*:** Select 'yes' to automatically create the remote Terraform state file configuration. When 'yes' the PAR above needs to be specified. Select 'no' when the remote Terraform state file configuration is included in the supplied Terraform files (or it is not needed for any reason). When 'no' the PAR above can be left blank.
 
 **NOTE:** If your connection is not listed or if you want to use an existing connection, you can setup a service connection, using the 'Add' or 'Manage' button.
