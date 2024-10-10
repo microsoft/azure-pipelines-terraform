@@ -9,7 +9,7 @@
             "id": "Microsoft.VisualStudio.Services"
         }
     ],
-    "description": "Install terraform and run terraform commands to manage resources on Azure, AWS and GCP.",
+    "description": "Install terraform and run terraform commands to manage resources on Azure, AWS, GCP and OCI.",
     "public": true,
     "categories": [
         "Azure Pipelines"
@@ -52,6 +52,9 @@
         },
         {
             "path": "images/7_Terraform_plan_apply_destroy.png"
+        },
+        {
+            "path": "images/8_OCI_service_endpoint.PNG"
         }
     ],
     "content": {
@@ -92,6 +95,10 @@
         },
         {
             "path": "images/7_Terraform_plan_apply_destroy.png",
+            "addressable": true
+        },
+        {
+            "path": "images/8_OCI_service_endpoint.PNG",
             "addressable": true
         }
     ],
