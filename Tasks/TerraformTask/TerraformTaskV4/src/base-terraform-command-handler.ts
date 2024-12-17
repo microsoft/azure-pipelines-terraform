@@ -127,7 +127,7 @@ export abstract class BaseTerraformCommandHandler {
     }
     public async output(): Promise<number> {
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
-        let commandOptions = tasks.getInput("commandOptions") != null ? `${tasks.getInput("commandOptions")} -json`:`-json`
+        let commandOptions = tasks.getInput("commandOptions") != null ? `-json ${tasks.getInput("commandOptions")}`:`-json`
         
         let outputCommand = new TerraformAuthorizationCommandInitializer(
             "output",
