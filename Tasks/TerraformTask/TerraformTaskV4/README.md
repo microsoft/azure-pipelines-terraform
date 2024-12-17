@@ -128,7 +128,7 @@ Below is a basic example usage of a few commands within the TerraformTaskV4 task
 # Only runs if the 'terraformPlan' task has detected changes the in state. 
 - task: TerraformTaskV4@4
   displayName: Apply Terraform Plan
-  condition: eq(variables['terraformPlan.changesPresent'], 'true')
+  condition: and(succeeded(), eq(variables['terraformPlan.changesPresent'], 'true'))
   inputs:
     provider: 'azurerm'
     command: 'apply'
