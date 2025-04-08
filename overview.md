@@ -109,7 +109,8 @@ Examples:
 ![Generic inputs](images/6_Terraform_all_inputs.PNG)
 
 - For **plan**, **apply** and **destroy** commands:
-    - **Azure Provider Service Connection (only if "azurerm" provider is selected)\*:** Select the AzureRM Service Connection to use for managing the resources used by the plan, apply, show, output, custom and destroy commands
+  - **Azure Provider Service Connection (only if "azurerm" provider is selected)\*:** Select the AzureRM Service Connection to use for managing the resources used by the plan, apply, show, output, custom and destroy commands
+    - **Use ID Token Refresh for Azure Authentication\*:** Choose whether to use Id Token refresh capability for authentication. If selected, the environment variable 'ARM_OIDC_AZURE_SERVICE_CONNECTION_ID' will be set and 'ARM_OIDC_TOKEN' will be unset.
 	- **Amazon Web Services connection (only if "aws" provider is selected)\*:** Select the AWS connection to use for managing the resources used by the plan, apply and destroy commands.
 	- **Google Cloud Platform connection (only if "gcp" provider is selected)\*:** Select the GCP connection to use for managing the resources used by the plan, apply and destroy commands.
 	- **Oracle Cloud Infrastructure connection (only if "oci" provider is selected)\*:** Select the OCI connection to use for managing the resources used by the plan, apply and destroy commands.
@@ -125,6 +126,7 @@ Examples:
 - **Key\*:** Specify the relative path to the state file inside the selected container. For example, if you want to store the state file, named terraform.tfstate, inside a folder, named tf, then give the input "tf/terraform.tfstate"
 - **Use Env Vars for Authentication\*:** Choose whether to use environment variables for azurerm backend authentication. If selected, the principal details will be created as environment variables for 'ARM_CLIENT_ID' and 'ARM_CLIENT_SECRET' or 'ARM_OIDC_TOKEN'.
 - **Use Entra ID for Authentication\*:** Choose whether to use Entra Id authentication to the storage account. If selected, 'use_azuread_auth = true' will be passed to the backend config.
+- **Use ID Token Refresh for Authentication\*:** Choose whether to use Id Token refresh capability for the authentication to the storage account. If selected, the environment variable 'ARM_OIDC_AZURE_SERVICE_CONNECTION_ID' will be set and 'ARM_OIDC_TOKEN' will be unset.
 
 ### Setting up AWS backend configuration
 
