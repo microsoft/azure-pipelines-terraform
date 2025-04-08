@@ -61,12 +61,13 @@ Options specific to **terraform init** command
 
 - Options specific to **AzureRM backend configuration**
 	- **Azure Backend Service Connection\*:** Select the Azure Service Connection to use for AzureRM backend configuration
-	- **Resource group\*:** Select the name of the resource group in which you want to store the terraform remote state file
+	- **Resource group\*:** Select the name of the resource group in which you want to store the terraform remote state file (only required if you are using URI lookup for the storage account)
 	- **Storage account\*:** Select the name of the storage account belonging to the selected resource group in which you want to store the terraform remote state file
 	- **Container\*:** Select the name of the Azure Blob container belonging to the storage account in which you want to store the terraform remote state file
 	- **Key\*:** Specify the relative path to the state file inside the selected container. For example, if you want to store the state file, named terraform.tfstate, inside a folder, named tf, then give the input "tf/terraform.tfstate"
 	- **Use Env Vars for Authentication\*:** Choose whether to use environment variables for azurerm backend authentication. If selected, the principal details will be created as environment variables for 'ARM_CLIENT_ID' and 'ARM_CLIENT_SECRET' or 'ARM_OIDC_TOKEN'.
 	- **Use Entra ID for Authentication\*:** Choose whether to use Entra Id authentication to the storage account. If selected, 'use_azuread_auth = true' will be passed to the backend config.
+  - **Use ID Token Refresh for Authentication\*:** Choose whether to use Id Token refresh capability for the authentication to the storage account. If selected, the environment variable 'ARM_OIDC_AZURE_SERVICE_CONNECTION_ID' will be set and 'ARM_OIDC_TOKEN' will be unset.
 
 - Options specific to **Amazon Web Services(AWS) backend configuration**
 	- **Amazon Web Services connection\*:** Select the AWS connection to use for AWS backend configuration
@@ -81,6 +82,7 @@ Options specific to **terraform init** command
 Options specific to **terraform plan, apply, show, output, custom and destroy** commands
 
 - **Azure Provider Service Connection (only if "azurerm" provider is selected)\*:** Select the AzureRM Service Connection to use for managing the resources used by the plan, apply, show, output, custom and destroy commands
+  - **Use ID Token Refresh for Azure Authentication\*:** Choose whether to use Id Token refresh capability for authentication. If selected, the environment variable 'ARM_OIDC_AZURE_SERVICE_CONNECTION_ID' will be set and 'ARM_OIDC_TOKEN' will be unset.
 - **Amazon Web Services connection (only if "aws" provider is selected)\*:** Select the AWS connection to use for managing the resources used by the plan, apply, show, output, custom and destroy commands
 - **Google Cloud Platform connection (only if "gcp" provider is selected)\*:** Select the GCP connection to use for managing the resources used by the plan, apply, show, output, custom and destroy commands
 
@@ -102,7 +104,8 @@ When selecting custom you can use any command that is supported natively by terr
 * **jsonOutputVariablesPath:** The location of the JSON file which contains the output variables set by the user in the terraform config files.<br><br>Note: This variable will only be set if 'command' input is set to 'output'.
 
 ## Example Task Usage
-Below is a basic example usage of a few commands within the TerraformTaskV4 task.
+
+Below is a basic example usage of a few commands within the TerraformTaskV4 task for Azure.
 
 ```yaml
 - task: TerraformTaskV4@4
@@ -111,10 +114,12 @@ Below is a basic example usage of a few commands within the TerraformTaskV4 task
     provider: 'azurerm'
     command: 'init'
     backendServiceArm: 'your-backend-service-connection'
-    backendAzureRmResourceGroupName: 'your-rg-name'
     backendAzureRmStorageAccountName: 'your-stg-name'
     backendAzureRmContainerName: 'your-container-name'
     backendAzureRmKey: 'state.tfstate'
+    backendAzureRmUseEnvironmentVariablesForAuthentication: true
+    backendAzureRmUseAzureADAuthentication: true
+    backendAzureRmUseIdTokenRefresh: true
 
 - task: TerraformTaskV4@4
   name: terraformPlan
@@ -124,6 +129,7 @@ Below is a basic example usage of a few commands within the TerraformTaskV4 task
     command: 'plan'
     commandOptions: '-out main.tfplan'
     environmentServiceNameAzureRM: 'your-environment-service-connection'
+    azureRmUseIdTokenRefreshForAuthentication: true
 
 # Only runs if the 'terraformPlan' task has detected changes the in state. 
 - task: TerraformTaskV4@4
@@ -134,4 +140,5 @@ Below is a basic example usage of a few commands within the TerraformTaskV4 task
     command: 'apply'
     commandOptions: 'main.tfplan'
     environmentServiceNameAzureRM: 'your-environment-service-connection'
+    azureRmUseIdTokenRefreshForAuthentication: true
 ```

@@ -14,8 +14,8 @@
     "demands": [],
     "version": {
         "Major": "4",
-        "Minor": "241",
-        "Patch": "11"
+        "Minor": "255",
+        "Patch": "1"
     },
     "instanceNameFormat": "Terraform : $(provider)",
     "execution": {
@@ -167,6 +167,16 @@
             "groupName": "providerAzureRm"
         },
         {
+            "name": "azureRmUseIdTokenRefreshForAuthentication",
+            "type": "boolean",
+            "properties": {
+                "PopulateDefaultValue": "True"
+            },
+            "label": "Use ID Token Refresh for Authentication",
+            "helpMarkDown": "Choose whether to use Id Token refresh capability for authentication. If selected, the environment variable 'ARM_OIDC_AZURE_SERVICE_CONNECTION_ID' will be set and 'ARM_OIDC_TOKEN' will be unset.",
+            "groupName": "providerAzureRm"
+        },
+        {
             "name": "environmentServiceNameAWS",
             "type": "connectedService:AWSServiceEndpoint",
             "label": "Amazon Web Services connection",
@@ -212,6 +222,16 @@
             "groupName": "backendAzureRm"
         },
         {
+            "name": "backendAzureRmUseIdTokenRefreshForAuthentication",
+            "type": "boolean",
+            "properties": {
+                "PopulateDefaultValue": "True"
+            },
+            "label": "Use ID Token Refresh for Authentication",
+            "helpMarkDown": "Choose whether to use Id Token refresh capability for the authentication to the storage account. If selected, the environment variable 'ARM_OIDC_AZURE_SERVICE_CONNECTION_ID' will be set and 'ARM_OIDC_TOKEN' will be unset.",
+            "groupName": "backendAzureRm"
+        },
+        {
             "name": "backendServiceArm",
             "type": "connectedService:AzureRM",
             "label": "Azure Backend Service Connection",
@@ -223,7 +243,7 @@
             "name": "backendAzureRmResourceGroupName",
             "type": "pickList",
             "label": "Resource group",
-            "required": true,
+            "required": false,
             "helpMarkDown": "The name of the resource group which contains the storage account selected below.",
             "groupName": "backendAzureRm",
             "properties": {

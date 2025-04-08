@@ -21,7 +21,10 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         this.backendConfig.set('storage_account_name', tasks.getInput("backendAzureRmStorageAccountName", true));
         this.backendConfig.set('container_name', tasks.getInput("backendAzureRmContainerName", true));
         this.backendConfig.set('key', tasks.getInput("backendAzureRmKey", true));
-        this.backendConfig.set('resource_group_name', tasks.getInput("backendAzureRmResourceGroupName", true));
+        const resourceGroupName = tasks.getInput("backendAzureRmResourceGroupName", false);
+        if(resourceGroupName != null && resourceGroupName != "") {
+            this.backendConfig.set('resource_group_name', resourceGroupName);
+        }
         const subscriptionId = tasks.getEndpointDataParameter(backendServiceName, "subscriptionid", true);
         if(subscriptionId) {
             this.backendConfig.set('subscription_id', tasks.getEndpointDataParameter(backendServiceName, "subscriptionid", true));
@@ -30,6 +33,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
         const useEnvironmentVariables = tasks.getInput("backendAzureRmUseEnvironmentVariablesForAuthentication", false) == "true";
         const useEntraIdAuthenticator = tasks.getInput("backendAzureRmUseEntraIdForAuthentication", false) == "true";
+        const useIdTokenRefresh = tasks.getInput("backendAzureRmUseIdTokenRefreshForAuthentication", false) == "true";
 
         if(useEntraIdAuthenticator) {
             this.backendConfig.set('use_azuread_auth', 'true');
@@ -46,10 +50,19 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                 if(useEnvironmentVariables) {
                     tasks.debug('azurerm backend auth warning. Due to limitations in the Terraform azurerm backend, we are setting the ARM_CLIENT_ID and ARM_OIDC_TOKEN as environment variables. This is to avoid them being cached in the plan file. However this means that during the plan and apply stages this task will use the service connection supplied for the environmentServiceNameAzureRM input as opposed to the backendServiceArm input to connect to the storage account.')
                     process.env['ARM_CLIENT_ID'] = workloadIdentityFederationCredentials.servicePrincipalId;
-                    process.env['ARM_OIDC_TOKEN'] = workloadIdentityFederationCredentials.idToken;
+
+                    if(useIdTokenRefresh) {
+                        process.env['ARM_OIDC_AZURE_SERVICE_CONNECTION_ID'] = tasks.getInput("backendServiceArm", true)
+                    } else {
+                        process.env['ARM_OIDC_TOKEN'] = workloadIdentityFederationCredentials.idToken;
+                    }
                 } else {
                     this.backendConfig.set('client_id', workloadIdentityFederationCredentials.servicePrincipalId);
-                    this.backendConfig.set('oidc_token', workloadIdentityFederationCredentials.idToken);
+                    if(useIdTokenRefresh) {
+                        this.backendConfig.set('oidc_azure_service_connection_id', tasks.getInput("backendServiceArm", true));
+                    } else {
+                        this.backendConfig.set('oidc_token', workloadIdentityFederationCredentials.idToken);
+                    }
                 }
                 
                 this.backendConfig.set('use_oidc', 'true');
@@ -93,6 +106,8 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
             }
             process.env['ARM_TENANT_ID'] = tasks.getEndpointAuthorizationParameter(command.serviceProvidername, "tenantid", false);
 
+            const useIdTokenRefresh = tasks.getInput("azureRmUseIdTokenRefreshForAuthentication", false) == "true";
+
             switch(authorizationScheme) {
                 case AuthorizationScheme.ManagedServiceIdentity:
                     process.env['ARM_USE_MSI'] = 'true';
@@ -101,7 +116,11 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                 case AuthorizationScheme.WorkloadIdentityFederation:
                     var workloadIdentityFederationCredentials = await this.getWorkloadIdentityFederationCredentials(command.serviceProvidername);
                     process.env['ARM_CLIENT_ID'] = workloadIdentityFederationCredentials.servicePrincipalId;
-                    process.env['ARM_OIDC_TOKEN'] = workloadIdentityFederationCredentials.idToken;
+                    if(useIdTokenRefresh) {
+                        process.env['ARM_OIDC_AZURE_SERVICE_CONNECTION_ID'] = tasks.getInput("environmentServiceNameAzureRM", true)
+                    } else {
+                        process.env['ARM_OIDC_TOKEN'] = workloadIdentityFederationCredentials.idToken;
+                    }
                     process.env['ARM_USE_OIDC'] = 'true';
                     break;
 
