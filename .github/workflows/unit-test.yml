@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  unit-test:
+  unit-test-v4:
     name: Unit Test V4 Task
     runs-on: ubuntu-latest
     steps:
@@ -19,5 +19,16 @@ jobs:
     - name: Run Unit Tests
       run: |
         cd Tasks/TerraformTask/TerraformTaskV4
+        npm install -include=dev
+        npm test
+  unit-test-v5:
+    name: Unit Test V5 Task
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Run Unit Tests
+      run: |
+        cd Tasks/TerraformTask/TerraformTaskV5
         npm install -include=dev
         npm test
