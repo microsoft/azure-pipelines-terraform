@@ -14,6 +14,7 @@ module.exports = {
             patterns: [
                 { from: "./images", to: "images", context: "." },
                 { from: "./overview.md", to: "overview.md" },
+                { from: "./LICENSE", to: "./" },
                 { from: "./azure-devops-extension.json", to: "azure-devops-extension.json" },
                 {
                     from: "./Tasks",
