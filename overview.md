@@ -7,7 +7,7 @@ Terraform is an open-source tool created by HashiCorp for developing, changing a
 This extension provides the following components:
 - A service connection for connecting to an Amazon Web Services(AWS) account
 - A service connection for connecting to a Google Cloud Platform(GCP) account
-- A service connection for connecting to a Oracle Cloud Infrastructure(OCI) account
+- A service connection for connecting to an Oracle Cloud Infrastructure(OCI) account
 - A task for installing a specific version of Terraform, if not already installed, on the agent
 - A task for executing the core Terraform commands
 
@@ -61,9 +61,9 @@ The Terraform task requires a GCP service connection for setting up the credenti
 
 ![Creating a GCP service connection](images/2_GCP_service_endpoint.PNG)
 
-## Create a new service connection for connecting to a OCI account
+## Create a new service connection for connecting to an OCI account
 
-The Terraform task requires a OCI service connection for setting up the credentials to connect to an OCI account. For setting up a new OCI service connection:
+The Terraform task requires an OCI service connection for setting up the credentials to connect to an OCI account. For setting up a new OCI service connection:
 
 - Using OCI Console add an API Key by generating it (https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#two) and download it
 - On the project page, go to **Project settings** and choose **Service connections**.
