@@ -14,13 +14,13 @@
     "categories": [
         "Azure Pipelines"
     ],
-    "Tags": [ 
+    "Tags": [
         "Terraform",
         "Azure",
         "AWS",
         "GCP",
         "OCI",
-        "Release", 
+        "Release",
         "DevOps"
     ],
     "branding": {
@@ -60,6 +60,9 @@
     "content": {
         "details": {
             "path": "overview.md"
+        },
+        "license": {
+            "path": "LICENSE"
         }
     },
     "files": [
@@ -147,9 +150,9 @@
                     {
                         "name": "AWS",
                         "endpointUrl": "{{endpoint.url}}",
-                        "RequestVerb":"GET",
+                        "RequestVerb": "GET",
                         "resultSelector": "xpath://ListAllMyBucketsResult/Buckets/Bucket/Name"
-                    }                
+                    }
                 ],
                 "authenticationSchemes": [
                     {
