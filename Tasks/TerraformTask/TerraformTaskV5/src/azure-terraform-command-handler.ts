@@ -28,7 +28,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         }
 
         let subscriptionId = tasks.getInput("backendAzureRmOverrideSubscriptionID", false);
-        if(subscriptionId != null && subscriptionId != "") {
+        if(subscriptionId == null || subscriptionId == "") {
             subscriptionId = tasks.getEndpointDataParameter(serviceConnectionID, "subscriptionid", true);
         }
         if(subscriptionId != null && subscriptionId != "" && resourceGroupName != null && resourceGroupName != "") {
@@ -58,7 +58,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
         // Setup required provider configuration for subscription ID
         let subscriptionId = tasks.getInput("environmentAzureRmOverrideSubscriptionID", false);
-        if(subscriptionId != null && subscriptionId != "") {
+        if(subscriptionId == null || subscriptionId == "") {
             subscriptionId = tasks.getEndpointDataParameter(serviceConnectionID, "subscriptionid", true);
         }
         if(subscriptionId != null && subscriptionId != "") {
