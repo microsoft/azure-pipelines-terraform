@@ -75,9 +75,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                 EnvironmentVariableHelper.setEnvironmentVariable("ARM_CLIENT_ID", workloadIdentityFederationCredentials.servicePrincipalId);
                 EnvironmentVariableHelper.setEnvironmentVariable("ARM_OIDC_AZURE_SERVICE_CONNECTION_ID", serviceConnectionID);
                 EnvironmentVariableHelper.setEnvironmentVariable("ARM_USE_OIDC", "true");
-                const systemAccessToken = tasks.getVariable("System.AccessToken");
-                tasks.setSecret(systemAccessToken);
-                EnvironmentVariableHelper.setEnvironmentVariable("SYSTEM_ACCESSTOKEN", systemAccessToken);
+                EnvironmentVariableHelper.setEnvironmentVariable("SYSTEM_ACCESSTOKEN", tasks.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false));
                 break;
 
             case AuthorizationScheme.ServicePrincipal:
