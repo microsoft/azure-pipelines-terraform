@@ -51,7 +51,7 @@ The TerraformInstaller task installs a specific version of Terraform on the agen
 
 ## Terraform task
 
-The Terraform task enables running Terraform commands as part of Azure Build and Release Pipelines.
+The Terraform task abstracts running Terraform commands as part of an Azure DevOps Pipeline.
 
 ### Steps to use the Terraform task
 
@@ -60,7 +60,9 @@ The Terraform task enables running Terraform commands as part of Azure Build and
 - Create or open a YAML pipeline.
 - Add the Terraform task to your pipeline YAML file.
 
-### Example: Run Terraform init, plan and apply for Azure
+### Example: Run Terraform init, plan and apply for Microsoft Azure
+
+>NOTE: Terraform on Azure does not support the use of separate credentials for backend storage account and the Azure providers at this time. This is because they share the same environment variable names. As such, the service connection used for the Terraform Task must have permissions on the storage account container for your backend state file, even if it is in a separate subscription.
 
 ```yaml
 - task: TerraformTask@5
@@ -207,6 +209,7 @@ The Terraform task has the following input parameters:
 - `backendAzureRmStorageAccountName`: The name of the Azure storage account to use for the `azurerm` backend. The default value is `''`.
 - `backendAzureRmContainerName`: The name of the Azure storage container to use for the `azurerm` backend. The default value is `''`.
 - `backendAzureRmKey`: The name of the Azure storage blob to use for the `azurerm` backend. The default value is `''`.
+- `backendAzureRmOverrideSubscriptionID`: The override subscription ID to use for the `azurerm` backend. This is only required if using URI lookup and if you don't want to use the service connection subscription ID. The default value is `''`.
 - `backendAzureRmResourceGroupName`: The name of the Azure resource group the Storage Account sits in to use for the `azurerm` backend. This is only required if using URI lookup. The default value is `''`.
 
 ##### AWS Specific Inputs for `init`
@@ -238,6 +241,7 @@ The Terraform task has the following input parameters:
 ##### Azure Specific Inputs for `plan`, `apply`, and `destroy`
 
 - `environmentServiceNameAzureRM`: The name of the Azure service connection to use for the `azurerm` provider. The default value is `''`.
+- `environmentAzureRmOverrideSubscriptionID`: The override subscription ID to use for the `azurerm` provider. This is only required if you don't want to use the service connection subscription ID. The default value is `''`.
 
 ##### AWS Specific Inputs for `plan`, `apply`, and `destroy`
 

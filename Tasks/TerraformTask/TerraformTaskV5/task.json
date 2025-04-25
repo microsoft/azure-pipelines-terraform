@@ -2,7 +2,7 @@
     "id": "FE504ACC-6115-40CB-89FF-191386B5E7BF",
     "name": "TerraformTask",
     "friendlyName": "Terraform",
-    "description": "Execute terraform commands to manage resources on AzureRM, Amazon Web Services(AWS), Google Cloud Platform(GCP) and Oracle Cloud Infrastructure(OCI). v5.255.1",
+    "description": "Execute terraform commands to manage resources on Microsoft Azure, Amazon Web Services(AWS), Google Cloud Platform(GCP) and Oracle Cloud Infrastructure(OCI). v5.255.1",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/devlabs/ado/tf/task/v5)",
     "category": "Deploy",
@@ -167,6 +167,15 @@
             "groupName": "providerAzureRm"
         },
         {
+            "name": "environmentAzureRmOverrideSubscriptionID",
+            "type": "string",
+            "label": "Subscription ID Override",
+            "required": false,
+            "visibleRule": "provider = azurerm && command != init && command != validate",
+            "helpMarkDown": "Used to override the subscription ID that the provider will target by default. This is set to the ARM_SUBSCRIPTION_ID environment variable. It will use the service connection subscription ID by default.",
+            "groupName": "providerAzureRm"
+        },
+        {
             "name": "environmentServiceNameAWS",
             "type": "connectedService:AWSServiceEndpoint",
             "label": "Amazon Web Services connection",
@@ -195,7 +204,7 @@
             "type": "boolean",
             "defaultValue": "true",
             "label": "Use Entra ID for Authentication",
-            "helpMarkDown": "Choose whether to use Entra Id authentication to the storage account. If selected, the ARM_USE_AZUREAD environent variable will be set to true.",
+            "helpMarkDown": "Choose whether to use Entra Id authentication to the storage account. If selected, the use_azuread_auth variable will be set to true.",
             "groupName": "backendAzureRm"
         },
         {
@@ -207,11 +216,22 @@
             "groupName": "backendAzureRm"
         },
         {
+            "name": "backendAzureRmOverrideSubscriptionID",
+            "type": "string",
+            "label": "Subscription ID Override",
+            "required": false,
+            "helpMarkDown": "Used to override the ID of the subscription which contains the storage account. (Only required for URI lookup)",
+            "groupName": "backendAzureRm",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
             "name": "backendAzureRmResourceGroupName",
-            "type": "pickList",
+            "type": "string",
             "label": "Resource group",
             "required": false,
-            "helpMarkDown": "The name of the resource group which contains the storage account selected below.",
+            "helpMarkDown": "The name of the resource group which contains the storage account. (Only required for URI lookup)",
             "groupName": "backendAzureRm",
             "properties": {
                 "EditableOptions": "True"
@@ -219,10 +239,10 @@
         },
         {
             "name": "backendAzureRmStorageAccountName",
-            "type": "pickList",
+            "type": "string",
             "label": "Storage account",
             "required": true,
-            "helpMarkDown": "The name of the storage account which contains the Azure Blob container selected below.",
+            "helpMarkDown": "The name of the storage account which contains the Azure Blob container.",
             "groupName": "backendAzureRm",
             "properties": {
                 "EditableOptions": "True"
@@ -230,7 +250,7 @@
         },
         {
             "name": "backendAzureRmContainerName",
-            "type": "pickList",
+            "type": "string",
             "label": "Container",
             "required": true,
             "helpMarkDown": "The name of the Azure Blob container in which to store the Terraform remote state file.",
@@ -332,24 +352,6 @@
         }
     ],
     "dataSourceBindings": [
-        {
-            "target": "backendAzureRmResourceGroupName",
-            "endpointId": "$(backendServiceArm)",
-            "endpointUrl": "{{{endpoint.url}}}subscriptions/{{{endpoint.subscriptionId}}}/resourcegroups?api-version=2025-03-01",
-            "resultSelector": "jsonpath:$.value[*].name"
-        },
-        {
-            "target": "backendAzureRmStorageAccountName",
-            "endpointId": "$(backendServiceArm)",
-            "endpointUrl": "{{{endpoint.url}}}subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(backendAzureRmResourceGroupName)/providers/Microsoft.Storage/storageAccounts?api-version=2024-01-01",
-            "resultSelector": "jsonpath:$.value[*].name"
-        },
-        {
-            "target": "backendAzureRmContainerName",
-            "endpointId": "$(backendServiceArm)",
-            "endpointUrl": "{{{endpoint.url}}}subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(backendAzureRmResourceGroupName)/providers/Microsoft.Storage/storageAccounts/$(backendAzureRmStorageAccountName)/blobServices/default/containers?api-version=2024-01-01",
-            "resultSelector": "jsonpath:$.value[*].name"
-        },
         {
             "target": "backendAWSBucketName",
             "endpointId": "$(backendServiceAWS)",

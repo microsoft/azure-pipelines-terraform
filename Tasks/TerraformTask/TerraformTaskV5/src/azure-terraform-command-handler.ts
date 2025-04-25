@@ -21,20 +21,24 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         this.backendConfig.set("container_name", tasks.getInput("backendAzureRmContainerName", true));
         this.backendConfig.set("key", tasks.getInput("backendAzureRmKey", true));
 
-        // Setup the optional backend configuration for the storage account blob location with subscription and resource group
+        // Setup the optional backend configuration for the storage account blob location with subscription ID and resource group name (set as backend config to ensure it is cached)
         const resourceGroupName = tasks.getInput("backendAzureRmResourceGroupName", false);
         if(resourceGroupName != null && resourceGroupName != "") {
             this.backendConfig.set("resource_group_name", resourceGroupName);
         }
-        const subscriptionId = tasks.getEndpointDataParameter(serviceConnectionID, "subscriptionid", true);
+
+        let subscriptionId = tasks.getInput("backendAzureRmOverrideSubscriptionID", false);
+        if(subscriptionId != null && subscriptionId != "") {
+            subscriptionId = tasks.getEndpointDataParameter(serviceConnectionID, "subscriptionid", true);
+        }
         if(subscriptionId != null && subscriptionId != "" && resourceGroupName != null && resourceGroupName != "") {
-            EnvironmentVariableHelper.setEnvironmentVariable("ARM_SUBSCRIPTION_ID", subscriptionId);
+            this.backendConfig.set("subscription_id", subscriptionId);
         }
 
-        // Setup Entra ID authentication
+        // Setup Entra ID authentication (set as backend config to ensure it is cached)
         const useEntraIdAuthentication = tasks.getBoolInput("backendAzureRmUseEntraIdForAuthentication", false);
         if(useEntraIdAuthentication) {
-            EnvironmentVariableHelper.setEnvironmentVariable("ARM_USE_AZUREAD", "true");
+            this.backendConfig.set("use_azuread_auth", "true");
         }
 
         this.setCommonEnvironmentVariables(authorizationScheme, serviceConnectionID);
@@ -52,7 +56,11 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
         tasks.debug("Setting up provider for authorization scheme: " + authorizationScheme + ".");
 
-        const subscriptionId = tasks.getEndpointDataParameter(serviceConnectionID, "subscriptionid", true);
+        // Setup required provider configuration for subscription ID
+        let subscriptionId = tasks.getInput("environmentAzureRmOverrideSubscriptionID", false);
+        if(subscriptionId != null && subscriptionId != "") {
+            subscriptionId = tasks.getEndpointDataParameter(serviceConnectionID, "subscriptionid", true);
+        }
         if(subscriptionId != null && subscriptionId != "") {
             EnvironmentVariableHelper.setEnvironmentVariable("ARM_SUBSCRIPTION_ID", subscriptionId);
         }
@@ -75,7 +83,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                 EnvironmentVariableHelper.setEnvironmentVariable("ARM_CLIENT_ID", workloadIdentityFederationCredentials.servicePrincipalId);
                 EnvironmentVariableHelper.setEnvironmentVariable("ARM_OIDC_AZURE_SERVICE_CONNECTION_ID", serviceConnectionID);
                 EnvironmentVariableHelper.setEnvironmentVariable("ARM_USE_OIDC", "true");
-                EnvironmentVariableHelper.setEnvironmentVariable("SYSTEM_ACCESSTOKEN", tasks.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false));
+                EnvironmentVariableHelper.setEnvironmentVariable("ARM_OIDC_REQUEST_TOKEN", tasks.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false));
                 break;
 
             case AuthorizationScheme.ServicePrincipal:
