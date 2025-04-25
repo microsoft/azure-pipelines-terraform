@@ -1,7 +1,8 @@
-import tasks = require('azure-pipelines-task-lib/task');
-import {ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
-import {TerraformAuthorizationCommandInitializer} from './terraform-commands';
-import {BaseTerraformCommandHandler} from './base-terraform-command-handler';
+import tasks = require("azure-pipelines-task-lib/task");
+import {ToolRunner} from "azure-pipelines-task-lib/toolrunner";
+import {TerraformAuthorizationCommandInitializer} from "./terraform-commands";
+import {BaseTerraformCommandHandler} from "./base-terraform-command-handler";
+import {EnvironmentVariableHelper} from "./environment-variables";
 
 export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler {
     constructor() {
@@ -9,98 +10,83 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         this.providerName = "azurerm";
     }
 
-    private setupBackend(serviceConnectionName: string) {
-        const authorizationScheme = this.mapAuthorizationScheme(tasks.getEndpointAuthorizationScheme(serviceConnectionName, true));
+    public async handleBackend(terraformToolRunner: ToolRunner): Promise<void> {
+        let serviceConnectionID = tasks.getInput("backendServiceArm", true);
+        const authorizationScheme = this.mapAuthorizationScheme(tasks.getEndpointAuthorizationScheme(serviceConnectionID, true));
 
-        tasks.debug('Setting up backend for authorization scheme: ' + authorizationScheme + '.');
+        tasks.debug("Setting up backend for authorization scheme: " + authorizationScheme + ".");
 
-        this.backendConfig.set('storage_account_name', tasks.getInput("backendAzureRmStorageAccountName", true));
-        this.backendConfig.set('container_name', tasks.getInput("backendAzureRmContainerName", true));
-        this.backendConfig.set('key', tasks.getInput("backendAzureRmKey", true));
+        // Setup required backend configuration for storage account blob location
+        this.backendConfig.set("storage_account_name", tasks.getInput("backendAzureRmStorageAccountName", true));
+        this.backendConfig.set("container_name", tasks.getInput("backendAzureRmContainerName", true));
+        this.backendConfig.set("key", tasks.getInput("backendAzureRmKey", true));
+
+        // Setup the optional backend configuration for the storage account blob location with subscription and resource group
         const resourceGroupName = tasks.getInput("backendAzureRmResourceGroupName", false);
         if(resourceGroupName != null && resourceGroupName != "") {
-            this.backendConfig.set('resource_group_name', resourceGroupName);
+            this.backendConfig.set("resource_group_name", resourceGroupName);
         }
-        const subscriptionId = tasks.getEndpointDataParameter(serviceConnectionName, "subscriptionid", true);
-        if(subscriptionId) {
-            process.env['ARM_SUBSCRIPTION_ID'] = subscriptionId;
+        const subscriptionId = tasks.getEndpointDataParameter(serviceConnectionID, "subscriptionid", true);
+        if(subscriptionId != null && subscriptionId != "" && resourceGroupName != null && resourceGroupName != "") {
+            EnvironmentVariableHelper.setEnvironmentVariable("ARM_SUBSCRIPTION_ID", subscriptionId);
         }
-        process.env['ARM_TENANT_ID'] = tasks.getEndpointAuthorizationParameter(serviceConnectionName, "tenantid", false);
 
-        const useEntraIdAuthentication = tasks.getInput("backendAzureRmUseEntraIdForAuthentication", false) == "true";
-
+        // Setup Entra ID authentication
+        const useEntraIdAuthentication = tasks.getBoolInput("backendAzureRmUseEntraIdForAuthentication", false);
         if(useEntraIdAuthentication) {
-            process.env['ARM_USE_AZUREAD_AUTH'] = 'true';
-        }
-        
-        switch(authorizationScheme) {
-            case AuthorizationScheme.ManagedServiceIdentity:
-                process.env['ARM_USE_MSI'] = 'true';
-                break;
-
-            case AuthorizationScheme.WorkloadIdentityFederation:
-                var workloadIdentityFederationCredentials = this.getWorkloadIdentityFederationCredentials(serviceConnectionName);
-                process.env['ARM_CLIENT_ID'] = workloadIdentityFederationCredentials.servicePrincipalId;
-                process.env['ARM_OIDC_AZURE_SERVICE_CONNECTION_ID'] = serviceConnectionName;
-                process.env['ARM_USE_OIDC'] = 'true';
-                break;
-            
-            case AuthorizationScheme.ServicePrincipal:
-                tasks.warning('Client secret authentication is not secure and will be deprecated in the next major version of this task. Please use Workload identity federation authentication instead.');
-
-                var servicePrincipalCredentials = this.getServicePrincipalCredentials(serviceConnectionName);
-                process.env['ARM_CLIENT_ID'] = servicePrincipalCredentials.servicePrincipalId;
-                process.env['ARM_CLIENT_SECRET'] = servicePrincipalCredentials.servicePrincipalKey;
-                break;
+            EnvironmentVariableHelper.setEnvironmentVariable("ARM_USE_AZUREAD", "true");
         }
 
-        tasks.debug('Finished up backend for authorization scheme: ' + authorizationScheme + '.');
-    }
-
-    public async handleBackend(terraformToolRunner: ToolRunner): Promise<void> {
-        let serviceConnectionName = tasks.getInput("backendServiceArm", true);
-        this.setupBackend(serviceConnectionName);
+        this.setCommonEnvironmentVariables(authorizationScheme, serviceConnectionID);
 
         for (let [key, value] of this.backendConfig.entries()) {
             terraformToolRunner.arg(`-backend-config=${key}=${value}`);
         }
+
+        tasks.debug("Finished setting up backend for authorization scheme: " + authorizationScheme + ".");
     }
 
     public async handleProvider(command: TerraformAuthorizationCommandInitializer) : Promise<void> {
-        if (command.serviceProvidername) {
-            var serviceConnection = tasks.getInput("environmentServiceNameAzureRM", true);
-            const authorizationScheme = this.mapAuthorizationScheme(tasks.getEndpointAuthorizationScheme(serviceConnection, true));
+        var serviceConnectionID = tasks.getInput("environmentServiceNameAzureRM", true);
+        const authorizationScheme = this.mapAuthorizationScheme(tasks.getEndpointAuthorizationScheme(serviceConnectionID, true));
 
-            tasks.debug('Setting up provider for authorization scheme: ' + authorizationScheme + '.');
+        tasks.debug("Setting up provider for authorization scheme: " + authorizationScheme + ".");
 
-            const subscriptionId = tasks.getEndpointDataParameter(command.serviceProvidername, "subscriptionid", true);
-            if(subscriptionId) {
-                process.env['ARM_SUBSCRIPTION_ID']  = tasks.getEndpointDataParameter(command.serviceProvidername, "subscriptionid", false);
-            }
-            process.env['ARM_TENANT_ID'] = tasks.getEndpointAuthorizationParameter(command.serviceProvidername, "tenantid", false);
+        const subscriptionId = tasks.getEndpointDataParameter(serviceConnectionID, "subscriptionid", true);
+        if(subscriptionId != null && subscriptionId != "") {
+            EnvironmentVariableHelper.setEnvironmentVariable("ARM_SUBSCRIPTION_ID", subscriptionId);
+        }
 
-            switch(authorizationScheme) {
-                case AuthorizationScheme.ManagedServiceIdentity:
-                    process.env['ARM_USE_MSI'] = 'true';
-                    break;
-    
-                case AuthorizationScheme.WorkloadIdentityFederation:
-                    var workloadIdentityFederationCredentials = this.getWorkloadIdentityFederationCredentials(command.serviceProvidername);
-                    process.env['ARM_CLIENT_ID'] = workloadIdentityFederationCredentials.servicePrincipalId;
-                    process.env['ARM_OIDC_AZURE_SERVICE_CONNECTION_ID'] = serviceConnection;
-                    process.env['ARM_USE_OIDC'] = 'true';
-                    break;
+        this.setCommonEnvironmentVariables(authorizationScheme, serviceConnectionID);
 
-                case AuthorizationScheme.ServicePrincipal:
-                    tasks.warning('Client secret authentication is not secure and will be deprecated in the next major version of this task. Please use Workload identity federation authentication instead.');
+        tasks.debug("Finished up provider for authorization scheme: " + authorizationScheme + ".");
+    }
 
-                    var servicePrincipalCredentials = this.getServicePrincipalCredentials(command.serviceProvidername);
-                    process.env['ARM_CLIENT_ID'] = servicePrincipalCredentials.servicePrincipalId;
-                    process.env['ARM_CLIENT_SECRET'] = servicePrincipalCredentials.servicePrincipalKey;
-                    break;
-            }
+    private setCommonEnvironmentVariables(authorizationScheme: AuthorizationScheme, serviceConnectionID: string) {
+        EnvironmentVariableHelper.setEnvironmentVariable("ARM_TENANT_ID", tasks.getEndpointAuthorizationParameter(serviceConnectionID, "tenantid", false));
 
-            tasks.debug('Finished up provider for authorization scheme: ' + authorizationScheme + '.');
+        switch(authorizationScheme) {
+            case AuthorizationScheme.ManagedServiceIdentity:
+                EnvironmentVariableHelper.setEnvironmentVariable("ARM_USE_MSI", "true");
+                break;
+
+            case AuthorizationScheme.WorkloadIdentityFederation:
+                var workloadIdentityFederationCredentials = this.getWorkloadIdentityFederationCredentials(serviceConnectionID);
+                EnvironmentVariableHelper.setEnvironmentVariable("ARM_CLIENT_ID", workloadIdentityFederationCredentials.servicePrincipalId);
+                EnvironmentVariableHelper.setEnvironmentVariable("ARM_OIDC_AZURE_SERVICE_CONNECTION_ID", serviceConnectionID);
+                EnvironmentVariableHelper.setEnvironmentVariable("ARM_USE_OIDC", "true");
+                const systemAccessToken = tasks.getVariable("System.AccessToken");
+                tasks.setSecret(systemAccessToken);
+                EnvironmentVariableHelper.setEnvironmentVariable("SYSTEM_ACCESSTOKEN", systemAccessToken);
+                break;
+
+            case AuthorizationScheme.ServicePrincipal:
+                tasks.warning("Client secret authentication is not secure and will be deprecated in the next major version of this task. Please use Workload identity federation authentication instead.");
+
+                var servicePrincipalCredentials = this.getServicePrincipalCredentials(serviceConnectionID);
+                EnvironmentVariableHelper.setEnvironmentVariable("ARM_CLIENT_ID", servicePrincipalCredentials.servicePrincipalId);
+                EnvironmentVariableHelper.setEnvironmentVariable("ARM_CLIENT_SECRET", servicePrincipalCredentials.servicePrincipalKey);
+                break;
         }
     }
 
@@ -121,7 +107,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
     private mapAuthorizationScheme(authorizationScheme: string) : AuthorizationScheme {
         if(authorizationScheme == undefined) {
-            tasks.warning('The authorization scheme could not be found for your Service Connection, using Workload identity federation by default, but this could cause issues.');
+            tasks.warning("The authorization scheme could not be found for your Service Connection, using Workload identity federation by default, but this could cause issues.");
             return AuthorizationScheme.WorkloadIdentityFederation;
         }
 
@@ -137,7 +123,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
             return AuthorizationScheme.WorkloadIdentityFederation;
         }
 
-        tasks.debug('No matching authorization scheme was found, using ServicePrincipal by default, but this could cause issues.');
+        tasks.debug("No matching authorization scheme was found, using ServicePrincipal by default, but this could cause issues.");
         return AuthorizationScheme.ServicePrincipal;
     }
 }

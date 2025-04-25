@@ -34,7 +34,7 @@ The TerraformInstaller task installs a specific version of Terraform on the agen
 ### Example: Install the latest version of Terraform
 
 ```yaml
-- task: TerraformInstallerV1@1
+- task: TerraformInstaller@1
   displayName: 'Install Terraform'
   inputs:
     terraformVersion: 'latest'
@@ -43,7 +43,7 @@ The TerraformInstaller task installs a specific version of Terraform on the agen
 ### Example: Install a specific version of Terraform
 
 ```yaml
-- task: TerraformInstallerV1@1
+- task: TerraformInstaller@1
   displayName: 'Install Terraform'
   inputs:
     terraformVersion: '1.11.3'
@@ -63,7 +63,7 @@ The Terraform task enables running Terraform commands as part of Azure Build and
 ### Example: Run Terraform init, plan and apply for Azure
 
 ```yaml
-- task: TerraformTaskV5@5
+- task: TerraformTask@5
   displayName: Run Terraform Init
   inputs:
     provider: 'azurerm'
@@ -73,7 +73,7 @@ The Terraform task enables running Terraform commands as part of Azure Build and
     backendAzureRmContainerName: 'your-container-name'
     backendAzureRmKey: 'state.tfstate'
 
-- task: TerraformTaskV5@5
+- task: TerraformTask@5
   name: terraformPlan
   displayName: Run Terraform Plan
   inputs:
@@ -82,8 +82,8 @@ The Terraform task enables running Terraform commands as part of Azure Build and
     commandOptions: '-out tfplan'
     environmentServiceNameAzureRM: 'your-service-connection'
 
-# Only runs if the 'terraformPlan' task has detected changes the in state. 
-- task: TerraformTaskV5@5
+# Only runs if the 'terraformPlan' task has detected changes the in state.
+- task: TerraformTask@5
   displayName: Run Terraform Apply
   condition: and(succeeded(), eq(variables['terraformPlan.changesPresent'], 'true'))
   inputs:
@@ -96,7 +96,7 @@ The Terraform task enables running Terraform commands as part of Azure Build and
 ### Example: Run Terraform init, plan and apply for AWS
 
 ```yaml
-- task: TerraformTaskV5@5
+- task: TerraformTask@5
   displayName: Run Terraform Init
   inputs:
     provider: 'aws'
@@ -105,7 +105,7 @@ The Terraform task enables running Terraform commands as part of Azure Build and
     backendAWSBucketName: 'your-bucket-name'
     backendAWSKey: 'state.tfstate'
 
-- task: TerraformTaskV5@5
+- task: TerraformTask@5
   name: terraformPlan
   displayName: Run Terraform Plan
   inputs:
@@ -114,8 +114,8 @@ The Terraform task enables running Terraform commands as part of Azure Build and
     commandOptions: '-out tfplan'
     environmentServiceNameAWS: 'your-service-connection'
 
-# Only runs if the 'terraformPlan' task has detected changes the in state. 
-- task: TerraformTaskV5@5
+# Only runs if the 'terraformPlan' task has detected changes the in state.
+- task: TerraformTask@5
   displayName: Run Terraform Apply
   condition: and(succeeded(), eq(variables['terraformPlan.changesPresent'], 'true'))
   inputs:
@@ -128,7 +128,7 @@ The Terraform task enables running Terraform commands as part of Azure Build and
 ### Example: Run Terraform init, plan and apply for GCP
 
 ```yaml
-- task: TerraformTaskV5@5
+- task: TerraformTask@5
   displayName: Run Terraform Init
   inputs:
     provider: 'gcp'
@@ -137,7 +137,7 @@ The Terraform task enables running Terraform commands as part of Azure Build and
     backendGCPBucketName: 'your-bucket-name'
     backendGCPPrefix: 'state.tfstate'
 
-- task: TerraformTaskV5@5
+- task: TerraformTask@5
   name: terraformPlan
   displayName: Run Terraform Plan
   inputs:
@@ -146,8 +146,8 @@ The Terraform task enables running Terraform commands as part of Azure Build and
     commandOptions: '-out tfplan'
     environmentServiceNameGCP: 'your-service-connection'
 
-# Only runs if the 'terraformPlan' task has detected changes the in state. 
-- task: TerraformTaskV5@5
+# Only runs if the 'terraformPlan' task has detected changes the in state.
+- task: TerraformTask@5
   displayName: Run Terraform Apply
   condition: and(succeeded(), eq(variables['terraformPlan.changesPresent'], 'true'))
   inputs:
@@ -160,7 +160,7 @@ The Terraform task enables running Terraform commands as part of Azure Build and
 ### Example: Run Terraform init, plan and apply for OCI
 
 ```yaml
-- task: TerraformTaskV5@5
+- task: TerraformTask@5
   displayName: Run Terraform Init
   inputs:
     provider: 'oci'
@@ -168,7 +168,7 @@ The Terraform task enables running Terraform commands as part of Azure Build and
     backendServiceOCI: 'your-service-connection'
     backendOCIPar: 'state.tfstate'
 
-- task: TerraformTaskV5@5
+- task: TerraformTask@5
   name: terraformPlan
   displayName: Run Terraform Plan
   inputs:
@@ -177,8 +177,8 @@ The Terraform task enables running Terraform commands as part of Azure Build and
     commandOptions: '-out tfplan'
     environmentServiceNameOCI: 'your-service-connection'
 
-# Only runs if the 'terraformPlan' task has detected changes the in state. 
-- task: TerraformTaskV5@5
+# Only runs if the 'terraformPlan' task has detected changes the in state.
+- task: TerraformTask@5
   displayName: Run Terraform Apply
   condition: and(succeeded(), eq(variables['terraformPlan.changesPresent'], 'true'))
   inputs:
@@ -257,7 +257,7 @@ The Terraform task requires a service connection for setting up the credentials 
 
 #### Create a new service connection for connecting to an Azure account
 
-Follow the instructions in the [Azure DevOps documentation](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/connect-to-azure?view=azure-devops) to create a new service connection for connecting to an Azure account using Workload identity federation. 
+Follow the instructions in the [Azure DevOps documentation](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/connect-to-azure?view=azure-devops) to create a new service connection for connecting to an Azure account using Workload identity federation.
 
 #### Create a new service connection for connecting to an AWS account
 
