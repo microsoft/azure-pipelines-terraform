@@ -30,7 +30,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         "terraform": true
     },
     "exec": {
-        "terraform init -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=resource_group_name=DummyResourceGroup": {
+        "terraform init -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=resource_group_name=DummyResourceGroup -backend-config=subscription_id=DummmySubscriptionId": {
             "code": 1,
             "stdout": "There are some problems with the configuration, described below.\n\nThe Terraform configuration must be valid before initialization so that Terraform can determine which modules and providers need to be installed."
         }

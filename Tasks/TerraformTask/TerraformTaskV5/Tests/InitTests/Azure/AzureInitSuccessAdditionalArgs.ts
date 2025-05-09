@@ -30,7 +30,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         "terraform": true
     },
     "exec": {
-        "terraform init -no-color -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=resource_group_name=DummyResourceGroup": {
+        "terraform init -no-color -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=resource_group_name=DummyResourceGroup -backend-config=subscription_id=DummmySubscriptionId": {
             "code": 0,
             "stdout": "Executed Successfully"
         }

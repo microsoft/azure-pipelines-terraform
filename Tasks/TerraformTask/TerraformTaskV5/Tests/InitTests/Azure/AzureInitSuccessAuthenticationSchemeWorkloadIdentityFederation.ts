@@ -11,15 +11,16 @@ tr.setInput('workingDirectory', 'DummyWorkingDirectory');
 tr.setInput('commandOptions', '');
 
 tr.setInput('backendServiceArm', 'AzureRM');
-tr.setInput('backendAzureRmResourceGroupName', 'DummyResourceGroup');
 tr.setInput('backendAzureRmStorageAccountName', 'DummyStorageAccount');
 tr.setInput('backendAzureRmContainerName', 'DummyContainer');
 tr.setInput('backendAzureRmKey', 'DummyKey');
+tr.setInput('backendAzureRmUseEntraIdForAuthentication', 'false');
 
 process.env['ENDPOINT_AUTH_SCHEME_AzureRM'] = 'WorkloadIdentityFederation';
 process.env['ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID'] = 'DummmySubscriptionId';
 process.env['ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID'] = 'DummyServicePrincipalId';
 process.env['ENDPOINT_AUTH_PARAMETER_AzureRM_TENANTID'] = 'DummyTenantId';
+process.env['ENDPOINT_AUTH_PARAMETER_SYSTEMVSSCONNECTION_ACCESSTOKEN'] = 'DummyAccessToken';
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "which": {
@@ -29,17 +30,17 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         "terraform": true
     },
     "exec": {
-        "terraform init -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=resource_group_name=DummyResourceGroup": {
+        "terraform init -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey": {
             "code": 0,
             "stdout": "Executed Successfully"
         }
     }
 }
 
-var mock = { 
+var mock = {
     "generateIdToken" : function(command) { return Promise.resolve('12345'); }
  }
- 
+
 tr.registerMock('./id-token-generator', mock);
 tr.setAnswers(a);
 tr.run();
