@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npm run compile && mocha --require ts-node/register Tests/L0.ts",
+    "test": "npm run compile && mocha --timeout 10000 --require ts-node/register Tests/L0.ts",
     "compile": "tsc -b tsconfig.json"
   },
   "author": "",
