@@ -11,7 +11,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\Tasks\\TerraformTask\\TerraformTaskV4\\Tests\\L0.ts",
+      "program": "${workspaceFolder}\\Tasks\\TerraformTask\\TerraformTaskV5\\Tests\\L0.ts",
       "outFiles": [
         "${workspaceFolder}/**/*.js"
       ]
@@ -24,7 +24,7 @@
           "program": "node_modules/mocha/bin/_mocha",
           "stopOnEntry": false,
           "args": [ "-r", "ts-node/register", "Tests/**/*.ts", "--no-timeouts"],
-          "cwd": "${workspaceRoot}/Tasks/TerraformTask/TerraformTaskV4"
+          "cwd": "${workspaceRoot}/Tasks/TerraformTask/TerraformTaskV5"
       },
       {            
         "name": "mocha tests npm",
@@ -32,7 +32,7 @@
         "request": "launch",
         "runtimeExecutable": "npm",
         "runtimeArgs": [ "run-script", "test" ],
-        "cwd": "${workspaceRoot}/Tasks/TerraformTask/TerraformTaskV4"
+        "cwd": "${workspaceRoot}/Tasks/TerraformTask/TerraformTaskV5"
     }
   ]
 }
