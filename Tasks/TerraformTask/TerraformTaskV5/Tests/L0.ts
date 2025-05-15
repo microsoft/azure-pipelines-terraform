@@ -176,6 +176,21 @@ describe('Terraform Test Suite', function () {
         }, tr);
     });
 
+    it('azure init should succeed with authentication scheme WorkloadIdentityFederation and cli flags', async () => {
+        let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndCLIFlags.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.warningIssues.length === 0, 'should have no warnings');
+            assert(tr.stdOutContained('AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndCLIFlagsL0 should have succeeded.'), 'Should have printed: AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndCLIFlagsL0 should have succeeded.');
+        }, tr);
+    });
+
     it('azure init should succeed with additional args', async () => {
         let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessAdditionalArgs.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

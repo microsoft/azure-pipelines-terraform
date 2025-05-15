@@ -216,6 +216,14 @@
             "groupName": "backendAzureRm"
         },
         {
+            "name": "backendAzureRmUseCliFlagsForAuthentication",
+            "type": "boolean",
+            "defaultValue": "false",
+            "label": "Use CLI flags for Authentication",
+            "helpMarkDown": "Choose whether to use CLI flags for client_id, ado_pipeline_service_connection_id and use_oidc inputs. This is designed to enable the use of a separate service connection for the backend configuration. Defaults to true.",
+            "groupName": "backendAzureRm"
+        },
+        {
             "name": "backendAzureRmUseIdTokenGeneration",
             "type": "boolean",
             "defaultValue": "false",

@@ -16,6 +16,7 @@ tr.setInput('backendAzureRmContainerName', 'DummyContainer');
 tr.setInput('backendAzureRmKey', 'DummyKey');
 tr.setInput('backendAzureRmUseEntraIdForAuthentication', 'true');
 tr.setInput('backendAzureRmUseIdTokenGeneration', 'true');
+tr.setInput('backendAzureRmUseCliFlagsForAuthentication', 'true');
 
 process.env['ENDPOINT_AUTH_SCHEME_AzureRM'] = 'WorkloadIdentityFederation';
 process.env['ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID'] = 'DummmySubscriptionId';

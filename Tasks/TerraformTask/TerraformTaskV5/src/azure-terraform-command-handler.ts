@@ -43,8 +43,9 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         }
 
         let fallbackToIdTokenGeneration = tasks.getBoolInput("backendAzureRmUseIdTokenGeneration", false);
+        let backendAzureRmUseCliFlagsForAuthentication = tasks.getBoolInput("backendAzureRmUseCliFlagsForAuthentication", false);
 
-        await this.setCommonVariables(authorizationScheme, serviceConnectionID, fallbackToIdTokenGeneration, true);
+        await this.setCommonVariables(authorizationScheme, serviceConnectionID, fallbackToIdTokenGeneration, backendAzureRmUseCliFlagsForAuthentication);
 
         for (let [key, value] of this.backendConfig.entries()) {
             terraformToolRunner.arg(`-backend-config=${key}=${value}`);
@@ -75,7 +76,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         tasks.debug("Finished up provider for authorization scheme: " + authorizationScheme + ".");
     }
 
-    private async setCommonVariables(authorizationScheme: AuthorizationScheme, serviceConnectionID: string, fallbackToIdTokenGeneration: boolean, isBackend: boolean) : Promise<void> {
+    private async setCommonVariables(authorizationScheme: AuthorizationScheme, serviceConnectionID: string, fallbackToIdTokenGeneration: boolean, useCliFlagsForBackend: boolean) : Promise<void> {
         EnvironmentVariableHelper.setEnvironmentVariable("ARM_TENANT_ID", tasks.getEndpointAuthorizationParameter(serviceConnectionID, "tenantid", false));
 
         switch(authorizationScheme) {
@@ -85,7 +86,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
             case AuthorizationScheme.WorkloadIdentityFederation:
                 var workloadIdentityFederationCredentials = await this.getWorkloadIdentityFederationCredentials(serviceConnectionID, fallbackToIdTokenGeneration);
-                if(isBackend) {
+                if(useCliFlagsForBackend) {
                     // By persisting the client ID in the backend config, we can support multiple service connections for backend and provider auth.
                     this.backendConfig.set("client_id", workloadIdentityFederationCredentials.servicePrincipalId);
                     this.backendConfig.set("use_oidc", "true");
@@ -99,9 +100,9 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                     EnvironmentVariableHelper.setEnvironmentVariable("ARM_OIDC_TOKEN", workloadIdentityFederationCredentials.oidcToken);
                 } else {
                     tasks.debug("ID token generation fallback is disabled, using ID Token Refresh.");
-                    if(isBackend) {
+                    if(useCliFlagsForBackend) {
                         // By persisting the service connection ID in the backend config, we can support multiple service connections for backend and provider auth.
-                        this.backendConfig.set("oidc_azure_service_connection_id", serviceConnectionID);
+                        this.backendConfig.set("ado_pipeline_service_connection_id", serviceConnectionID);
                     } else {
                         EnvironmentVariableHelper.setEnvironmentVariable("ARM_OIDC_AZURE_SERVICE_CONNECTION_ID", serviceConnectionID);
                     }
