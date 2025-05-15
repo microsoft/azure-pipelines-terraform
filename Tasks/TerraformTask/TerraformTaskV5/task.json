@@ -181,7 +181,7 @@
             "defaultValue": "false",
             "label": "Use ID Token Generation as a fallback for older provider versions",
             "helpMarkDown": "Choose whether to use ID Token generation as a fallback for older provider versions. Warning this setting may result in unexpected timeouts.",
-            "groupName": "backendAzureRm"
+            "groupName": "providerAzureRm"
         },
         {
             "name": "environmentServiceNameAWS",
