@@ -330,3 +330,10 @@ If you see an error like this, then it means you are using a provider or backend
 
 1. Update your Terraform CLI and / or Azure proividers to the latest version (recommended)
 2. Fallback to ID token generation by setting the `backendAzureRmUseIdTokenGeneration` and `environmentAzureRmUseIdTokenGeneration` inputs to `true` in the Terraform task. This is a fallback setting for older provider versions and can result in unexpected timeout issues, so please consider using current versions of the Terraform CLI and Azure providers before resorting to this option.
+
+Support for ID Token Refresh was introduced in:
+
+- Terraform CLI 1.11.1
+- AzureRM Provider 4.18.0
+- AzureAD Provider 3.2.0
+- AzAPI Provider 2.0.1
