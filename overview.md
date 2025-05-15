@@ -62,7 +62,7 @@ The Terraform task abstracts running Terraform commands as part of an Azure DevO
 
 ### Example: Run Terraform init, plan and apply for Microsoft Azure
 
->NOTE: Terraform on Azure does not support the use of separate credentials for backend storage account and the Azure providers at this time. This is because they share the same environment variable names. As such, the service connection used for the Terraform Task must have permissions on the storage account container for your backend state file, even if it is in a separate subscription.
+>NOTE: Terraform on Azure does not currently support the use of separate credentials for backend storage account and the Azure providers at this time. This is because they share the same environment variable names. As such, the service connection used for the Terraform Task must have permissions on the storage account container for your backend state file, even if it is in a separate subscription.
 
 ```yaml
 - task: TerraformTask@5
@@ -211,6 +211,7 @@ The Terraform task has the following input parameters:
 - `backendAzureRmKey`: The name of the Azure storage blob to use for the `azurerm` backend. The default value is `''`.
 - `backendAzureRmOverrideSubscriptionID`: The override subscription ID to use for the `azurerm` backend. This is only required if using URI lookup and if you don't want to use the service connection subscription ID. The default value is `''`.
 - `backendAzureRmResourceGroupName`: The name of the Azure resource group the Storage Account sits in to use for the `azurerm` backend. This is only required if using URI lookup. The default value is `''`.
+- `backendAzureRmUseIdTokenGeneration`: Whether to use ID token generation for the `azurerm` backend Workload identity federation. This is a fallback setting for older backend versions and can result in unexpected timeout issues. The default value is `false`.
 
 ##### AWS Specific Inputs for `init`
 
@@ -240,8 +241,9 @@ The Terraform task has the following input parameters:
 
 ##### Azure Specific Inputs for `plan`, `apply`, and `destroy`
 
-- `environmentServiceNameAzureRM`: The name of the Azure service connection to use for the `azurerm` provider. The default value is `''`.
-- `environmentAzureRmOverrideSubscriptionID`: The override subscription ID to use for the `azurerm` provider. This is only required if you don't want to use the service connection subscription ID. The default value is `''`.
+- `environmentServiceNameAzureRM`: The name of the Azure service connection to use for the Azure providers. The default value is `''`.
+- `environmentAzureRmOverrideSubscriptionID`: The override subscription ID to use for the Azure providers. This is only required if you don't want to use the service connection subscription ID. The default value is `''`.
+- `environmentAzureRmUseIdTokenGeneration`: Whether to use ID token generation for the Azure providers with Workload identity federation. This is a fallback setting for older provider versions and can result in unexpected timeout issues. The default value is `false`.
 
 ##### AWS Specific Inputs for `plan`, `apply`, and `destroy`
 
@@ -315,3 +317,16 @@ The Terraform task requires a OCI service connection for setting up the credenti
   - **Private key\*:** Enter the value of the contents of the **private_key** file generated and downloaded in the first step
 
 ![Creating a GCP service connection](images/8_OCI_service_endpoint.PNG)
+
+## Troubleshooting
+
+### How to resolve an error about AzureCLI Authorizer
+
+In you are using older Azure provider or backend versions, you may encounter the following or similar error when running the Terraform task:
+
+`Error: unable to build authorizer for Resource Manager API: could not configure AzureCli Authorizer: obtaining subscription ID: obtaining account details: running Azure CLI: exit status 1: ERROR: Please run 'az login' to setup account.`
+
+If you see an error like this, then it means you are using a provider or backend version that does not support Workload identity federation ID Token Refresh. To resolve this, you can either:
+
+1. Update your Terraform CLI and / or Azure proividers to the latest version (recommended)
+2. Fallback to ID token generation by setting the `backendAzureRmUseIdTokenGeneration` and `environmentAzureRmUseIdTokenGeneration` inputs to `true` in the Terraform task. This is a fallback setting for older provider versions and can result in unexpected timeout issues, so please consider using current versions of the Terraform CLI and Azure providers before resorting to this option.

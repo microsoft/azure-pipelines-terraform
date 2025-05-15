@@ -3,6 +3,7 @@ import {ToolRunner} from "azure-pipelines-task-lib/toolrunner";
 import {TerraformAuthorizationCommandInitializer} from "./terraform-commands";
 import {BaseTerraformCommandHandler} from "./base-terraform-command-handler";
 import {EnvironmentVariableHelper} from "./environment-variables";
+import {generateIdToken} from './id-token-generator';
 
 export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler {
     constructor() {
@@ -41,7 +42,9 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
             this.backendConfig.set("use_azuread_auth", "true");
         }
 
-        this.setCommonEnvironmentVariables(authorizationScheme, serviceConnectionID);
+        let fallbackToIdTokenGeneration = tasks.getBoolInput("backendAzureRmUseIdTokenGeneration", false);
+
+        await this.setCommonEnvironmentVariables(authorizationScheme, serviceConnectionID, fallbackToIdTokenGeneration);
 
         for (let [key, value] of this.backendConfig.entries()) {
             terraformToolRunner.arg(`-backend-config=${key}=${value}`);
@@ -65,12 +68,14 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
             EnvironmentVariableHelper.setEnvironmentVariable("ARM_SUBSCRIPTION_ID", subscriptionId);
         }
 
-        this.setCommonEnvironmentVariables(authorizationScheme, serviceConnectionID);
+        let fallbackToIdTokenGeneration = tasks.getBoolInput("environmentAzureRmUseIdTokenGeneration", false);
+
+        await this.setCommonEnvironmentVariables(authorizationScheme, serviceConnectionID, fallbackToIdTokenGeneration);
 
         tasks.debug("Finished up provider for authorization scheme: " + authorizationScheme + ".");
     }
 
-    private setCommonEnvironmentVariables(authorizationScheme: AuthorizationScheme, serviceConnectionID: string) {
+    private async setCommonEnvironmentVariables(authorizationScheme: AuthorizationScheme, serviceConnectionID: string, fallbackToIdTokenGeneration: boolean) : Promise<void> {
         EnvironmentVariableHelper.setEnvironmentVariable("ARM_TENANT_ID", tasks.getEndpointAuthorizationParameter(serviceConnectionID, "tenantid", false));
 
         switch(authorizationScheme) {
@@ -79,11 +84,19 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
                 break;
 
             case AuthorizationScheme.WorkloadIdentityFederation:
-                var workloadIdentityFederationCredentials = this.getWorkloadIdentityFederationCredentials(serviceConnectionID);
+                var workloadIdentityFederationCredentials = await this.getWorkloadIdentityFederationCredentials(serviceConnectionID, fallbackToIdTokenGeneration);
                 EnvironmentVariableHelper.setEnvironmentVariable("ARM_CLIENT_ID", workloadIdentityFederationCredentials.servicePrincipalId);
-                EnvironmentVariableHelper.setEnvironmentVariable("ARM_OIDC_AZURE_SERVICE_CONNECTION_ID", serviceConnectionID);
                 EnvironmentVariableHelper.setEnvironmentVariable("ARM_USE_OIDC", "true");
-                EnvironmentVariableHelper.setEnvironmentVariable("ARM_OIDC_REQUEST_TOKEN", tasks.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false));
+
+                if (fallbackToIdTokenGeneration) {
+                    tasks.debug("ID token generation fallback is enabled, generating ID Token.");
+                    EnvironmentVariableHelper.setEnvironmentVariable("ARM_OIDC_TOKEN", workloadIdentityFederationCredentials.oidcToken);
+                } else {
+                    tasks.debug("ID token generation fallback is disabled, using ID Token Refresh.");
+                    EnvironmentVariableHelper.setEnvironmentVariable("ARM_OIDC_AZURE_SERVICE_CONNECTION_ID", serviceConnectionID);
+                    EnvironmentVariableHelper.setEnvironmentVariable("ARM_OIDC_REQUEST_TOKEN", tasks.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false));
+                }
+
                 break;
 
             case AuthorizationScheme.ServicePrincipal:
@@ -104,9 +117,13 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         return servicePrincipalCredentials;
     }
 
-    private getWorkloadIdentityFederationCredentials(connectionName: string) : WorkloadIdentityFederationCredentials {
+    private async getWorkloadIdentityFederationCredentials(connectionName: string, getIdToken: boolean) : Promise<WorkloadIdentityFederationCredentials> {
         let workloadIdentityFederationCredentials : WorkloadIdentityFederationCredentials = {
             servicePrincipalId: tasks.getEndpointAuthorizationParameter(connectionName, "serviceprincipalid", true),
+            oidcToken: ""
+        }
+        if(getIdToken) {
+            workloadIdentityFederationCredentials.oidcToken = await generateIdToken(connectionName);
         }
         return workloadIdentityFederationCredentials;
     }
@@ -141,6 +158,7 @@ interface ServicePrincipalCredentials {
 
 interface WorkloadIdentityFederationCredentials {
     servicePrincipalId: string;
+    oidcToken: string;
 }
 
 enum AuthorizationScheme {

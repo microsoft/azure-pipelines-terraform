@@ -176,6 +176,14 @@
             "groupName": "providerAzureRm"
         },
         {
+            "name": "environmentAzureRmUseIdTokenGeneration",
+            "type": "boolean",
+            "defaultValue": "false",
+            "label": "Use ID Token Generation as a fallback for older provider versions",
+            "helpMarkDown": "Choose whether to use ID Token generation as a fallback for older provider versions. Warning this setting may result in unexpected timeouts.",
+            "groupName": "backendAzureRm"
+        },
+        {
             "name": "environmentServiceNameAWS",
             "type": "connectedService:AWSServiceEndpoint",
             "label": "Amazon Web Services connection",
@@ -205,6 +213,14 @@
             "defaultValue": "true",
             "label": "Use Entra ID for Authentication",
             "helpMarkDown": "Choose whether to use Entra Id authentication to the storage account. If selected, the use_azuread_auth variable will be set to true.",
+            "groupName": "backendAzureRm"
+        },
+        {
+            "name": "backendAzureRmUseIdTokenGeneration",
+            "type": "boolean",
+            "defaultValue": "false",
+            "label": "Use ID Token Generation as a fallback for older backend versions",
+            "helpMarkDown": "Choose whether to use ID Token generation as a fallback for older backend versions. Warning this setting may result in unexpected timeouts.",
             "groupName": "backendAzureRm"
         },
         {
