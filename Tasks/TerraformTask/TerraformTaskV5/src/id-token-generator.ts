@@ -1,17 +1,17 @@
 import tasks = require("azure-pipelines-task-lib/task");
 
-export async function generateIdToken(serviceConnectionName : string): Promise<string> {
+export async function generateIdToken(serviceConnectionID : string): Promise<string> {
     let tokenGenerator = new TokenGenerator();
-    return await tokenGenerator.generate(serviceConnectionName);
+    return await tokenGenerator.generate(serviceConnectionID);
 }
 
 export interface ITokenGenerator {
-    generate(serviceConnectionName : string): Promise<string>;
+    generate(serviceConnectionID : string): Promise<string>;
 }
 
 export class TokenGenerator implements ITokenGenerator {
-    public async generate(serviceConnectionName : string): Promise<string> {
-        const url = process.env["SYSTEM_OIDCREQUESTURI"]+"?api-version=7.1&serviceConnectionId=" + serviceConnectionName;
+    public async generate(serviceConnectionID : string): Promise<string> {
+        const url = process.env["SYSTEM_OIDCREQUESTURI"]+"?api-version=7.1&serviceConnectionId=" + serviceConnectionID;
         var oidcToken = await fetch(url, {
             method: 'POST',
             headers: {

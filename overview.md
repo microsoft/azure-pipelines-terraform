@@ -62,7 +62,7 @@ The Terraform task abstracts running Terraform commands as part of an Azure DevO
 
 ### Example: Run Terraform init, plan and apply for Microsoft Azure
 
->NOTE: Terraform on Azure does not currently support the use of separate credentials for backend storage account and the Azure providers at this time. This is because they share the same environment variable names. As such, the service connection used for the Terraform Task must have permissions on the storage account container for your backend state file, even if it is in a separate subscription.
+>NOTE: Terraform on Azure currently only supports support the use of separate credentials / service connections for backend storage account and the Azure providers when using Workload identity federation with ID Token Refresh. If you are not using Workload identity federation with ID Token Refresh, you must use the same service connection for both the backend and the providers.
 
 ```yaml
 - task: TerraformTask@5
@@ -329,7 +329,7 @@ In you are using older Azure provider or backend versions, you may encounter the
 If you see an error like this, then it means you are using a provider or backend version that does not support Workload identity federation ID Token Refresh. To resolve this, you can either:
 
 1. Update your Terraform CLI and / or Azure proividers to the latest version (recommended)
-2. Fallback to ID token generation by setting the `backendAzureRmUseIdTokenGeneration` and `environmentAzureRmUseIdTokenGeneration` inputs to `true` in the Terraform task. This is a fallback setting for older provider versions and can result in unexpected timeout issues, so please consider using current versions of the Terraform CLI and Azure providers before resorting to this option.
+2. Fallback to ID token generation by setting the `backendAzureRmUseIdTokenGeneration` and / or `environmentAzureRmUseIdTokenGeneration` inputs to `true` in the Terraform task. This is a fallback setting for older provider versions and can result in unexpected timeout issues, so please consider using current versions of the Terraform CLI and Azure providers before resorting to this option.
 
 Support for ID Token Refresh was introduced in:
 
