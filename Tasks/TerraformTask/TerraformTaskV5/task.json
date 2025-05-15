@@ -2,7 +2,7 @@
     "id": "FE504ACC-6115-40CB-89FF-191386B5E7BF",
     "name": "TerraformTask",
     "friendlyName": "Terraform",
-    "description": "Execute terraform commands to manage resources on Microsoft Azure, Amazon Web Services(AWS), Google Cloud Platform(GCP) and Oracle Cloud Infrastructure(OCI). v5.255.1",
+    "description": "Execute terraform commands to manage resources on Microsoft Azure, Amazon Web Services(AWS), Google Cloud Platform(GCP) and Oracle Cloud Infrastructure(OCI). v5.257.1",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/devlabs/ado/tf/task/v5)",
     "category": "Deploy",
