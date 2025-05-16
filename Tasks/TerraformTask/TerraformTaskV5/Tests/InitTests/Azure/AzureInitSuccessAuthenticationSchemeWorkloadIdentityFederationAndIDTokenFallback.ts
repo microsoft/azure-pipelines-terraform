@@ -2,7 +2,7 @@ import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 
-let tp = path.join(__dirname, './AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndDefaultSettingsL0.js');
+let tp = path.join(__dirname, './AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndIDTokenFallbackL0.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
 
 tr.setInput('provider', 'azurerm');
@@ -15,6 +15,7 @@ tr.setInput('backendAzureRmStorageAccountName', 'DummyStorageAccount');
 tr.setInput('backendAzureRmContainerName', 'DummyContainer');
 tr.setInput('backendAzureRmKey', 'DummyKey');
 tr.setInput('backendAzureRmUseEntraIdForAuthentication', 'true');
+tr.setInput('backendAzureRmUseIdTokenGeneration', 'true');
 tr.setInput('backendAzureRmUseCliFlagsForAuthentication', 'true');
 
 process.env['ENDPOINT_AUTH_SCHEME_AzureRM'] = 'WorkloadIdentityFederation';
@@ -31,7 +32,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         "terraform": true
     },
     "exec": {
-        "terraform init -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=use_azuread_auth=true -backend-config=client_id=DummyServicePrincipalId -backend-config=use_oidc=true -backend-config=ado_pipeline_service_connection_id=AzureRM": {
+        "terraform init -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=use_azuread_auth=true -backend-config=client_id=DummyServicePrincipalId -backend-config=use_oidc=true": {
             "code": 0,
             "stdout": "Executed Successfully"
         }

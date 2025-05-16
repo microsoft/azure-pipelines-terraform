@@ -2,7 +2,7 @@
     "id": "FE504ACC-6115-40CB-89FF-191386B5E7BF",
     "name": "TerraformTask",
     "friendlyName": "Terraform",
-    "description": "Execute terraform commands to manage resources on Microsoft Azure, Amazon Web Services(AWS), Google Cloud Platform(GCP) and Oracle Cloud Infrastructure(OCI). v5.255.1",
+    "description": "Execute terraform commands to manage resources on Microsoft Azure, Amazon Web Services(AWS), Google Cloud Platform(GCP) and Oracle Cloud Infrastructure(OCI).",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[Learn more about this task](https://aka.ms/devlabs/ado/tf/task/v5)",
     "category": "Deploy",
@@ -14,7 +14,7 @@
     "demands": [],
     "version": {
         "Major": "5",
-        "Minor": "255",
+        "Minor": "257",
         "Patch": "1"
     },
     "instanceNameFormat": "Terraform : $(provider)",
@@ -176,6 +176,14 @@
             "groupName": "providerAzureRm"
         },
         {
+            "name": "environmentAzureRmUseIdTokenGeneration",
+            "type": "boolean",
+            "defaultValue": "false",
+            "label": "Use ID Token Generation as a fallback for older provider versions",
+            "helpMarkDown": "Choose whether to use ID Token generation as a fallback for older provider versions. Warning this setting may result in unexpected timeouts.",
+            "groupName": "providerAzureRm"
+        },
+        {
             "name": "environmentServiceNameAWS",
             "type": "connectedService:AWSServiceEndpoint",
             "label": "Amazon Web Services connection",
@@ -205,6 +213,22 @@
             "defaultValue": "true",
             "label": "Use Entra ID for Authentication",
             "helpMarkDown": "Choose whether to use Entra Id authentication to the storage account. If selected, the use_azuread_auth variable will be set to true.",
+            "groupName": "backendAzureRm"
+        },
+        {
+            "name": "backendAzureRmUseCliFlagsForAuthentication",
+            "type": "boolean",
+            "defaultValue": "false",
+            "label": "Use CLI flags for Authentication",
+            "helpMarkDown": "Choose whether to use CLI flags for client_id, ado_pipeline_service_connection_id and use_oidc inputs. This is designed to enable the use of a separate service connection for the backend configuration. Defaults to true.",
+            "groupName": "backendAzureRm"
+        },
+        {
+            "name": "backendAzureRmUseIdTokenGeneration",
+            "type": "boolean",
+            "defaultValue": "false",
+            "label": "Use ID Token Generation as a fallback for older backend versions",
+            "helpMarkDown": "Choose whether to use ID Token generation as a fallback for older backend versions. Warning this setting may result in unexpected timeouts.",
             "groupName": "backendAzureRm"
         },
         {
