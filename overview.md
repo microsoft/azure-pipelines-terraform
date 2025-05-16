@@ -104,6 +104,9 @@ In order to use different service connections for the backend state and provider
 The following example shows an example of using a 3 service connection setup with the Terraform task:
 
 ```yaml
+trigger:
+- main
+
 stages:
 # In Stage 1, run Terraform init and plan
 # `your-backend-service-connection` identity only has Storage Blob Data Contributor permissions to the Storage Account Container
@@ -205,7 +208,7 @@ stages:
         environmentServiceNameAzureRM: 'your-apply-service-connection'
 ```
 
->NOTE: This example is not comprehensive, you need to consider using environments, concurrency control, deployment jobs, approvals on the service connection, and other best practices based your specific use case. This example is only designed to show the fundamentals of how to use the Terraform task with different service connections for the backend state and providers.
+>NOTE: This example is not comprehensive, you need to consider using environments, concurrency control, deployment jobs, approvals on the service connection, private networking, and other best practices based your specific use case. This example is only designed to show the fundamentals of how to use the Terraform task with different service connections for the backend state and providers.
 
 ### Example: Run Terraform init, plan and apply for AWS
 
