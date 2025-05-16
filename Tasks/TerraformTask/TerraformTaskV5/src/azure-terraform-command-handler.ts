@@ -71,7 +71,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
         let fallbackToIdTokenGeneration = tasks.getBoolInput("environmentAzureRmUseIdTokenGeneration", false);
 
-        await this.setCommonVariables(authorizationScheme, serviceConnectionID, fallbackToIdTokenGeneration, true);
+        await this.setCommonVariables(authorizationScheme, serviceConnectionID, fallbackToIdTokenGeneration, false);
 
         tasks.debug("Finished up provider for authorization scheme: " + authorizationScheme + ".");
     }
