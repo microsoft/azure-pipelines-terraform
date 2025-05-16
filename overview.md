@@ -60,9 +60,9 @@ The Terraform task abstracts running Terraform commands as part of an Azure DevO
 - Create or open a YAML pipeline.
 - Add the Terraform task to your pipeline YAML file.
 
-### Example: Run Terraform init, plan and apply for Microsoft Azure
+### Examples: Run Terraform init, plan and apply for Microsoft Azure
 
->NOTE: Terraform on Azure currently only supports support the use of separate credentials / service connections for backend storage account and the Azure providers when using Workload identity federation with ID Token Refresh. If you are not using Workload identity federation with ID Token Refresh, you must use the same service connection for both the backend and the providers.
+#### Example: Using default settings with the same service connection for all tasks.
 
 ```yaml
 - task: TerraformTask@5
@@ -94,6 +94,118 @@ The Terraform task abstracts running Terraform commands as part of an Azure DevO
     commandOptions: 'tfplan'
     environmentServiceNameAzureRM: 'your-service-connection'
 ```
+
+#### Example: Run Terraform init, plan and apply for Microsoft Azure with different service connections for state and providers
+
+Terraform on Azure currently only supports different identities / service connections for the backend state and providers for Workload identity federation when using ID Token Refresh. If you are not using ID Token refresh (the default) and have explicitly set the `backendAzureRmUseIdTokenGeneration` and / or `environmentAzureRmUseIdTokenGeneration` inputs to `false`, then you cannot use different service connections for the backend state and providers as it will result in an ID Token timeout.
+
+In order to use different service connections for the backend state and providers, you need to set `backendAzureRmUseCliFlagsForAuthentication` to `true` in the Terraform task. This will set the backend configuration as CLI flags for the `client_id`, `ado_pipeline_service_connection_id` and `use_oidc` settings. This means that they will not read the environment variables set for the provider. You must take caustion when doing this, as it will cache these settings in the plan file and can have unexpected result depending on your combination of service connections.
+
+The following example shows an example of using a 3 service connection setup with the Terraform task:
+
+```yaml
+stages:
+# In Stage 1, run Terraform init and plan
+# `your-backend-service-connection` only has Storage Blob Data Contributor permissions to the Storage Account Container
+# `your-plan-service-connection` has Reader permissions to the Azure subscription
+- stage: plan
+  displayName: 'Terraform Plan'
+  jobs:
+  - job: plan
+    displayName: 'Terraform Init and Plan'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: TerraformInstaller@1
+      displayName: 'Install Terraform'
+      inputs:
+        terraformVersion: 'latest'
+
+    - task: TerraformTask@5
+      displayName: Run Terraform Init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        backendServiceArm: 'your-backend-service-connection'
+        backendAzureRmStorageAccountName: 'your-storage-account-name'
+        backendAzureRmContainerName: 'your-container-name'
+        backendAzureRmKey: 'state.tfstate'
+        backendAzureRmUseCliFlagsForAuthentication: true
+
+    - task: TerraformTask@5
+      name: terraformPlan
+      displayName: Run Terraform Plan
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        commandOptions: '-out tfplan'
+        environmentServiceNameAzureRM: 'your-plan-service-connection'
+
+    - task: CopyFiles@2
+      displayName: Create Module Artifact
+      inputs:
+        SourceFolder: '$(Build.SourcesDirectory)'
+        Contents: |
+          **/*
+          !.terraform/**/*
+          !.git/**/*
+          !**/.terraform/**/*
+          !**/.git/**/*
+        TargetFolder: '$(Build.ArtifactsStagingDirectory)'
+        CleanTargetFolder: true
+        OverWrite: true
+
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Module Artifact
+      inputs:
+        targetPath: '$(Build.ArtifactsStagingDirectory)'
+        artifact: 'terraformModule'
+        publishLocation: 'pipeline'
+
+# In Stage 2, run Terraform init and apply
+# `your-backend-service-connection` only has Storage Blob Data Contributor permissions to the Storage Account Container
+# `your-apply-service-connection` has Contributor permissions to the Azure subscription
+- stage: apply
+  displayName: 'Terraform Apply'
+  jobs:
+  - job: apply
+    displayName: 'Terraform Init and Apply'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: DownloadPipelineArtifact@2
+      displayName: Download Module Artifact
+      inputs:
+        source: 'current'
+        artifactName: 'terraformModule'
+        targetPath: '$(Build.SourcesDirectory)'
+
+    - task: TerraformInstaller@1
+      displayName: 'Install Terraform'
+      inputs:
+        terraformVersion: 'latest'
+
+    - task: TerraformTask@5
+      displayName: Run Terraform Init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        backendServiceArm: 'your-backend-service-connection'
+        backendAzureRmStorageAccountName: 'your-storage-account-name'
+        backendAzureRmContainerName: 'your-container-name'
+        backendAzureRmKey: 'state.tfstate'
+        backendAzureRmUseCliFlagsForAuthentication: true
+
+    - task: TerraformTask@5
+      displayName: Run Terraform Apply
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        commandOptions: 'tfplan'
+        environmentServiceNameAzureRM: 'your-apply-service-connection'
+```
+
+>NOTE: This example is not comprehensive, you need to consider using environments, deployment jobs, approvals and other best practices based your specific use case. This example is only designed to show how to use the Terraform task with different service connections for the backend state and providers.
 
 ### Example: Run Terraform init, plan and apply for AWS
 
@@ -212,6 +324,7 @@ The Terraform task has the following input parameters:
 - `backendAzureRmOverrideSubscriptionID`: The override subscription ID to use for the `azurerm` backend. This is only required if using URI lookup and if you don't want to use the service connection subscription ID. The default value is `''`.
 - `backendAzureRmResourceGroupName`: The name of the Azure resource group the Storage Account sits in to use for the `azurerm` backend. This is only required if using URI lookup. The default value is `''`.
 - `backendAzureRmUseIdTokenGeneration`: Whether to use ID token generation for the `azurerm` backend Workload identity federation. This is a fallback setting for older backend versions and can result in unexpected timeout issues. The default value is `false`.
+- `backendAzureRmUseCliFlagsForAuthentication`: Whether to use CLI flags for authentication for the `azurerm` backend. This is required if you want to use different service connections for the backend state and providers. It will set `client_id`, `ado_pipeline_service_connection_id` and `use_oidc` as CLI flags, so they are persisted in the plan file. The default value is `false`.
 
 ##### AWS Specific Inputs for `init`
 
