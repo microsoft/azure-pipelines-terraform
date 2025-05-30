@@ -27,7 +27,7 @@ describe('Terraform Test Suite', function () {
     it('azure init should succeed with no additional args', async () => {
         let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessNoAdditionalArgs.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        
+
         await tr.runAsync();
 
         runValidations(() => {
@@ -42,7 +42,7 @@ describe('Terraform Test Suite', function () {
     it('azure init should succeed with no additional args and default settings', async () => {
         let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessNoAdditionalArgsAndDefaultSettings.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        
+
         await tr.runAsync();
 
         runValidations(() => {
@@ -57,7 +57,7 @@ describe('Terraform Test Suite', function () {
     it('azure init should succeed with lower case authentication scheme', async () => {
         let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessLowerCaseAuthenticationScheme.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            
+
         await tr.runAsync();
 
         runValidations(() => {
@@ -85,7 +85,7 @@ describe('Terraform Test Suite', function () {
         }, tr);
     });
 
-    
+
     it('azure init should succeed with malformed authentication scheme', async () => {
         let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessMalformedAuthenticationScheme.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -158,6 +158,36 @@ describe('Terraform Test Suite', function () {
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndDefaultSettingsL0 should have succeeded.'), 'Should have printed: AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndDefaultSettingsL0 should have succeeded.');
+        }, tr);
+    });
+
+    it('azure init should succeed with authentication scheme WorkloadIdentityFederation and id token fallback', async () => {
+        let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndIDTokenFallback.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.warningIssues.length === 0, 'should have no warnings');
+            assert(tr.stdOutContained('AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndIDTokenFallbackL0 should have succeeded.'), 'Should have printed: AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndIDTokenFallbackL0 should have succeeded.');
+        }, tr);
+    });
+
+    it('azure init should succeed with authentication scheme WorkloadIdentityFederation and cli flags', async () => {
+        let tp = path.join(__dirname, './InitTests/Azure/AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndCLIFlags.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.warningIssues.length === 0, 'should have no warnings');
+            assert(tr.stdOutContained('AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndCLIFlagsL0 should have succeeded.'), 'Should have printed: AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndCLIFlagsL0 should have succeeded.');
         }, tr);
     });
 
@@ -674,7 +704,7 @@ describe('Terraform Test Suite', function () {
             assert(tr.stdOutContained('Execution failed: invalid config files'), 'Should have shown error message');
         }, tr);
     });
-    
+
     it('gcp plan should fail with empty working directory', async () => {
         let tp = path.join(__dirname, './PlanTests/GCP/GCPPlanFailEmptyWorkingDirectory.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -1141,7 +1171,7 @@ describe('Terraform Test Suite', function () {
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.invokedToolCount === 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
-            assert(tr.warningIssues.length === 0, 'should have no warnings');    
+            assert(tr.warningIssues.length === 0, 'should have no warnings');
         }, tr);
     });
 
@@ -1155,8 +1185,8 @@ describe('Terraform Test Suite', function () {
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.invokedToolCount === 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
-            assert(tr.warningIssues.length === 1, 'should have one warning');  
-            assert(tr.createdWarningIssue('Multiple provider blocks specified in the .tf files in the current working directory.'), 'Should have created warning: Multiple provider blocks specified in the .tf files in the current working drectory.');  
+            assert(tr.warningIssues.length === 1, 'should have one warning');
+            assert(tr.createdWarningIssue('Multiple provider blocks specified in the .tf files in the current working directory.'), 'Should have created warning: Multiple provider blocks specified in the .tf files in the current working drectory.');
         }, tr);
     });
 
