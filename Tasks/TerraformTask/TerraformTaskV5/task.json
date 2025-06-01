@@ -153,17 +153,9 @@
             "name": "fileName",
             "type": "string",
             "label": "Output Filename",
-            "visibleRule": "outputTo = file",
-            "required": true,
-            "helpMarkDown": "filename of output"
-        },
-        {
-            "name": "showPlanName",
-            "type": "string",
-            "label": "Plan Name",
-            "visibleRule": "command = show && outputFormat = json",
+            "visibleRule": "outputTo = file || outputFormat = json",
             "required": false,
-            "helpMarkDown": "Name for the terraform plan to display in the Terraform Plan tab. If not provided, a default name will be used."
+            "helpMarkDown": "Filename for the output. For JSON plan output, this will also be used as the name for the terraform plan to display in the Terraform Plan tab. If not provided, a default name will be used."
         },
         {
             "name": "publishPlan",

@@ -117,15 +117,13 @@ export abstract class BaseTerraformCommandHandler {
             
             // If JSON format is used, attach the output for the Terraform Plan tab
             if (outputFormat == "json") {
-                const planName = tasks.getInput("planName") || "terraform-plan";
+                const planName = tasks.getInput("fileName") || "terraform-plan";
                 const attachmentType = "terraform-plan-results";
                 
                 // Create a file in the task's working directory
                 const workDir = tasks.getVariable('System.DefaultWorkingDirectory') || '.';
-                // Get the plan name from the input parameter
-                const showPlanName = tasks.getInput("showPlanName") || "terraform-plan";
                 // Create an absolute path for the plan file
-                const planFilePath = path.join(workDir, `${showPlanName}.json`);
+                const planFilePath = path.join(workDir, `${planName}.json`);
                 
                 // Write the output to the file
                 tasks.writeFile(planFilePath, commandOutput.stdout);
@@ -141,8 +139,8 @@ export abstract class BaseTerraformCommandHandler {
                 console.log(`Task Instance ID: ${tasks.getVariable('SYSTEM_TASKINSTANCEID') || 'unknown'}`);
                 
                 // Save as attachment using the file path
-                console.log(`Adding attachment: type=${attachmentType}, name=${showPlanName}, path=${planFilePath}`);
-                tasks.addAttachment(attachmentType, showPlanName, planFilePath);
+                console.log(`Adding attachment: type=${attachmentType}, name=${planName}, path=${planFilePath}`);
+                tasks.addAttachment(attachmentType, planName, planFilePath);
                 
                 console.log(`Terraform plan output saved for visualization in the Terraform Plan tab`);
             }
@@ -161,7 +159,7 @@ export abstract class BaseTerraformCommandHandler {
             
             // If JSON format is used, attach the output for the Terraform Plan tab
             if (outputFormat == "json") {
-                const showPlanName = tasks.getInput("showPlanName") || path.basename(showFilePath);
+                const planName = tasks.getInput("fileName") || path.basename(showFilePath);
                 const attachmentType = "terraform-plan-results";
                 
                 // Debug info to help troubleshoot
@@ -175,8 +173,8 @@ export abstract class BaseTerraformCommandHandler {
                 console.log(`Task Instance ID: ${tasks.getVariable('SYSTEM_TASKINSTANCEID') || 'unknown'}`);
                 
                 // Save as attachment - using the file path that was already written to
-                console.log(`Adding attachment: type=${attachmentType}, name=${showPlanName}, path=${showFilePath}`);
-                tasks.addAttachment(attachmentType, showPlanName, showFilePath);
+                console.log(`Adding attachment: type=${attachmentType}, name=${planName}, path=${showFilePath}`);
+                tasks.addAttachment(attachmentType, planName, showFilePath);
                 
                 console.log(`Terraform plan output saved for visualization in the Terraform Plan tab`);
             }
