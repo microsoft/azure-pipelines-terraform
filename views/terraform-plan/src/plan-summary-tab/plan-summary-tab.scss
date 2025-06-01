@@ -1,0 +1,32 @@
+.terraform-plan-container {
+    margin: 10px;
+    padding: 10px;
+}
+
+.plan-dropdown {
+    margin-bottom: 15px;
+    width: 300px;
+}
+
+.plan-content {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    overflow-x: auto;
+}
+
+.plan-content-no-data {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+}
+
+pre {
+    margin: 0;
+}
+
+/* Import formatter styles */
+@import './terraform-plan-formatter.scss';

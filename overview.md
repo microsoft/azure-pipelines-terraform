@@ -354,6 +354,18 @@ The Terraform task has the following input parameters:
 - `outputTo`: Choose whether to output to the console or a file for the `show` and `output` Terraform commands. The options are `console`, and `file`. The default value is `console`.
 - `fileName`: The name of the file to output to for the `show` and `output` commands if `outputTo` is set to `file`. The default value is `''`.
 - `outputFormat`: The output format to use for the `show` command. The options are `json`, and `default`. The default value is `default`.
+- `planName`: The name to display for the plan in the Terraform Plan tab when using `show` command with `json` output format. If not provided, a default name will be used. The default value is `''`.
+
+#### Terraform Plan Visualization
+
+When using the `show` command with `outputFormat` set to `json`, the task will automatically save the plan output for visualization in the "Terraform Plan" tab of the build summary. This provides a convenient way to view the Terraform plan directly in Azure Pipelines without needing to download and review log files.
+
+To use this feature:
+1. Set the `command` to `show`
+2. Set the `outputFormat` to `json`
+3. Optionally provide a `planName` to identify your plan in the tab
+
+Multiple plans in the same build will be shown in a dropdown selector in the tab.
 
 ##### Azure Specific Inputs for `plan`, `apply`, and `destroy`
 

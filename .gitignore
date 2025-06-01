@@ -1,6 +1,9 @@
 node_modules
 build
+dist
+views/terraform-plan/dist
 Tasks/**/*.js
+views/**/*.js
 .taskkey
 configs/self.json
 *.vsix

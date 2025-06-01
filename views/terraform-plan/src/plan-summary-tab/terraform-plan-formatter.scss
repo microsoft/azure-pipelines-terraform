@@ -1,0 +1,128 @@
+.json-plan {
+    font-family: monospace;
+    font-size: 13px;
+    overflow: auto;
+    max-height: 600px;
+}
+
+.tf-plan-summary {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: var(--background-color, #f5f5f5);
+    border: 1px solid var(--border-color, #ddd);
+    border-radius: 4px;
+}
+
+.tf-plan-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.tf-plan-actions {
+    margin-top: 10px;
+}
+
+.tf-plan-actions ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.tf-action-create {
+    color: var(--create-color, #28a745);
+}
+
+.tf-action-update {
+    color: var(--update-color, #0078d4);
+}
+
+.tf-action-delete {
+    color: var(--delete-color, #d73a49);
+}
+
+.tf-sensitive-info {
+    color: var(--warning-color, #f2c811);
+}
+
+.tf-sensitive-badge {
+    background-color: var(--warning-bg-color, #fff4b5);
+    color: var(--warning-text-color, #735c0f);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.has-sensitive .tf-resource-address {
+    margin-right: 10px;
+}
+
+.tf-plan-details {
+    margin: 20px 0;
+}
+
+.tf-plan-details summary {
+    cursor: pointer;
+    padding: 8px 0;
+    font-weight: bold;
+}
+
+.tf-resource-changes {
+    margin-top: 20px;
+}
+
+.tf-resource-detail {
+    border: 1px solid var(--border-color, #ddd);
+    border-radius: 4px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.tf-resource-detail summary {
+    cursor: pointer;
+    padding: 10px;
+    background-color: var(--background-color, #f5f5f5);
+    display: flex;
+    justify-content: space-between;
+}
+
+.tf-resource-address {
+    font-weight: bold;
+    font-family: monospace;
+}
+
+.tf-resource-actions {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background-color: var(--action-bg-color, #f0f0f0);
+}
+
+.tf-resource-content {
+    padding: 15px;
+}
+
+.tf-resource-before,
+.tf-resource-after {
+    margin-bottom: 15px;
+}
+
+.tf-resource-before h5,
+.tf-resource-after h5 {
+    margin-bottom: 5px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .tf-plan-summary {
+        --background-color: #252526;
+        --border-color: #3c3c3c;
+    }
+    
+    .tf-resource-detail summary {
+        --background-color: #252526;
+    }
+}

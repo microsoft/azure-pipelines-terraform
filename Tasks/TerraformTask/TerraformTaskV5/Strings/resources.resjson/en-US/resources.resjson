@@ -20,6 +20,8 @@
   "loc.input.help.outputTo": "choose output to file or console.  ",
   "loc.input.label.fileName": "Filename",
   "loc.input.help.fileName": "filename of output",
+  "loc.input.label.planName": "Plan Name",
+  "loc.input.help.planName": "Name for the terraform plan to display in the Terraform Plan tab. If not provided, a default name will be used.",
   "loc.input.label.outputFormat": "Output format",
   "loc.input.help.outputFormat": "choose format of console ouput for show cmd.",
   "loc.input.label.environmentServiceNameAzureRM": "Azure subscription",
