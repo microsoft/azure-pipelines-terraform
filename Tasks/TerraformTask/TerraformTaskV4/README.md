@@ -92,6 +92,7 @@ Options specific to  **custom**
 When selecting custom you can use any command that is supported natively by terraform.
 - **customCommand\*:** pass any command that is supported natively by terraform
 - **outputTo\*:** (console or file).You can choose to save output to file or only show output in console (i.e log)
+- **filename\*:** specifies the output file name when outputTO is set to file.
 
 ## Output Variables
 * **changesPresent:** This variable is set to true if the plan command finds changes to apply. Can be used by subsequent tasks. Give the producing task a reference name. Then, in a downstream step, you can use the form $(\<ReferenceName\>.changesPresent) to refer to it.
