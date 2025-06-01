@@ -305,6 +305,16 @@ stages:
     environmentServiceNameOCI: 'your-service-connection'
 ```
 
+### Default Non-Interactive Mode for Terraform Commands
+
+> **Note:** As of June 2025, this extension automatically adds `-input=false` to the following Terraform commands by default: `init`, `plan`, `apply`, and `destroy`.
+>
+> This means that in CI/CD pipelines, if required inputs are missing, Terraform will immediately fail and release any statefile locks, rather than hanging and waiting for interactive input. This prevents pipeline hangs and ungraceful statefile locks, making automation more robust.
+>
+> **Override:** If you explicitly specify an `-input` flag in your `commandOptions`, your value will be used instead of the default.
+>
+> For more details, see the [Terraform CLI input docs](https://www.terraform.io/cli/commands/options/input).
+
 ### Input parameters
 
 The Terraform task has the following input parameters:
