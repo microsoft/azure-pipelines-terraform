@@ -162,21 +162,8 @@ export abstract class BaseTerraformCommandHandler {
                 const planName = tasks.getInput("fileName") || path.basename(showFilePath);
                 const attachmentType = "terraform-plan-results";
                 
-                // Debug info to help troubleshoot
-                console.log(`Using existing file for plan output: ${showFilePath}`);
-                console.log(`File exists: ${tasks.exist(showFilePath)}`);
-                console.log(`File size: ${fs.statSync(showFilePath).size} bytes`);
-                console.log(`First 100 chars: ${fs.readFileSync(showFilePath, 'utf8').substring(0, 100)}...`);
-                
-                // Get current task info for debugging
-                console.log(`Task ID: ${tasks.getVariable('SYSTEM_TASKID') || 'unknown'}`);
-                console.log(`Task Instance ID: ${tasks.getVariable('SYSTEM_TASKINSTANCEID') || 'unknown'}`);
-                
                 // Save as attachment - using the file path that was already written to
-                console.log(`Adding attachment: type=${attachmentType}, name=${planName}, path=${showFilePath}`);
                 tasks.addAttachment(attachmentType, planName, showFilePath);
-                
-                console.log(`Terraform plan output saved for visualization in the Terraform Plan tab`);
             }
             
             return commandOutput.exitCode;
@@ -306,16 +293,8 @@ export abstract class BaseTerraformCommandHandler {
                     // Write the output to the file
                     tasks.writeFile(jsonPlanFilePath, showCommandOutput.stdout);
                     
-                    // Debug info to help troubleshoot
-                    console.log(`Writing plan to file: ${jsonPlanFilePath}`);
-                    console.log(`File exists: ${tasks.exist(jsonPlanFilePath)}`);
-                    console.log(`File size: ${fs.statSync(jsonPlanFilePath).size} bytes`);
-                    
                     // Save as attachment using the file path
-                    console.log(`Adding attachment: type=${attachmentType}, name=${planName}, path=${jsonPlanFilePath}`);
                     tasks.addAttachment(attachmentType, planName, jsonPlanFilePath);
-                    
-                    console.log(`Terraform plan output saved for visualization in the Terraform Plan tab`);
                 }
             } catch (error) {
                 // Log error but don't fail the task
