@@ -214,11 +214,11 @@ export abstract class BaseTerraformCommandHandler {
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let commandOptions = tasks.getInput("commandOptions") != null ? `${tasks.getInput("commandOptions")} -detailed-exitcode`:`-detailed-exitcode`
         
-        // Check if publishPlan is enabled
-        const publishPlan = tasks.getBoolInput("publishPlan", false);
+        // Check if publishPlan is provided (non-empty string means publish)
+        const publishPlanName = tasks.getInput("publishPlan") || "";
         
-        // If publishPlan is enabled, check for -out parameter and add it if not specified
-        if (publishPlan) {
+        // If publishPlan is provided, check for -out parameter and add it if not specified
+        if (publishPlanName) {
             // Check if -out parameter is already specified
             let outParamSpecified = false;
             let planOutputPath = "";
@@ -270,8 +270,8 @@ export abstract class BaseTerraformCommandHandler {
         }
         tasks.setVariable('changesPresent', (result === 2).toString(), false, true);
         
-        // If publishPlan is enabled, run show command with JSON output to get the plan details
-        if (publishPlan) {
+        // If publishPlan name is provided, run show command with JSON output to get the plan details
+        if (publishPlanName) {
             try {
                 // Extract the plan file path from the commandOptions
                 let planFilePath = '';
@@ -301,7 +301,7 @@ export abstract class BaseTerraformCommandHandler {
                     });
                     
                     // Create a JSON file for the plan output
-                    const planName = tasks.getInput("planPlanName") || "terraform-plan";
+                    const planName = publishPlanName || "terraform-plan";
                     const attachmentType = "terraform-plan-results";
                     const jsonPlanFilePath = path.join(tasks.getVariable('System.DefaultWorkingDirectory') || '.', `${planName}.json`);
                     

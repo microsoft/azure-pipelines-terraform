@@ -167,20 +167,12 @@
         },
         {
             "name": "publishPlan",
-            "type": "boolean",
-            "label": "Publish Plan",
-            "defaultValue": "false",
+            "type": "string",
+            "label": "Publish Plan Name",
+            "defaultValue": "",
             "visibleRule": "command = plan",
             "required": false,
-            "helpMarkDown": "If selected, the terraform plan will be published for visualization in the Terraform Plan tab."
-        },
-        {
-            "name": "planPlanName",
-            "type": "string",
-            "label": "Plan Name",
-            "visibleRule": "command = plan && publishPlan = true",
-            "required": false,
-            "helpMarkDown": "Name for the terraform plan to display in the Terraform Plan tab. If not provided, a default name will be used."
+            "helpMarkDown": "If provided, the terraform plan will be published for visualization in the Terraform Plan tab using this name. Leave empty to disable plan publishing."
         },
         {
             "name": "environmentServiceNameAzureRM",
