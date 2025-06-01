@@ -349,23 +349,27 @@ The Terraform task has the following input parameters:
 
 #### Command and Cloud Specific Inputs for the `plan`, `apply`, and `destroy` commands
 
-- `commandOptions`: The addtiional command arguments to pass to the command. The default value is `''`.
+- `commandOptions`: The additional command arguments to pass to the command. The default value is `''`.
 - `customCommand`: The custom command to run if `command` is set to `custom`. The default value is `''`.
 - `outputTo`: Choose whether to output to the console or a file for the `show` and `output` Terraform commands. The options are `console`, and `file`. The default value is `console`.
-- `fileName`: The name of the file to output to for the `show` and `output` commands if `outputTo` is set to `file`. The default value is `''`.
+- `fileName`: The name of the file to output to for the `show` and `output` commands if `outputTo` is set to `file`. For JSON plan output, this will also be used as the name for the terraform plan to display in the Terraform Plan tab. If not provided, a default name will be used. The default value is `''`.
 - `outputFormat`: The output format to use for the `show` command. The options are `json`, and `default`. The default value is `default`.
-- `planName`: The name to display for the plan in the Terraform Plan tab when using `show` command with `json` output format. If not provided, a default name will be used. The default value is `''`.
+- `publishPlan`: When using the `plan` command, if provided, the terraform plan will be published for visualization in the Terraform Plan tab using this name. Leave empty to disable plan publishing. The default value is `''`.
 
 #### Terraform Plan Visualization
 
-When using the `show` command with `outputFormat` set to `json`, the task will automatically save the plan output for visualization in the "Terraform Plan" tab of the build summary. This provides a convenient way to view the Terraform plan directly in Azure Pipelines without needing to download and review log files.
+The task supports visualizing Terraform plans in the "Terraform Plan" tab of the build summary in two ways:
 
-To use this feature:
-1. Set the `command` to `show`
-2. Set the `outputFormat` to `json`
-3. Optionally provide a `planName` to identify your plan in the tab
+1. **Using the `show` command with JSON output**:
+   - Set the `command` to `show`
+   - Set the `outputFormat` to `json`
+   - Optionally provide a `fileName` to identify your plan in the tab
 
-Multiple plans in the same build will be shown in a dropdown selector in the tab.
+2. **Directly from the `plan` command**:
+   - Set the `command` to `plan`
+   - Provide a name in the `publishPlan` parameter
+
+This provides a convenient way to view the Terraform plan directly in Azure Pipelines without needing to download and review log files. Multiple plans in the same build will be shown in a dropdown selector in the tab.
 
 ##### Azure Specific Inputs for `plan`, `apply`, and `destroy`
 
