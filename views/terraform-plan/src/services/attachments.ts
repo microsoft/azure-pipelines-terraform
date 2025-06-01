@@ -137,7 +137,8 @@ export class AzdoAttachmentService implements IAttachmentService {
             console.log(`Parsing attachment URL: ${attachmentUrl.href}`);
             
             const segments = attachmentUrl.pathname.split('/').filter(s => s.length > 0);
-            const isVSTSUrl = attachmentUrl.hostname.includes('visualstudio.com');
+            const allowedHosts = ['visualstudio.com', 'dev.azure.com'];
+            const isVSTSUrl = allowedHosts.includes(attachmentUrl.hostname);
             
             // Determine the correct indices based on URL structure
             let projectIndex = -1;
