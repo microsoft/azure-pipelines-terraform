@@ -15,7 +15,7 @@ interface TerraformPlan {
     plan: string,
 }
 
-export const NoPublishedPlanMessage = "No terraform plans have been published for this pipeline run. The terraform task must run 'show' with '-json' output format to view plans.";
+export const NoPublishedPlanMessage = "No terraform plans have been published for this pipeline run. To view plans, either set the 'publishPlan' parameter in the terraform plan task or run the terraform task with 'show' command using the '-json' output format.";
 export const LoadingMessage = "Loading terraform plans...";
 export const ErrorLoadingMessage = "An error occurred while loading terraform plans. Check the browser console for more details.";
 
