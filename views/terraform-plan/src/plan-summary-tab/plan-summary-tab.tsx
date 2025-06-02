@@ -36,28 +36,18 @@ export default class TerraformPlanDisplay extends React.Component<{ attachments:
     }
 
     public async componentDidMount() {
-        console.log("TerraformPlanDisplay: Component mounting");
         let foundPlans: TerraformPlan[] = [];
         
         try {
-            console.log(`Looking for attachments of type: ${this.terraformPlanAttachmentType}`);
             const attachments = await this.attachments.getAttachments(this.terraformPlanAttachmentType);
-            console.log(`Retrieved ${attachments?.length || 0} attachments`);
             
             if (attachments && attachments.length > 0) {
                 attachments.forEach(attachment => {
-                    console.log(`Processing attachment: ${attachment.name}, content length: ${attachment.content?.length || 0} bytes`);
                     if (attachment.content) {
                         foundPlans.push({ name: attachment.name, plan: attachment.content});
-                    } else {
-                        console.warn(`Attachment ${attachment.name} has no content`);
                     }
                 });
-            } else {
-                console.log("No attachments found or empty attachments array returned");
             }
-            
-            console.log(`Total plans found: ${foundPlans.length}`);
             
             if (foundPlans.length > 0) {
                 this.plans.change(0, ...foundPlans);
@@ -70,7 +60,6 @@ export default class TerraformPlanDisplay extends React.Component<{ attachments:
             this.hasError.value = true;
         } finally {
             this.plansLoaded.value = true;
-            console.log("TerraformPlanDisplay: Component mounted");
         }
     }
 
