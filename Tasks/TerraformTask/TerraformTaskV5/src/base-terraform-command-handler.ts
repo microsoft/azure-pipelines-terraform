@@ -111,8 +111,43 @@ export abstract class BaseTerraformCommandHandler {
         await this.handleProvider(showCommand);
         
         if(outputTo == "console"){
-            return await terraformTool.execAsync(<IExecOptions> {
-            cwd: showCommand.workingDirectory});
+            let commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
+                cwd: showCommand.workingDirectory,
+            });
+            
+            // If JSON format is used, attach the output for the Terraform Plan tab
+            if (outputFormat == "json") {
+                const planName = tasks.getInput("fileName") || "terraform-plan";
+                const attachmentType = "terraform-plan-results";
+                
+                // Create a file in the task's working directory
+                const workDir = tasks.getVariable('System.DefaultWorkingDirectory') || '.';
+                // Create an absolute path for the plan file
+                const planFilePath = path.join(workDir, `${planName}.json`);
+                
+                // Write the output to the file
+                tasks.writeFile(planFilePath, commandOutput.stdout);
+                
+                // Debug info to help troubleshoot
+                console.log(`Writing plan to file: ${planFilePath}`);
+                console.log(`File exists: ${tasks.exist(planFilePath)}`);
+                console.log(`File size: ${fs.statSync(planFilePath).size} bytes`);
+                console.log(`First 100 chars: ${commandOutput.stdout.substring(0, 100)}...`);
+                
+                // Get current task info for debugging
+                console.log(`Task ID: ${tasks.getVariable('SYSTEM_TASKID') || 'unknown'}`);
+                console.log(`Task Instance ID: ${tasks.getVariable('SYSTEM_TASKINSTANCEID') || 'unknown'}`);
+                
+                // Save as attachment using the file path
+                console.log(`Adding attachment: type=${attachmentType}, name=${planName}, path=${planFilePath}`);
+                tasks.addAttachment(attachmentType, planName, planFilePath);
+                
+                console.log(`Terraform plan output saved for visualization in the Terraform Plan tab`);
+            }
+            
+            // Output to console
+            console.log(commandOutput.stdout);
+            return commandOutput.exitCode;
         }else if(outputTo == "file"){
             const showFilePath = path.resolve(tasks.getInput("filename"));
             let commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
@@ -122,7 +157,16 @@ export abstract class BaseTerraformCommandHandler {
             tasks.writeFile(showFilePath, commandOutput.stdout);
             tasks.setVariable('showFilePath', showFilePath, false, true);
             
-            return commandOutput;
+            // If JSON format is used, attach the output for the Terraform Plan tab
+            if (outputFormat == "json") {
+                const planName = tasks.getInput("fileName") || path.basename(showFilePath);
+                const attachmentType = "terraform-plan-results";
+                
+                // Save as attachment - using the file path that was already written to
+                tasks.addAttachment(attachmentType, planName, showFilePath);
+            }
+            
+            return commandOutput.exitCode;
         }
     }
     public async output(): Promise<number> {
@@ -154,6 +198,41 @@ export abstract class BaseTerraformCommandHandler {
     public async plan(): Promise<number> {
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let commandOptions = tasks.getInput("commandOptions") != null ? `${tasks.getInput("commandOptions")} -detailed-exitcode`:`-detailed-exitcode`
+        
+        // Check if publishPlan is provided (non-empty string means publish)
+        const publishPlanName = tasks.getInput("publishPlan") || "";
+        
+        // If publishPlan is provided, check for -out parameter and add it if not specified
+        if (publishPlanName) {
+            // Check if -out parameter is already specified
+            let outParamSpecified = false;
+            let planOutputPath = "";
+            
+            // Look for -out= in the command options (equals sign format)
+            const outEqualParamMatch = commandOptions.match(/-out=([^\s]+)/);
+            if (outEqualParamMatch && outEqualParamMatch[1]) {
+                outParamSpecified = true;
+                planOutputPath = outEqualParamMatch[1];
+            }
+            
+            // Look for -out followed by a space and a value (space-separated format)
+            if (!outParamSpecified) {
+                const outSpaceParamMatch = commandOptions.match(/-out\s+([^\s-][^\s]*)/);
+                if (outSpaceParamMatch && outSpaceParamMatch[1]) {
+                    outParamSpecified = true;
+                    planOutputPath = outSpaceParamMatch[1];
+                }
+            }
+            
+            // If -out parameter is not specified, add it
+            if (!outParamSpecified) {
+                // Generate a unique filename for the plan output
+                const tempPlanFile = path.join(tasks.getVariable('System.DefaultWorkingDirectory') || '.', `terraform-plan-${uuidV4()}.tfplan`);
+                commandOptions = `${commandOptions} -out=${tempPlanFile}`;
+                planOutputPath = tempPlanFile;
+            }
+        }
+        
         let planCommand = new TerraformAuthorizationCommandInitializer(
             "plan",
             tasks.getInput("workingDirectory"),
@@ -175,6 +254,55 @@ export abstract class BaseTerraformCommandHandler {
             throw new Error(tasks.loc("TerraformPlanFailed", result));
         }
         tasks.setVariable('changesPresent', (result === 2).toString(), false, true);
+        
+        // If publishPlan name is provided, run show command with JSON output to get the plan details
+        if (publishPlanName) {
+            try {
+                // Extract the plan file path from the commandOptions
+                let planFilePath = '';
+                
+                // Look for -out= in the command options (equals sign format)
+                const outEqualMatch = commandOptions.match(/-out=([^\s]+)/);
+                if (outEqualMatch && outEqualMatch[1]) {
+                    planFilePath = outEqualMatch[1];
+                } else {
+                    // Look for -out followed by a space and a value (space-separated format)
+                    const outSpaceMatch = commandOptions.match(/-out\s+([^\s-][^\s]*)/);
+                    if (outSpaceMatch && outSpaceMatch[1]) {
+                        planFilePath = outSpaceMatch[1];
+                    }
+                }
+                
+                if (planFilePath) {
+                    // Run terraform show with JSON output on the plan file
+                    let showTerraformTool = this.terraformToolHandler.createToolRunner(new TerraformBaseCommandInitializer(
+                        "show",
+                        planCommand.workingDirectory,
+                        `-json ${planFilePath}`
+                    ));
+                    
+                    let showCommandOutput = await showTerraformTool.execSync(<IExecSyncOptions> {
+                        cwd: planCommand.workingDirectory,
+                    });
+                    
+                    // Create a JSON file for the plan output
+                    const planName = publishPlanName || "terraform-plan";
+                    const attachmentType = "terraform-plan-results";
+                    const jsonPlanFilePath = path.join(tasks.getVariable('System.DefaultWorkingDirectory') || '.', `${planName}.json`);
+                    
+                    // Write the output to the file
+                    tasks.writeFile(jsonPlanFilePath, showCommandOutput.stdout);
+                    
+                    // Save as attachment using the file path
+                    tasks.addAttachment(attachmentType, planName, jsonPlanFilePath);
+                }
+            } catch (error) {
+                // Log error but don't fail the task
+                console.log(`Error publishing plan: ${error}`);
+                tasks.warning(`Failed to publish terraform plan: ${error}`);
+            }
+        }
+        
         return result;
     }
 

@@ -25,6 +25,10 @@ module.exports = {
                     },
                     to: "Tasks"
                 },
+                {
+                    from: "./views/terraform-plan/dist",
+                    to: "views/terraform-plan/dist"
+                },
 
             ]
         })
