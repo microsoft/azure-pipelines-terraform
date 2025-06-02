@@ -1,21 +1,20 @@
 .json-plan {
-    font-family: var(--monospace-font, monospace) !important;
-    font-size: 13px !important;
-    overflow: auto !important;
-    max-height: 600px !important;
-    padding: 10px !important;
-    border-radius: 3px !important;
-    background-color: var(--code-bg-color, var(--palette-neutral-0, #fff)) !important;
-    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd)) !important;
+    font-family: var(--monospace-font, monospace);
+    font-size: 13px;
+    overflow: auto;
+    max-height: 600px;
+    padding: 10px;
+    border-radius: 3px;
+    background-color: var(--background-color, var(--palette-neutral-0, #fff));
+    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
 }
 
 .tf-plan-summary {
-    margin-bottom: 20px !important;
-    padding: 15px !important;
-    background-color: var(--background-color, var(--palette-neutral-2, #f5f5f5)) !important;
-    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd)) !important;
-    border-radius: 4px !important;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: var(--background-color, var(--palette-neutral-2, #f5f5f5));
+    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+    border-radius: 4px;
 }
 
 .tf-plan-info {
@@ -66,49 +65,60 @@
 }
 
 .tf-plan-details {
-    margin: 20px 0 !important;
-    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd)) !important;
-    border-radius: 4px !important;
-    overflow: hidden !important;
+    margin: 20px 0;
+    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+    border-radius: 4px;
+    overflow: hidden;
 }
 
 .tf-plan-details summary {
-    cursor: pointer !important;
-    padding: 12px !important;
-    font-weight: bold !important;
-    background-color: var(--background-color, var(--palette-neutral-2, #f5f5f5)) !important;
-    border-bottom: 1px solid var(--border-color, var(--palette-neutral-8, #ddd)) !important;
+    cursor: pointer;
+    padding: 12px;
+    font-weight: bold;
+    background-color: var(--background-color, var(--palette-neutral-2, #f5f5f5));
+    border-bottom: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
 }
 
 .tf-plan-details pre {
-    margin: 0 !important;
-    padding: 8px !important;
-    background-color: var(--code-bg-color, var(--palette-neutral-0, #fff)) !important;
-    border-radius: 3px !important;
-    border: 1px solid var(--border-color-light, var(--palette-neutral-4, #eee)) !important;
-    overflow-x: auto !important;
+    margin: 0;
+    padding: 8px;
+    background-color: var(--code-bg-color, var(--palette-neutral-0, #fff));
+    border-radius: 3px;
+    border: 1px solid var(--border-color-light, var(--palette-neutral-4, #eee));
+    overflow-x: auto;
 }
 
 .tf-resource-changes {
     margin-top: 20px;
+    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.tf-resource-changes > h4 {
+    padding: 12px;
+    margin: 0;
+    background-color: var(--background-color, var(--palette-neutral-2, #f5f5f5));
+    border-bottom: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+    font-weight: 600;
 }
 
 .tf-resource-detail {
-    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd)) !important;
-    border-radius: 4px !important;
-    margin-bottom: 15px !important;
-    overflow: hidden !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+    border-radius: 4px;
+    margin: 15px;
+    overflow: hidden;
+    background-color: var(--background-color-secondary, var(--palette-neutral-0, #fff));
 }
 
 .tf-resource-detail summary {
-    cursor: pointer !important;
-    padding: 12px !important;
-    background-color: var(--background-color, var(--palette-neutral-2, #f5f5f5)) !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    border-bottom: 1px solid var(--border-color, var(--palette-neutral-8, #ddd)) !important;
-    font-weight: 500 !important;
+    cursor: pointer;
+    padding: 12px;
+    background-color: var(--background-color, var(--palette-neutral-2, #f5f5f5));
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+    font-weight: 500;
 }
 
 .tf-resource-address {
@@ -124,32 +134,33 @@
 }
 
 .tf-resource-content {
-    padding: 15px !important;
-    background-color: var(--background-color-secondary, var(--palette-neutral-0, #fff)) !important;
+    padding: 15px;
+    background-color: var(--background-color-secondary, var(--palette-neutral-0, #fff));
 }
 
 .tf-resource-before,
 .tf-resource-after {
-    margin-bottom: 20px !important;
-    padding: 10px !important;
-    border-radius: 3px !important;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
 }
 
 .tf-resource-before {
-    background-color: var(--before-bg-color, var(--palette-neutral-2, #f8f8f8)) !important;
-    border-left: 3px solid var(--delete-color, var(--status-error-foreground, var(--palette-error, #d73a49))) !important;
+    background-color: var(--before-bg-color, var(--palette-neutral-2, #f8f8f8));
+    border-left: 3px solid var(--delete-color, var(--status-error-foreground, var(--palette-error, #d73a49)));
 }
 
 .tf-resource-after {
-    background-color: var(--after-bg-color, var(--palette-neutral-2, #f8f8f8)) !important;
-    border-left: 3px solid var(--create-color, var(--status-success-foreground, var(--palette-success, #28a745))) !important;
+    background-color: var(--after-bg-color, var(--palette-neutral-2, #f8f8f8));
+    border-left: 3px solid var(--create-color, var(--status-success-foreground, var(--palette-success, #28a745)));
 }
 
 .tf-resource-before h5,
 .tf-resource-after h5 {
-    margin-bottom: 8px !important;
-    font-weight: 600 !important;
-    color: var(--text-primary-color, var(--palette-neutral-100, #333)) !important;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-primary-color, var(--palette-neutral-100, #333));
 }
 
 /* Theme support is now handled through Azure DevOps CSS variables */
