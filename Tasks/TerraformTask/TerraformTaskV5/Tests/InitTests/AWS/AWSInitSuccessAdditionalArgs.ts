@@ -27,7 +27,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         "terraform": true
     },
     "exec": {
-        "terraform init -no-color -backend-config=bucket=DummyBucket -backend-config=key=DummyKey -backend-config=region=DummyRegion -backend-config=access_key=DummyUsername -backend-config=secret_key=DummyPassword": {
+        "terraform init -no-color -input=false -backend-config=bucket=DummyBucket -backend-config=key=DummyKey -backend-config=region=DummyRegion -backend-config=access_key=DummyUsername -backend-config=secret_key=DummyPassword": {
             "code": 0,
             "stdout": "Executed Successfully"
         }
