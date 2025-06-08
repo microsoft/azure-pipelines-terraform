@@ -28,7 +28,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
             "code": 0,
             "stdout": "provider aws"
         },
-        "terraform plan -no-color -detailed-exitcode": {
+        "terraform plan -input=false -no-color -detailed-exitcode": {
             "code": 0,
             "stdout": "Executed successfully"
         }

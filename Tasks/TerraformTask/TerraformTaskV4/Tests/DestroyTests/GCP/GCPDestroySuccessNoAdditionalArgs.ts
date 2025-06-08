@@ -30,7 +30,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
             "code": 0,
             "stdout": "Executed successfully"
         },
-        "terraform destroy -auto-approve": {
+        "terraform destroy -input=false -auto-approve": {
             "code": 0,
             "stdout": "Executed successfully"
         }
