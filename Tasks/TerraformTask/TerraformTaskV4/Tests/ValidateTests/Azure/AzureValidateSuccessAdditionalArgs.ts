@@ -17,7 +17,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         "terraform": true
     },
     "exec": {
-        "terraform validate -input=false -no-color": {
+        "terraform validate -no-color": {
             "code": 0,
             "stdout": "Executed Successfully"
         }
