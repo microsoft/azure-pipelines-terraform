@@ -5,6 +5,14 @@ import path = require('path');
 let tp = path.join(__dirname, './AzureApplySuccessAuthenticationSchemeWorkloadIdentityFederationL0.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
 
+// Mock the azure-pipelines-tasks-artifacts-common/webapi module
+tr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
+    getFederatedToken: function() {
+        console.log('Mocked getFederatedToken called');
+        return Promise.resolve('DummyFederatedToken');
+    }
+});
+
 tr.setInput('provider', 'azurerm');
 tr.setInput('command', 'apply');
 tr.setInput('workingDirectory', 'DummyWorkingDirectory');
@@ -26,6 +34,14 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     },
     "exec": {
         "terraform providers": {
+            "code": 0,
+            "stdout": "provider[registry.terraform.io/hashicorp/azurerm]"
+        },
+        "terraform apply -auto-approve -input=false": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform apply -input=false -auto-approve": {
             "code": 0,
             "stdout": "Executed successfully"
         },

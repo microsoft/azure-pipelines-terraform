@@ -5,6 +5,14 @@ import path = require('path');
 let tp = path.join(__dirname, './AzureInitSuccessAuthenticationSchemeWorkloadIdentityFederationAndCLIFlagsL0.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
 
+// Mock the azure-pipelines-tasks-artifacts-common/webapi module
+tr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', {
+    getFederatedToken: function() {
+        console.log('Mocked getFederatedToken called');
+        return Promise.resolve('DummyFederatedToken');
+    }
+});
+
 tr.setInput('provider', 'azurerm');
 tr.setInput('command', 'init');
 tr.setInput('workingDirectory', 'DummyWorkingDirectory');
@@ -31,9 +39,13 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         "terraform": true
     },
     "exec": {
-        "terraform init -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=use_azuread_auth=true -backend-config=client_id=DummyServicePrincipalId -backend-config=use_oidc=true -backend-config=ado_pipeline_service_connection_id=AzureRM": {
+        "terraform init -input=false -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=use_azuread_auth=true -backend-config=client_id=DummyServicePrincipalId -backend-config=use_oidc=true -backend-config=ado_pipeline_service_connection_id=AzureRM": {
             "code": 0,
             "stdout": "Executed Successfully"
+        },
+        "terraform providers": {
+            "code": 0,
+            "stdout": "provider[registry.terraform.io/hashicorp/azurerm]"
         }
     }
 }

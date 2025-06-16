@@ -852,7 +852,16 @@ describe('Terraform Test Suite', () => {
         let tp = path.join(__dirname, './ApplyTests/Azure/AzureApplySuccessAuthenticationSchemeWorkloadIdentityFederation.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
+            console.log('Starting WorkloadIdentityFederation test run');
             tr.run();
+            
+            console.log('Test run completed');
+            console.log('Success:', tr.succeeded);
+            console.log('Invoked tool count:', tr.invokedToolCount);
+            console.log('Error issues:', tr.errorIssues);
+            console.log('Warning issues:', tr.warningIssues);
+            console.log('Stdout:', tr.stdout);
+            console.log('Stderr:', tr.stderr);
 
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
@@ -862,6 +871,7 @@ describe('Terraform Test Suite', () => {
 
             done();
         } catch(error) {
+            console.log('Test failed with error:', error);
             done(error);
         }
     });

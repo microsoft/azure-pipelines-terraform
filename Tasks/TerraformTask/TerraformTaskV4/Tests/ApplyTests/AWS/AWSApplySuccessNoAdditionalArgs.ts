@@ -28,7 +28,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
             "code": 0,
             "stdout": "provider aws"
         },
-        "terraform apply -input=false -auto-approve": {
+        "terraform apply -auto-approve -input=false": {
             "code": 0,
             "stdout": "Executed successfully"
         }

@@ -25,9 +25,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "exec": {
         "terraform providers": {
             "code": 0,
-            "stdout": "Executed successfully"
+            "stdout": "provider[registry.terraform.io/hashicorp/azurerm]"
         },
-        "terraform apply -auto-approve": {
+        "terraform apply -auto-approve -input=false": {
             "code": 0,
             "stdout": "Executed successfully"
         }
