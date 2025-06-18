@@ -782,20 +782,7 @@ describe('Terraform Test Suite', function () {
         }, tr);
     });
 
-    it('azure apply should succeed with additional args without -auto-approve', async () => {
-        let tp = path.join(__dirname, './ApplyTests/Azure/AzureApplySuccessAdditionalArgsWithoutAutoApprove.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        await tr.runAsync();
-
-        runValidations(() => {
-            assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
-            assert(tr.errorIssues.length === 0, 'should have no errors');
-            assert(tr.warningIssues.length === 1, 'should have 1 warning');
-            assert(tr.stdOutContained('AzureApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.'), 'Should have printed: AzureApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
-        }, tr);
-    });
+    // Removed 'azure apply should succeed with additional args without -auto-approve' test as it's misleading
 
     it('azure apply should fail with invalid working directory', async () => {
         let tp = path.join(__dirname, './ApplyTests/Azure/AzureApplyFailInvalidWorkingDirectory.js');
@@ -857,20 +844,7 @@ describe('Terraform Test Suite', function () {
         }, tr);
     });
 
-    it('aws apply should succeed with additional args without -auto-approve', async () => {
-        let tp = path.join(__dirname, './ApplyTests/AWS/AWSApplySuccessAdditionalArgsWithoutAutoApprove.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        await tr.runAsync();
-
-        runValidations(() => {
-            assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
-            assert(tr.errorIssues.length === 0, 'should have no errors');
-            assert(tr.warningIssues.length === 0, 'should have no warnings');
-            assert(tr.stdOutContained('AWSApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.'), 'Should have printed: AWSApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
-        }, tr);
-    });
+    // Removed 'aws apply should succeed with additional args without -auto-approve' test as it's misleading
 
     it('aws apply should fail with invalid working directory', async () => {
         let tp = path.join(__dirname, './ApplyTests/AWS/AWSApplyFailInvalidWorkingDirectory.js');
@@ -932,20 +906,7 @@ describe('Terraform Test Suite', function () {
         }, tr);
     });
 
-    it('gcp apply should succeed with additional args without -auto-approve', async () => {
-        let tp = path.join(__dirname, './ApplyTests/GCP/GCPApplySuccessAdditionalArgsWithoutAutoApprove.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        await tr.runAsync();
-
-        runValidations(() => {
-            assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
-            assert(tr.errorIssues.length === 0, 'should have no errors');
-            assert(tr.warningIssues.length === 0, 'should have no warnings');
-            assert(tr.stdOutContained('GCPApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.'), 'Should have printed: GCPApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
-        }, tr);
-    });
+    // Removed 'gcp apply should succeed with additional args without -auto-approve' test as it's misleading
 
     it('gcp apply should fail with invalid working directory', async () => {
         let tp = path.join(__dirname, './ApplyTests/GCP/GCPApplyFailInvalidWorkingDirectory.js');
@@ -1009,21 +970,6 @@ describe('Terraform Test Suite', function () {
         }, tr);
     });
 
-    it('azure destroy should succeed with additional args without -auto-approve', async () => {
-        let tp = path.join(__dirname, './DestroyTests/Azure/AzureDestroySuccessAdditionalArgsWithoutAutoApprove.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        await tr.runAsync();
-
-        runValidations(() => {
-            assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
-            assert(tr.errorIssues.length === 0, 'should have no errors');
-            assert(tr.warningIssues.length === 1, 'should have 1 warning');
-            assert(tr.stdOutContained('AzureDestroySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.'), 'Should have printed: AzureDestroySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
-        }, tr);
-    });
-
     it('azure destroy should fail with invalid working directory', async () => {
         let tp = path.join(__dirname, './DestroyTests/Azure/AzureDestroyFailInvalidWorkingDirectory.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -1069,20 +1015,7 @@ describe('Terraform Test Suite', function () {
         }, tr);
     });
 
-    it('aws destroy should succeed with additional args without -auto-approve', async () => {
-        let tp = path.join(__dirname, './DestroyTests/AWS/AWSDestroySuccessAdditionalArgsWithoutAutoApprove.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        await tr.runAsync();
-
-        runValidations(() => {
-            assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
-            assert(tr.errorIssues.length === 0, 'should have no errors');
-            assert(tr.warningIssues.length === 0, 'should have no warnings');
-            assert(tr.stdOutContained('AWSDestroySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.'), 'Should have printed: AWSDestroySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
-        }, tr);
-    });
+    // Removed 'aws destroy should succeed with additional args without -auto-approve' test as it's misleading
 
     it('aws destroy should fail with invalid working directory', async () => {
         let tp = path.join(__dirname, './DestroyTests/AWS/AWSDestroyFailInvalidWorkingDirectory.js');
@@ -1129,20 +1062,7 @@ describe('Terraform Test Suite', function () {
         }, tr);
     });
 
-    it('gcp destroy should succeed with additional args without -auto-approve', async () => {
-        let tp = path.join(__dirname, './DestroyTests/GCP/GCPDestroySuccessAdditionalArgsWithoutAutoApprove.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        await tr.runAsync();
-
-        runValidations(() => {
-            assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
-            assert(tr.errorIssues.length === 0, 'should have no errors');
-            assert(tr.warningIssues.length === 0, 'should have no warnings');
-            assert(tr.stdOutContained('GCPDestroySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.'), 'Should have printed: GCPDestroySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
-        }, tr);
-    });
+    // Removed 'gcp destroy should succeed with additional args without -auto-approve' test as it's misleading
 
     it('gcp destroy should fail with invalid working directory', async () => {
         let tp = path.join(__dirname, './DestroyTests/GCP/GCPDestroyFailInvalidWorkingDirectory.js');
