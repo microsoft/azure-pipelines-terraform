@@ -218,7 +218,7 @@ export abstract class BaseTerraformCommandHandler {
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let autoApprove: string = '-auto-approve';
         let inputFalse: string = '-input=false';
-        let additionalArgs: string = tasks.getInput("commandOptions") || autoApprove;
+        let additionalArgs: string = tasks.getInput("commandOptions") || "";
         if (additionalArgs.includes(inputFalse) === false) {
             additionalArgs = `${inputFalse} ${additionalArgs}`;
         }
