@@ -26,9 +26,21 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "exec": {
         "terraform providers": {
             "code": 0,
-            "stdout": "provider aws"
+            "stdout": "provider[registry.terraform.io/hashicorp/aws]"
         },
         "terraform plan -no-color -detailed-exitcode": {
+            "code": 1,
+            "stdout": "Execution failed: invalid config files"
+        },
+        "terraform plan -no-color -detailed-exitcode -input=false": {
+            "code": 1,
+            "stdout": "Execution failed: invalid config files"
+        },
+        "terraform plan -detailed-exitcode -input=false -no-color": {
+            "code": 1,
+            "stdout": "Execution failed: invalid config files"
+        },
+        "terraform plan -detailed-exitcode -no-color -input=false": {
             "code": 1,
             "stdout": "Execution failed: invalid config files"
         }

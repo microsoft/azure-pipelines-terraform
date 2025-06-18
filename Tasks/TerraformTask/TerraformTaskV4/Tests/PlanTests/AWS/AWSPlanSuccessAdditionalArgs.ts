@@ -35,6 +35,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         "terraform plan -detailed-exitcode -input=false -no-color": {
             "code": 0,
             "stdout": "Executed successfully"
+        },
+        "terraform plan -no-color -detailed-exitcode -input=false": {
+            "code": 0,
+            "stdout": "Executed successfully"
         }
     }
 }

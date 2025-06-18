@@ -36,6 +36,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         "terraform plan -detailed-exitcode -input=false -no-color": {
             "code": 1,
             "stdout": "Error: No configuration files"
+        },
+        "terraform plan -no-color -detailed-exitcode -input=false": {
+            "code": 1,
+            "stdout": "Error: No configuration files"
         }
     }
 }
