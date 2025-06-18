@@ -24,8 +24,14 @@ export class TerraformToolHandler implements ITerraformToolHandler {
         if (command) {
             terraformToolRunner.arg(command.name);
             if (command.additionalArgs) {
+                console.log(`Adding additional args: ${command.additionalArgs}`);
                 terraformToolRunner.line(command.additionalArgs);
             }
+            
+            // Debug the full command
+            const fullCommand = `terraform ${command.name} ${command.additionalArgs || ''}`;
+            console.log(`Full command to be executed: terraform ${command.name} ${command.additionalArgs || ''}`);
+            console.log(`Full command to be executed: ${fullCommand}`);
         }
 
         return terraformToolRunner;

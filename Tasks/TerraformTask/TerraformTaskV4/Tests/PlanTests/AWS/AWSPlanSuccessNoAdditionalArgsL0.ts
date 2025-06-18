@@ -1,4 +1,4 @@
-import { TerraformCommandHandlerAWS } from './../../../src/aws-terraform-command-handler';
+import { TerraformCommandHandlerAWS } from "../../../src/aws-terraform-command-handler";
 import tl = require('azure-pipelines-task-lib');
 
 let terraformCommandHandlerAWS: TerraformCommandHandlerAWS = new TerraformCommandHandlerAWS();

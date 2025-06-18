@@ -28,7 +28,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         "terraform": true
     },
     "exec": {
-        "terraform init -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=resource_group_name=DummyResourceGroup -backend-config=subscription_id=DummmySubscriptionId -backend-config=tenant_id=DummyTenantId -backend-config=use_msi=true": {
+        "terraform init -input=false -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=resource_group_name=DummyResourceGroup -backend-config=subscription_id=DummmySubscriptionId -backend-config=tenant_id=DummyTenantId -backend-config=use_msi=true": {
             "code": 0,
             "stdout": "Executed Successfully"
         }

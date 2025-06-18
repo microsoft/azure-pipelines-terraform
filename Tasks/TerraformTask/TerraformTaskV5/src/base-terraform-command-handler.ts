@@ -74,10 +74,14 @@ export abstract class BaseTerraformCommandHandler {
     }
 
     public async init(): Promise<number> {
+        let commandOptions = tasks.getInput("commandOptions") || "";
+        if (!commandOptions.includes("-input=false")) {
+            commandOptions = `${commandOptions} -input=false`.trim();
+        }
         let initCommand = new TerraformBaseCommandInitializer(
             "init",
             tasks.getInput("workingDirectory"),
-            tasks.getInput("commandOptions")
+            commandOptions
         );
         
         let terraformTool;
@@ -153,7 +157,10 @@ export abstract class BaseTerraformCommandHandler {
     
     public async plan(): Promise<number> {
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
-        let commandOptions = tasks.getInput("commandOptions") != null ? `${tasks.getInput("commandOptions")} -detailed-exitcode`:`-detailed-exitcode`
+        let commandOptions = tasks.getInput("commandOptions") != null ? `${tasks.getInput("commandOptions")} -detailed-exitcode`:`-detailed-exitcode`;
+        if (!commandOptions.includes("-input=false")) {
+            commandOptions = `${commandOptions} -input=false`.trim();
+        }
         let planCommand = new TerraformAuthorizationCommandInitializer(
             "plan",
             tasks.getInput("workingDirectory"),
@@ -210,12 +217,15 @@ export abstract class BaseTerraformCommandHandler {
         let terraformTool;
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let autoApprove: string = '-auto-approve';
-        let additionalArgs: string = tasks.getInput("commandOptions") || autoApprove;
-
+        let inputFalse: string = '-input=false';
+        let additionalArgs: string = tasks.getInput("commandOptions") || "";
+     
+        if (additionalArgs.includes(inputFalse) === false) {
+            additionalArgs = `${inputFalse} ${additionalArgs}`;
+        }
         if (additionalArgs.includes(autoApprove) === false) {
             additionalArgs = `${autoApprove} ${additionalArgs}`;
         }
-
         let applyCommand = new TerraformAuthorizationCommandInitializer(
             "apply",
             tasks.getInput("workingDirectory"),
@@ -233,15 +243,15 @@ export abstract class BaseTerraformCommandHandler {
     }
 
     public async destroy(): Promise<number> {
-        
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let autoApprove: string = '-auto-approve';
         let additionalArgs: string = tasks.getInput("commandOptions") || autoApprove;
-
         if (additionalArgs.includes(autoApprove) === false) {
             additionalArgs = `${autoApprove} ${additionalArgs}`;
         }
-
+        if (!additionalArgs.includes("-input=false")) {
+            additionalArgs = `${additionalArgs} -input=false`.trim();
+        }
         let destroyCommand = new TerraformAuthorizationCommandInitializer(
             "destroy",
             tasks.getInput("workingDirectory"),

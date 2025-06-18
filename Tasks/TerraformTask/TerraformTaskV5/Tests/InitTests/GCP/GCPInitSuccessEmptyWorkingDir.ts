@@ -31,7 +31,23 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         "terraform": true
     },
     "exec": {
+        "terraform providers": {
+            "code": 0,
+            "stdout": "provider[registry.terraform.io/hashicorp/google]"
+        },
         [`terraform init -no-color -backend-config=bucket=DummyBucket -backend-config=prefix=DummyPrefix -backend-config=credentials=${credentialsFilePath}`]: {
+            "code": 0,
+            "stdout": "Executed Successfully"
+        },
+        [`terraform init -input=false -no-color -backend-config=bucket=DummyBucket -backend-config=prefix=DummyPrefix -backend-config=credentials=${credentialsFilePath}`]: {
+            "code": 0,
+            "stdout": "Executed Successfully"
+        },
+        [`terraform init -no-color -input=false -backend-config=bucket=DummyBucket -backend-config=prefix=DummyPrefix -backend-config=credentials=${credentialsFilePath}`]: {
+            "code": 0,
+            "stdout": "Executed Successfully"
+        },
+        [`terraform init -no-color -backend-config=bucket=DummyBucket -backend-config=prefix=DummyPrefix -backend-config=credentials=${credentialsFilePath} -input=false`]: {
             "code": 0,
             "stdout": "Executed Successfully"
         }
