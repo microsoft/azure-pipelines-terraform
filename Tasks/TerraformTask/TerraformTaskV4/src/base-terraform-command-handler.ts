@@ -217,13 +217,16 @@ export abstract class BaseTerraformCommandHandler {
         let terraformTool;
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let autoApprove: string = '-auto-approve';
+        let inputFalse: string = '-input=false';
         let additionalArgs: string = tasks.getInput("commandOptions") || autoApprove;
+        if (additionalArgs.includes(inputFalse) === false) {
+            additionalArgs = `${inputFalse} ${additionalArgs}`;
+        }
+        
         if (additionalArgs.includes(autoApprove) === false) {
             additionalArgs = `${autoApprove} ${additionalArgs}`;
         }
-        if (!additionalArgs.includes("-input=false")) {
-            additionalArgs = `${additionalArgs} -input=false`.trim();
-        }
+      
         let applyCommand = new TerraformAuthorizationCommandInitializer(
             "apply",
             tasks.getInput("workingDirectory"),
