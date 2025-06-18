@@ -26,9 +26,17 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "exec": {
         "terraform providers": {
             "code": 0,
-            "stdout": "Executed successfully"
+            "stdout": "provider[registry.terraform.io/hashicorp/aws]"
         },
         "terraform destroy -auto-approve": {
+            "code": 1,
+            "stdout": "Execution failed: invalid config files"
+        },
+        "terraform destroy -auto-approve -input=false": {
+            "code": 1,
+            "stdout": "Execution failed: invalid config files"
+        },
+        "terraform destroy -input=false -auto-approve": {
             "code": 1,
             "stdout": "Execution failed: invalid config files"
         }

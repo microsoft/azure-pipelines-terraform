@@ -26,9 +26,17 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "exec": {
         "terraform providers": {
             "code": 0,
-            "stdout": "Executed successfully"
+            "stdout": "provider[registry.terraform.io/hashicorp/aws]"
         },
         "terraform apply -auto-approve": {
+            "code": 1,
+            "stdout": "Error: No configuration files"
+        },
+        "terraform apply -auto-approve -input=false": {
+            "code": 1,
+            "stdout": "Error: No configuration files"
+        },
+        "terraform apply -input=false -auto-approve": {
             "code": 1,
             "stdout": "Error: No configuration files"
         }

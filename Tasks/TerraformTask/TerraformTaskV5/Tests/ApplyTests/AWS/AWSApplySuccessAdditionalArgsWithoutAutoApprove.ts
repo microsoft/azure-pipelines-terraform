@@ -26,9 +26,33 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "exec": {
         "terraform providers": {
             "code": 0,
-            "stdout": "provider aws"
+            "stdout": "provider[registry.terraform.io/hashicorp/aws]"
         },
         "terraform apply -auto-approve -no-color": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform apply -auto-approve -no-color -input=false": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform apply -auto-approve -input=false -no-color": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform apply -input=false -auto-approve -no-color": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform apply -no-color -auto-approve -input=false": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform apply -no-color -input=false -auto-approve": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform apply -input=false -no-color -auto-approve": {
             "code": 0,
             "stdout": "Executed successfully"
         }

@@ -28,9 +28,17 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "exec": {
         "terraform providers": {
             "code": 0,
-            "stdout": "provider aws"
+            "stdout": "provider[registry.terraform.io/hashicorp/google]"
         },
         "terraform plan -detailed-exitcode": {
+            "code": 1,
+            "stdout": "Error: No configuration files"
+        },
+        "terraform plan -detailed-exitcode -input=false": {
+            "code": 1,
+            "stdout": "Error: No configuration files"
+        },
+        "terraform plan -input=false -detailed-exitcode": {
             "code": 1,
             "stdout": "Error: No configuration files"
         }

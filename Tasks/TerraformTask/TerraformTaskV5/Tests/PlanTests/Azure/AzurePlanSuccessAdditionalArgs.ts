@@ -27,9 +27,29 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "exec": {
         "terraform providers": {
             "code": 0,
-            "stdout": "provider azurerm"
+            "stdout": "provider[registry.terraform.io/hashicorp/azurerm]"
         },
-        "terraform plan -detailed-exitcode -input=false -var my_subscription_id=\"DummySubscriptionId\"": {
+        "terraform plan -detailed-exitcode -input=false -no-color": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform plan -detailed-exitcode -no-color -input=false": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform plan -no-color -detailed-exitcode -input=false": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform plan -no-color -input=false -detailed-exitcode": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform plan -input=false -detailed-exitcode -no-color": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform plan -input=false -no-color -detailed-exitcode": {
             "code": 0,
             "stdout": "Executed successfully"
         }

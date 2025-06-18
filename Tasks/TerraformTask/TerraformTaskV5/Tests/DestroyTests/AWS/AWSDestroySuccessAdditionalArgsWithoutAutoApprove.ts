@@ -26,9 +26,33 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
     "exec": {
         "terraform providers": {
             "code": 0,
-            "stdout": "Executed successfully"
+            "stdout": "provider[registry.terraform.io/hashicorp/aws]"
         },
         "terraform destroy -auto-approve -no-color": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform destroy -auto-approve -no-color -input=false": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform destroy -auto-approve -input=false -no-color": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform destroy -input=false -auto-approve -no-color": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform destroy -no-color -auto-approve -input=false": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform destroy -no-color -input=false -auto-approve": {
+            "code": 0,
+            "stdout": "Executed successfully"
+        },
+        "terraform destroy -input=false -no-color -auto-approve": {
             "code": 0,
             "stdout": "Executed successfully"
         }

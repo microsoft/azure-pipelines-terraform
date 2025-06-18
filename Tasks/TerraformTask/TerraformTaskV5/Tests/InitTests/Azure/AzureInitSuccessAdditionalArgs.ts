@@ -30,7 +30,19 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers> {
         "terraform": true
     },
     "exec": {
+        "terraform providers": {
+            "code": 0,
+            "stdout": "provider[registry.terraform.io/hashicorp/azurerm]"
+        },
         "terraform init -input=false -no-color -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=resource_group_name=DummyResourceGroup -backend-config=subscription_id=DummmySubscriptionId": {
+            "code": 0,
+            "stdout": "Executed Successfully"
+        },
+        "terraform init -no-color -input=false -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=resource_group_name=DummyResourceGroup -backend-config=subscription_id=DummmySubscriptionId": {
+            "code": 0,
+            "stdout": "Executed Successfully"
+        },
+        "terraform init -no-color -backend-config=storage_account_name=DummyStorageAccount -backend-config=container_name=DummyContainer -backend-config=key=DummyKey -backend-config=resource_group_name=DummyResourceGroup -backend-config=subscription_id=DummmySubscriptionId -input=false": {
             "code": 0,
             "stdout": "Executed Successfully"
         }
