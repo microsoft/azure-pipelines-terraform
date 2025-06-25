@@ -1,5 +1,5 @@
 ---
-name: Unit Testing for TerraformTaskV4
+name: Unit Testing for OpenTofuTaskV4
 on:
   pull_request:
     branches:
@@ -18,7 +18,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Run Unit Tests
       run: |
-        cd Tasks/TerraformTask/TerraformTaskV4
+        cd Tasks/OpenTofuTask/OpenTofuTaskV4
         npm install -include=dev
         npm test
   unit-test-v5:
@@ -29,6 +29,6 @@ jobs:
       uses: actions/checkout@v2
     - name: Run Unit Tests
       run: |
-        cd Tasks/TerraformTask/TerraformTaskV5
+        cd Tasks/OpenTofuTask/OpenTofuTaskV5
         npm install -include=dev
         npm test

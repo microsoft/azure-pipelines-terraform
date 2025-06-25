@@ -1,5 +1,5 @@
 {
-    "name": "Terraform",
+    "name": "OpenTofu",
     "version": "1.0.0",
     "description": "",
     "scripts": {
@@ -10,14 +10,14 @@
         "package:test": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/test.json --root ./build",
         "package:release": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/release.json --root ./build",
         "deps": "npm run deps:npm:inst && npm run deps:npm:tasks",
-        "deps:npm:tasks": "glob-exec --parallel --foreach \"Tasks/TerraformTask/*/tsconfig.json\" -- \"cd {{file.dir}} && npm install --no-update-notifier --no-progress\"",
-        "deps:npm:inst": "glob-exec --parallel --foreach \"Tasks/TerraformInstaller/*/tsconfig.json\" -- \"cd {{file.dir}} && npm install --no-update-notifier --no-progress\"",
+        "deps:npm:tasks": "glob-exec --parallel --foreach \"Tasks/OpenTofuTask/*/tsconfig.json\" -- \"cd {{file.dir}} && npm install --no-update-notifier --no-progress\"",
+        "deps:npm:inst": "glob-exec --parallel --foreach \"Tasks/OpenTofuInstaller/*/tsconfig.json\" -- \"cd {{file.dir}} && npm install --no-update-notifier --no-progress\"",
         "deps:prune": "npm run deps:prune:inst && npm run deps:prune:tasks",
-        "deps:prune:tasks": "glob-exec --parallel --foreach \"Tasks/TerraformTask/*/tsconfig.json\" -- \"cd {{file.dir}} && npm prune --production --no-update-notifier --no-progress\"",
-        "deps:prune:inst": "glob-exec --parallel --foreach \"Tasks/TerraformInstaller/*/tsconfig.json\" -- \"cd {{file.dir}} && npm prune --production --no-update-notifier --no-progress\"",
+        "deps:prune:tasks": "glob-exec --parallel --foreach \"Tasks/OpenTofuTask/*/tsconfig.json\" -- \"cd {{file.dir}} && npm prune --production --no-update-notifier --no-progress\"",
+        "deps:prune:inst": "glob-exec --parallel --foreach \"Tasks/OpenTofuInstaller/*/tsconfig.json\" -- \"cd {{file.dir}} && npm prune --production --no-update-notifier --no-progress\"",
         "compile": "npm run compile:inst && npm run compile:tasks",
-        "compile:tasks": "glob-exec \"Tasks/TerraformTask/*/tsconfig.json\" -- \"tsc -b {{files.join(' ')}}\"",
-        "compile:inst": "glob-exec \"Tasks/TerraformInstaller/*/tsconfig.json\" -- \"tsc -b {{files.join(' ')}}\"",
+        "compile:tasks": "glob-exec \"Tasks/OpenTofuTask/*/tsconfig.json\" -- \"tsc -b {{files.join(' ')}}\"",
+        "compile:inst": "glob-exec \"Tasks/OpenTofuInstaller/*/tsconfig.json\" -- \"tsc -b {{files.join(' ')}}\"",
         "webpack": "webpack --config webpack.config.js --progress"
     },
     "devDependencies": {

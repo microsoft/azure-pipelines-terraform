@@ -4,13 +4,13 @@ variables:
 - name: minor
   value: '1'
 - name: extensionName
-  value: 'Terraform'
+  value: 'OpenTofu'
 - name: marketplaceServiceConnection
   value: 'marketplaceServiceConnection'
 - name: publisherId
   value: 'ms-devlabs'
 - name: publicExtensionName
-  value: "Terraform"
+  value: "OpenTofu"
 
 name: $(major).$(minor)$(rev:.r)
 
@@ -43,7 +43,7 @@ stages:
     steps:
     - task: NodeTool@0
       inputs:
-        versionSpec: '16.x'
+        versionSpec: '20.x'
     - template: build.yml@pipeline-templates
     - template: package.yml@pipeline-templates
       parameters:
