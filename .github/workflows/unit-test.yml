@@ -1,5 +1,5 @@
 ---
-name: Unit Testing for OpenTofuTaskV4
+name: Unit Testing for OpenTofuTaskV1
 on:
   pull_request:
     branches:
