@@ -1,6 +1,6 @@
 {
-    "id": "custom-terraform-tasks-test",
-    "name": "Terraform (test)",
+    "id": "custom-opentofu-tasks-test",
+    "name": "OpenTofu (test)",
     "public": false,
-    "publisher": "solidify-labs"
+    "publisher": "cotality"
 }

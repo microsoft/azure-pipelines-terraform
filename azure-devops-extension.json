@@ -1,20 +1,21 @@
 {
     "manifestVersion": 1,
-    "id": "custom-terraform-tasks",
-    "name": "Terraform",
+    "id": "custom-opentofu-tasks",
+    "name": "OpenTofu",
     "version": "0.1.34",
-    "publisher": "ms-devlabs",
+    "publisher": "cotality",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
         }
     ],
-    "description": "Install terraform and run terraform commands to manage resources on Azure, AWS, GCP and OCI.",
-    "public": true,
+    "description": "OpenTofu tasks for Azure DevOps. Based on Microsoft's Terraform extension.",
+    "public": false,
     "categories": [
         "Azure Pipelines"
     ],
     "Tags": [
+        "OpenTofu",
         "Terraform",
         "Azure",
         "AWS",
@@ -67,10 +68,10 @@
     },
     "files": [
         {
-            "path": "Tasks/TerraformTask"
+            "path": "Tasks/OpenTofuTask"
         },
         {
-            "path": "Tasks/TerraformInstaller"
+            "path": "Tasks/OpenTofuInstaller"
         },
         {
             "path": "images/1_AWS_service_endpoint.PNG",
@@ -111,23 +112,23 @@
     },
     "contributions": [
         {
-            "id": "custom-terraform-installer-task",
+            "id": "custom-opentofu-installer-task",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "Tasks/TerraformInstaller"
+                "name": "Tasks/OpenTofuInstaller"
             }
         },
         {
-            "id": "custom-terraform-release-task",
+            "id": "custom-opentofu-release-task",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "Tasks/TerraformTask"
+                "name": "Tasks/OpenTofuTask"
             }
         },
         {
@@ -139,7 +140,7 @@
             ],
             "properties": {
                 "name": "AWSServiceEndpoint",
-                "displayName": "AWS for Terraform",
+                "displayName": "AWS for OpenTofu",
                 "url": {
                     "displayName": "Server Url",
                     "helpText": "AWS homepage",
@@ -219,7 +220,7 @@
             ],
             "properties": {
                 "name": "GoogleCloudServiceEndpoint",
-                "displayName": "GCP for Terraform",
+                "displayName": "GCP for OpenTofu",
                 "helpMarkDown": "[Get JSON Key File](https://console.cloud.google.com/iam-admin/serviceaccounts)",
                 "url": {
                     "displayName": "Server Url",
@@ -289,7 +290,7 @@
             ],
             "properties": {
                 "name": "OracleCloudInfrastructureServiceEndpoint",
-                "displayName": "OCI for Terraform",
+                "displayName": "OCI for OpenTofu",
                 "helpMarkDown": "",
                 "url": {
                     "displayName": "Server Url",

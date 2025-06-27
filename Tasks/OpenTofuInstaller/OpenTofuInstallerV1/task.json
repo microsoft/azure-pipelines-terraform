@@ -1,0 +1,57 @@
+{
+    "id": "15a920cd-dbfd-4e0a-8f1e-9250b0980c88",
+    "name": "OpenTofuInstaller",
+    "friendlyName": "OpenTofu tool installer",
+    "description": "Find in cache or download a specific version of OpenTofu and prepend it to the PATH",
+    "author": "Cotality",
+    "helpMarkDown": "[Learn more about this task](https://opentofu.org/docs/)",
+    "category": "Tool",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "demands": [],
+    "version": {
+        "Major": "1",
+        "Minor": "0",
+        "Patch": "0"
+    },
+    "instanceNameFormat": "Install OpenTofu $(opentofuVersion)",
+    "inputs": [
+        {
+            "name": "opentofuVersion",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "latest",
+            "required": true,
+            "helpMarkDown": "The version of OpenTofu which should be installed on the agent if not already present"
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "src/index.js"
+        },
+        "Node16": {
+            "target": "src/index.js"
+        },
+        "Node20_1": {
+            "target": "src/index.js"
+        }
+    },
+    "outputVariables": [
+        {
+            "name": "opentofuLocation",
+            "description": "The location of the OpenTofu binary that was installed on the agent."
+        }
+    ],
+    "messages": {
+        "VerifyOpenTofuInstallation": "Verifying OpenTofu installation...",
+        "InputVersionNotValidSemanticVersion": "Input version %s is not a valid semantic version",
+        "OpenTofuNotFoundInFolder": "OpenTofu executable not found in path %s",
+        "OperatingSystemNotSupported": "Operating system %s is not supported",
+        "ArchitectureNotSupported": "Architecture %s is not supported",
+        "OpenTofuDownloadFailed": "Failed to download OpenTofu from url %s. Error %s",
+        "OpenTofuVersionNotFound": "Unable to get latest version: %s defaulting to 1.9.0",
+        "GettingLatestOpenTofuVersion": "Getting latest OpenTofu version."
+    }
+}
