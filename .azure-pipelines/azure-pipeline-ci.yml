@@ -8,7 +8,7 @@ variables:
 - name: marketplaceServiceConnection
   value: 'marketplaceServiceConnection'
 - name: publisherId
-  value: 'ms-devlabs'
+  value: 'cotality'
 - name: publicExtensionName
   value: "OpenTofu"
 

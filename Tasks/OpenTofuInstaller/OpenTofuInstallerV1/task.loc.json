@@ -3,7 +3,7 @@
   "name": "OpenTofuInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "author": "OpenTofu Community",
+  "author": "Cotality",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
   "visibility": [

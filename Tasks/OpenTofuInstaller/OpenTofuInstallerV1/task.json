@@ -3,7 +3,7 @@
     "name": "OpenTofuInstaller",
     "friendlyName": "OpenTofu tool installer",
     "description": "Find in cache or download a specific version of OpenTofu and prepend it to the PATH",
-    "author": "OpenTofu Community",
+    "author": "Cotality",
     "helpMarkDown": "[Learn more about this task](https://opentofu.org/docs/)",
     "category": "Tool",
     "visibility": [

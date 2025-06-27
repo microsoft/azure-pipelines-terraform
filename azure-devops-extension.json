@@ -3,14 +3,14 @@
     "id": "custom-opentofu-tasks",
     "name": "OpenTofu",
     "version": "0.1.34",
-    "publisher": "ms-devlabs",
+    "publisher": "cotality",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
         }
     ],
-    "description": "Install OpenTofu and run OpenTofu commands to manage resources on Azure, AWS, GCP and OCI.",
-    "public": true,
+    "description": "OpenTofu tasks for Azure DevOps. Based on Microsoft's Terraform extension.",
+    "public": false,
     "categories": [
         "Azure Pipelines"
     ],

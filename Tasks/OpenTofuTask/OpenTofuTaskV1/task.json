@@ -3,7 +3,7 @@
     "name": "OpenTofuTask",
     "friendlyName": "OpenTofu",
     "description": "Execute OpenTofu commands to manage resources on Microsoft Azure, Amazon Web Services(AWS), Google Cloud Platform(GCP) and Oracle Cloud Infrastructure(OCI).",
-    "author": "OpenTofu Community",
+    "author": "Cotality",
     "helpMarkDown": "[Learn more about this task](https://opentofu.org/docs/)",
     "category": "Deploy",
     "visibility": [

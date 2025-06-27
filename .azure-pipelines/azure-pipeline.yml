@@ -8,7 +8,7 @@ variables:
 - name: marketplaceServiceConnection
   value: 'marketplaceServiceConnection'
 - name: publisherId
-  value: 'ms-devlabs'
+  value: 'cotality'
 - name: publicExtensionName
   value: "OpenTofu"
 - name: extensionId
@@ -89,6 +89,6 @@ stages:
       marketplaceConnectedServiceName: $(marketplaceServiceConnection)
       publisherId: $(publisherId)
       publicExtensionName: $(publicExtensionName)
-      extensionVisibility: 'public'
+      extensionVisibility: 'private'
       updateTaskVersion: true
       extensionId: $(extensionId)

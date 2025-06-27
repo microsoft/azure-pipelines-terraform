@@ -2,5 +2,5 @@
     "id": "custom-opentofu-tasks2",
     "name": "OpenTofu (Dev)",
     "public": false,
-    "publisher": "solidify-labs"
+    "publisher": "cotality"
 }
