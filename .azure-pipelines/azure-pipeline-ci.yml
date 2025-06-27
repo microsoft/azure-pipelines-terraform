@@ -6,7 +6,7 @@ variables:
 - name: extensionName
   value: 'OpenTofu'
 - name: marketplaceServiceConnection
-  value: 'marketplaceServiceConnection'
+  value: 'Azure Marketplace cotality'
 - name: publisherId
   value: 'cotality'
 - name: publicExtensionName
