@@ -1,7 +1,0 @@
-{
-    "id": "custom-opentofu-tasks",
-    "name": "OpenTofu Tasks",
-    "public": false,
-    "publisher": "cotality",
-    "version": "0.1.0"
-}
