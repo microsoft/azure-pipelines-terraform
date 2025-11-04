@@ -24,7 +24,7 @@ export async function downloadTerraform(inputVersion: string): Promise<string> {
             .catch((exception: any) => {
                 console.warn(tasks.loc("TerraformVersionNotFound"));
 
-                latestVersion = '1.1.6';
+                latestVersion = '1.9.8';
             })
         }
         else
@@ -39,7 +39,7 @@ export async function downloadTerraform(inputVersion: string): Promise<string> {
             })
             .catch((exception: any) => {
                 console.warn(tasks.loc("TerraformVersionNotFound"));
-                latestVersion = '1.1.6';
+                latestVersion = '1.9.8';
             })
         }
     }

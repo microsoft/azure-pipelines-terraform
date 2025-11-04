@@ -28,6 +28,13 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         }
         this.backendConfig.set('tenant_id', tasks.getEndpointAuthorizationParameter(backendServiceName, "tenantid", true));
 
+        const useEnvironmentVariables = tasks.getInput("backendAzureRmUseEnvironmentVariablesForAuthentication", false) == "true";
+        const useEntraIdAuthenticator = tasks.getInput("backendAzureRmUseEntraIdForAuthentication", false) == "true";
+
+        if(useEntraIdAuthenticator) {
+            this.backendConfig.set('use_azuread_auth', 'true');
+        }
+        
         switch(authorizationScheme) {
             case AuthorizationScheme.ManagedServiceIdentity:
                 this.backendConfig.set('use_msi', 'true');
@@ -35,15 +42,30 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
 
             case AuthorizationScheme.WorkloadIdentityFederation:
                 var workloadIdentityFederationCredentials = await this.getWorkloadIdentityFederationCredentials(backendServiceName);
-                this.backendConfig.set('client_id', workloadIdentityFederationCredentials.servicePrincipalId);
-                this.backendConfig.set('oidc_token', workloadIdentityFederationCredentials.idToken);
+
+                if(useEnvironmentVariables) {
+                    tasks.debug('azurerm backend auth warning. Due to limitations in the Terraform azurerm backend, we are setting the ARM_CLIENT_ID and ARM_OIDC_TOKEN as environment variables. This is to avoid them being cached in the plan file. However this means that during the plan and apply stages this task will use the service connection supplied for the environmentServiceNameAzureRM input as opposed to the backendServiceArm input to connect to the storage account.')
+                    process.env['ARM_CLIENT_ID'] = workloadIdentityFederationCredentials.servicePrincipalId;
+                    process.env['ARM_OIDC_TOKEN'] = workloadIdentityFederationCredentials.idToken;
+                } else {
+                    this.backendConfig.set('client_id', workloadIdentityFederationCredentials.servicePrincipalId);
+                    this.backendConfig.set('oidc_token', workloadIdentityFederationCredentials.idToken);
+                }
+                
                 this.backendConfig.set('use_oidc', 'true');
                 break;
             
             case AuthorizationScheme.ServicePrincipal:
                 var servicePrincipalCredentials = this.getServicePrincipalCredentials(backendServiceName);
-                this.backendConfig.set('client_id', servicePrincipalCredentials.servicePrincipalId);
-                this.backendConfig.set('client_secret', servicePrincipalCredentials.servicePrincipalKey);
+
+                if(useEnvironmentVariables) {
+                    tasks.debug('azurerm backend auth warning. Due to limitations in the Terraform azurerm backend, we are setting the ARM_CLIENT_ID and ARM_CLIENT_SECRET as environment variables. This is to avoid them being cached in the plan file. However this means that during the plan and apply stages this task will use the service connection supplied for the environmentServiceNameAzureRM input as opposed to the backendServiceArm input to connect to the storage account.')
+                    process.env['ARM_CLIENT_ID'] = servicePrincipalCredentials.servicePrincipalId;
+                    process.env['ARM_CLIENT_SECRET'] = servicePrincipalCredentials.servicePrincipalKey;
+                } else {
+                    this.backendConfig.set('client_id', servicePrincipalCredentials.servicePrincipalId);
+                    this.backendConfig.set('client_secret', servicePrincipalCredentials.servicePrincipalKey);
+                }
                 break;
         }
 
@@ -102,7 +124,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         return servicePrincipalCredentials;
     }
 
-    private async getWorkloadIdentityFederationCredentials(connectionName: string) : Promise<WorkloadIdentityFederationCredentials> {       
+    private async getWorkloadIdentityFederationCredentials(connectionName: string) : Promise<WorkloadIdentityFederationCredentials> {
         let workloadIdentityFederationCredentials : WorkloadIdentityFederationCredentials = {
             servicePrincipalId: tasks.getEndpointAuthorizationParameter(connectionName, "serviceprincipalid", true),
             idToken: await generateIdToken(connectionName)
@@ -146,5 +168,5 @@ interface WorkloadIdentityFederationCredentials {
 enum AuthorizationScheme {
     ServicePrincipal = "serviceprincipal",
     ManagedServiceIdentity = "managedserviceidentity",
-    WorkloadIdentityFederation = "workloadidentityfederation"   
+    WorkloadIdentityFederation = "workloadidentityfederation"
 }

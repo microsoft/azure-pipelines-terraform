@@ -2,9 +2,9 @@
     "id": "FE504ACC-6115-40CB-89FF-191386B5E7BF",
     "name": "TerraformTaskV4",
     "friendlyName": "Terraform",
-    "description": "Execute terraform commands to manage resources on AzureRM, Amazon Web Services(AWS) and Google Cloud Platform(GCP)",
+    "description": "Execute terraform commands to manage resources on AzureRM, Amazon Web Services(AWS), Google Cloud Platform(GCP) and Oracle Cloud Infrastructure(OCI). v4.241.11",
     "author": "Microsoft Corporation",
-    "helpMarkDown": "[Learn more about this task](https://aka.ms/AAf0uqr)",
+    "helpMarkDown": "[Learn more about this task](https://aka.ms/devlabs/ado/tf/task/v4)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -14,8 +14,8 @@
     "demands": [],
     "version": {
         "Major": "4",
-        "Minor": "228",
-        "Patch": "0"
+        "Minor": "241",
+        "Patch": "11"
     },
     "instanceNameFormat": "Terraform : $(provider)",
     "execution": {
@@ -23,6 +23,9 @@
             "target": "src/index.js"
         },
         "Node16": {
+            "target": "src/index.js"
+        },
+        "Node20_1": {
             "target": "src/index.js"
         }
     },
@@ -32,6 +35,12 @@
             "displayName": "AzureRM backend configuration",
             "isExpanded": true,
             "visibleRule": "provider = azurerm && command = init"
+        },
+        {
+            "name": "providerAzureRm",
+            "displayName": "Azure provider configuration (AzureRM, AzureAD and AzAPI)",
+            "isExpanded": true,
+            "visibleRule": "provider = azurerm && command != init"
         },
         {
             "name": "backendAWS",
@@ -44,6 +53,12 @@
             "displayName": "Google Cloud Platform(GCP) backend configuration",
             "isExpanded": true,
             "visibleRule": "provider = gcp && command = init"
+        },
+        {
+            "name": "backendOCI",
+            "displayName": "Oracle Cloud Infrastructure(OCI) backend configuration",
+            "isExpanded": true,
+            "visibleRule": "provider = oci && command = init"
         }
     ],
     "inputs": [
@@ -57,7 +72,8 @@
             "options": {
                 "azurerm": "azurerm",
                 "aws": "aws",
-                "gcp": "gcp"
+                "gcp": "gcp",
+                "oci": "oci"
             },
             "properties": {
                 "EditableOptions": "False"
@@ -144,10 +160,11 @@
         {
             "name": "environmentServiceNameAzureRM",
             "type": "connectedService:AzureRM",
-            "label": "Azure subscription",
+            "label": "Azure Provider Service Connection",
             "required": true,
             "visibleRule": "provider = azurerm && command != init && command != validate",
-            "helpMarkDown": "Select an Azure Resource Manager subscription for the deployment"
+            "helpMarkDown": "Select an Azure Resource Manager Service Connection for the Azure providers",
+            "groupName": "providerAzureRm"
         },
         {
             "name": "environmentServiceNameAWS",
@@ -166,11 +183,40 @@
             "helpMarkDown": "Select a Google Cloud Platform connection for the deployment.<br><br>Note: If your connection is not listed or if you want to use an existing connection, you can setup a Google Cloud Platform service connection using the 'Add' or 'Manage' button."
         },
         {
+            "name": "environmentServiceNameOCI",
+            "type": "connectedService:OracleCloudInfrastructureServiceEndpoint",
+
+            "label": "Oracle Cloud Platform connection",
+            "required": true,
+            "visibleRule": "provider = oci && command != init && command != validate",
+            "helpMarkDown": "Select a Oracle Cloud Platform connection for the deployment.<br><br>Note: If your connection is not listed or if you want to use an existing connection, you can setup a Oracle Cloud Platform service connection using the 'Add' or 'Manage' button."
+        },
+        {
+            "name": "backendAzureRmUseEnvironmentVariablesForAuthentication",
+            "type": "boolean",
+            "properties": {
+                "PopulateDefaultValue": "True"
+            },
+            "label": "Use Env Vars for Authentication",
+            "helpMarkDown": "Choose whether to use environment variables for azurerm backend authentication. If selected, the principal details will be created as environment variables for 'ARM_CLIENT_ID' and 'ARM_CLIENT_SECRET' or 'ARM_OIDC_TOKEN'.",
+            "groupName": "backendAzureRm"
+        },
+        {
+            "name": "backendAzureRmUseEntraIdForAuthentication",
+            "type": "boolean",
+            "properties": {
+                "PopulateDefaultValue": "True"
+            },
+            "label": "Use Entra ID for Authentication",
+            "helpMarkDown": "Choose whether to use Entra Id authentication to the storage account. If selected, 'use_azuread_auth = true' will be passed to the backend config.",
+            "groupName": "backendAzureRm"
+        },
+        {
             "name": "backendServiceArm",
             "type": "connectedService:AzureRM",
-            "label": "Azure subscription",
+            "label": "Azure Backend Service Connection",
             "required": true,
-            "helpMarkDown": "Azure resource manager subscription for the terraform backend configuration",
+            "helpMarkDown": "Select an Azure Resource Manager Service Connection for the terraform azurerm backend configuration",
             "groupName": "backendAzureRm"
         },
         {
@@ -267,6 +313,35 @@
             "required": false,
             "helpMarkDown": "The relative path to the state file inside the GCP bucket. For example, if you give the input as 'terraform', then the state file, named default.tfstate, will be stored inside an object called terraform.",
             "groupName": "backendGCP"
+        },
+        {
+            "name": "backendServiceOCI",
+            "type": "connectedService:OracleCloudInfrastructureServiceEndpoint",
+            "label": "Oracle Cloud Infrastructure connection",
+            "required": true,
+            "helpMarkDown": "Oracle Cloud Infrastructure connection for the terraform backend configuration.<br><br>Note: If your connection is not listed or if you want to use an existing connection, you can setup a Oracle Cloud Platform service connection using the 'Add' or 'Manage' button.",
+            "groupName": "backendOCI"
+        },
+        {
+            "name": "backendOCIPar",
+            "type": "string",
+            "label": "PAR for Terraform remote state file",
+            "required": false,
+            "helpMarkDown": "The OCI object storage PAR configuration for the Terraform remote state file (optional)",
+            "groupName": "backendOCI"
+        },
+        {
+            "name": "backendOCIConfigGenerate",
+            "type": "pickList",
+            "label": "Generate the Terraform remote state file config (Use Yes when not included in TF files)",
+            "required": true,
+            "defaultValue": "yes",
+            "helpMarkDown": "Generates the Terraform remote state file config, select Yes when not included in TF files, othwerwise No.",
+            "groupName": "backendOCI",
+            "options": {
+                "yes": "yes",
+                "no": "no"
+            }
         }
     ],
     "dataSourceBindings": [
