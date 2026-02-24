@@ -21,12 +21,12 @@ module.exports = {
                     globOptions: {
                         dot: true,
                         gitignore: false,
-                        ignore: ["**/Tests/**", "**/*.ts"],
+                        ignore: ["**/Tests/**", "**/*.ts", "**/views/**"],
                     },
                     to: "Tasks"
                 },
                 {
-                    from: "./views/terraform-plan/dist",
+                    from: "./Tasks/TerraformTask/TerraformTaskV5/views/terraform-plan/dist",
                     to: "views/terraform-plan/dist"
                 },
 
