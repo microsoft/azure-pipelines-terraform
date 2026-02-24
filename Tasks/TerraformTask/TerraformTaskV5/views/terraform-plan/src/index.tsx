@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === "development") {
         {
             name: 'stage_deploy.tfplan',
             type: 'terraform-plan-results',
-            content: testData.examplePlan2
+            content: testData.examplePlan1
         }
     );
     renderComponent(mockAttachments);
