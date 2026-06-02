@@ -23,13 +23,6 @@ trigger:
 
 pr: none
 
-resources:
-  repositories:
-    - repository: pipeline-templates
-      type: git
-      name: 'DevLabs Extensions/pipeline-templates'
-      ref: main
-
 stages:
 - stage: 'Build'
   jobs:
@@ -41,54 +34,50 @@ stages:
     - task: NodeTool@0
       inputs:
         versionSpec: '16.x'
-    - template: build.yml@pipeline-templates
-    - template: package.yml@pipeline-templates
-      parameters:
-        extensionName: $(extensionName)
-        outputPath: 'out'
-        rootPath: './build'
+    - task: Npm@1
+      displayName: 'Install dependencies (root)'
+      inputs:
+        command: 'install'
+        workingDir: '.'
+    - task: Npm@1
+      displayName: 'Install TerraformInstaller dependencies'
+      inputs:
+        command: 'custom'
+        customCommand: 'run deps:npm:inst'
+    - task: Npm@1
+      displayName: 'Install TerraformTask dependencies'
+      inputs:
+        command: 'custom'
+        customCommand: 'run deps:npm:tasks'
+    - task: Npm@1
+      displayName: 'Compile TerraformInstaller'
+      inputs:
+        command: 'custom'
+        customCommand: 'run compile:inst'
+    - task: Npm@1
+      displayName: 'Compile TerraformTask'
+      inputs:
+        command: 'custom'
+        customCommand: 'run compile:tasks'
+    - task: Npm@1
+      displayName: 'Prune dependencies'
+      inputs:
+        command: 'custom'
+        customCommand: 'run deps:prune'
+    - task: Npm@1
+      displayName: 'Run webpack'
+      inputs:
+        command: 'custom'
+        customCommand: 'run webpack'
+    - task: CopyFiles@2
+      displayName: 'Copy build artifacts'
+      inputs:
+        sourceFolder: '$(System.DefaultWorkingDirectory)/build'
+        contents: '**'
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish build artifacts'
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'terraform-extension'
 
-- stage: 'DeployDev'
-  displayName: 'Deploy to dev'
-  dependsOn: Build
-  condition: succeeded()
-  jobs: 
-  - template: deploy.yml@pipeline-templates
-    parameters:
-      environment: 'dev'
-      extensionName: $(extensionName)
-      marketplaceConnectedServiceName: $(marketplaceServiceConnection)
-      publisherId: $(publisherId)
-      publicExtensionName: $(publicExtensionName)
-      updateTaskVersion: true
-
-- stage: 'DeployTest'
-  displayName: 'Deploy to Test'
-  dependsOn: DeployDev
-  condition: succeeded()
-  jobs:
-  - template: deploy.yml@pipeline-templates
-    parameters:
-      environment: 'test'
-      extensionName: $(extensionName)
-      marketplaceConnectedServiceName: $(marketplaceServiceConnection)
-      publisherId: $(publisherId)
-      publicExtensionName: $(publicExtensionName)
-      updateTaskVersion: true
-      extensionId: $(extensionId)
-
-- stage: 'DeployRelease'
-  displayName: 'Deploy Release'
-  dependsOn: DeployTest
-  condition: succeeded()
-  jobs:
-  - template: deploy.yml@pipeline-templates
-    parameters:
-      environment: 'public'
-      extensionName: $(extensionName)
-      marketplaceConnectedServiceName: $(marketplaceServiceConnection)
-      publisherId: $(publisherId)
-      publicExtensionName: $(publicExtensionName)
-      extensionVisibility: 'public'
-      updateTaskVersion: true
-      extensionId: $(extensionId)
