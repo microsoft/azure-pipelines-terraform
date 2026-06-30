@@ -11,6 +11,6 @@
   "loc.messages.OperatingSystemNotSupported": "Operating system %s is not supported",
   "loc.messages.ArchitectureNotSupported": "Architecture %s is not supported",
   "loc.messages.TerraformDownloadFailed": "Failed to download Terraform from url %s. Error %s",
-  "loc.messages.TerraformVersionNotFound": "Unable to get latest version: using 1.1.6",
+  "loc.messages.TerraformVersionNotFound": "Unable to determine the latest Terraform version: %s. Please look up the desired version at https://releases.hashicorp.com/terraform/ and set it explicitly in the task's version input.",
   "loc.messages.GettingLatestTerraformVersion": "Getting latest Terraform version."
 }

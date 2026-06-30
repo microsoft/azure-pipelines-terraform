@@ -45,7 +45,7 @@
         "OperatingSystemNotSupported": "Operating system %s is not supported",
         "ArchitectureNotSupported": "Architecture %s is not supported",
         "TerraformDownloadFailed": "Failed to download Terraform from url %s. Error %s",
-        "TerraformVersionNotFound": "Unable to get latest version: %s defaulting to 1.0.8",
+        "TerraformVersionNotFound": "Unable to determine the latest Terraform version: %s. Please look up the desired version at https://releases.hashicorp.com/terraform/ and set it explicitly in the task's version input.",
         "GettingLatestTerraformVersion": "Getting latest Terraform version."
     }
 }
