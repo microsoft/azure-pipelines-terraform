@@ -42,15 +42,21 @@ async function fetchLatestTerraformVersion(): Promise<string> {
         if (!response.ok) {
             throw new Error(`HTTP ${response.status} ${response.statusText}`);
         }
+
+        }
+
         const data = await response.json();
         const latestVersion = getLatestTerraformVersion(Object.keys(data.versions || {}));
         if (!latestVersion) {
             throw new Error("No stable Terraform versions found in release index");
         }
         return latestVersion;
-    } catch (exception: any) {
-        const message = exception instanceof Error ? exception.message : String(exception);
-        throw new Error(tasks.loc("TerraformVersionNotFound", message));
+    } catch (exception: any) {
+
+        const message = exception instanceof Error ? exception.message : String(exception);
+
+        throw new Error(tasks.loc("TerraformVersionNotFound", message));
+
     }
 }
 
