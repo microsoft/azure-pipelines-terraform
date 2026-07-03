@@ -39,9 +39,9 @@ async function fetchLatestTerraformVersion(): Promise<string> {
 
     try {
         const response = await fetch(terraformReleasesUrl, fetchOptions);
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status} ${response.statusText}`);
-        }
+        if (!response.ok) {
+
+            throw new Error(`HTTP ${response.status} ${response.statusText}`);
 
         }
 
