@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "compile": "tsc -b tsconfig.json",
-    "test": "mocha --timeout 10000 --require ts-node/register Tests/L0.ts"
+    "test": "tsc --noEmit -p tsconfig.json && mocha --timeout 10000 --require ts-node/register Tests/L0.ts"
   },
   "author": "",
   "license": "ISC",
