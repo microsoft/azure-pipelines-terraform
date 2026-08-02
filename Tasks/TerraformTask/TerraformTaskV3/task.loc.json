@@ -11,9 +11,11 @@
     "Release"
   ],
   "demands": [],
+  "deprecated": true,
+  "removalDate": "2026-11-01",
   "version": {
     "Major": "3",
-    "Minor": "209",
+    "Minor": "210",
     "Patch": "0"
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -311,6 +313,7 @@
     }
   ],
   "messages": {
+    "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask",
     "TerraformToolNotFound": "ms-resource:loc.messages.TerraformToolNotFound"
   }
 }

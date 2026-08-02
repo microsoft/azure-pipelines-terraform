@@ -11,9 +11,11 @@
         "Release"
     ],
     "demands": [],
+    "deprecated": true,
+    "removalDate": "2026-11-01",
     "version": {
         "Major": "0",
-        "Minor": "202",
+        "Minor": "203",
         "Patch": "0"
     },
     "instanceNameFormat": "Terraform : $(provider)",
@@ -264,6 +266,7 @@
         }
     ],
     "messages": {
+        "DeprecatedTask": "TerraformTaskV1 is deprecated and stops working on 2026-11-01. Migrate to TerraformTaskV5. See https://github.com/microsoft/azure-pipelines-terraform for migration guidance.",
         "TerraformToolNotFound": "Failed to find terraform tool in paths",
         "TerraformPlanFailed": "Terraform Plan failed with exit code: %s"
     }
