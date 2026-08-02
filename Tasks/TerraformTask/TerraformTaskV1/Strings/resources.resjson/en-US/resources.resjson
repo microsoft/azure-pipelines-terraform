@@ -44,5 +44,5 @@
   "loc.input.help.backendGCPPrefix": "The relative path to the state file inside the GCP bucket. For example, if you give the input as 'terraform', then the state file, named default.tfstate, will be stored inside an object called terraform.",
   "loc.messages.TerraformToolNotFound": "Failed to find terraform tool in paths",
   "loc.messages.TerraformPlanFailed": "Terraform Plan failed with exit code: %s",
-  "loc.messages.DeprecatedTask": "TerraformTaskV1 is deprecated and stops working on 2026-11-01. Migrate to TerraformTaskV5. See https://github.com/microsoft/azure-pipelines-terraform for migration guidance."
+  "loc.messages.DeprecatedTask": "TerraformTaskV1 is deprecated and will be removed at least 12 weeks after this warning first appears. Migrate to TerraformTaskV5. See https://github.com/microsoft/azure-pipelines-terraform for the removal date and migration guidance."
 }

@@ -12,7 +12,6 @@
   ],
   "demands": [],
   "deprecated": true,
-  "removalDate": "2026-11-01",
   "version": {
     "Major": "2",
     "Minor": "203",
