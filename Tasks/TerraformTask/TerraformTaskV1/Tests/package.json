@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "nock": "13.2.4"
+    "nock": "^13.5.6"
   }
 }

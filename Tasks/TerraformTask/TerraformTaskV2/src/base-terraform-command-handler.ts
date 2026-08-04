@@ -3,7 +3,7 @@ import {ToolRunner, IExecOptions, IExecSyncOptions, IExecSyncResult} from 'azure
 import {TerraformBaseCommandInitializer, TerraformAuthorizationCommandInitializer} from './terraform-commands';
 import tasks = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import * as uuidV4 from 'uuid/v4';
+import { v4 as uuidV4 } from 'uuid';
 const fs = require('fs');
 const del = require('del');
 
@@ -12,8 +12,8 @@ export abstract class BaseTerraformCommandHandler {
     terraformToolHandler: ITerraformToolHandler;
     backendConfig: Map<string, string>;
 
-    abstract handleBackend(terraformToolRunner: ToolRunner);
-    abstract handleProvider(command: TerraformAuthorizationCommandInitializer);
+    abstract handleBackend(terraformToolRunner: ToolRunner) : Promise<void>;
+    abstract handleProvider(command: TerraformAuthorizationCommandInitializer) : Promise<void>;
     
     constructor() {
         this.providerName = "";
@@ -82,7 +82,7 @@ export abstract class BaseTerraformCommandHandler {
         let terraformTool;
         
         terraformTool = this.terraformToolHandler.createToolRunner(initCommand);
-        this.handleBackend(terraformTool);
+        await this.handleBackend(terraformTool);
         
         return terraformTool.exec(<IExecOptions> {
             cwd: initCommand.workingDirectory
@@ -126,7 +126,7 @@ export abstract class BaseTerraformCommandHandler {
         
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(planCommand);
-        this.handleProvider(planCommand);
+        await this.handleProvider(planCommand);
     
         let result = await terraformTool.exec(<IExecOptions> {
             cwd: planCommand.workingDirectory,
@@ -140,7 +140,7 @@ export abstract class BaseTerraformCommandHandler {
         return result;
     }
 
-    public setOutputVariableToPlanFilePath() {
+    public async setOutputVariableToPlanFilePath(): Promise<void> {
         // Do terraform version to check if version is >= 0.12.0
         if (this.checkIfShowCommandSupportsJsonOutput() >= 0) {
             let terraformTool;
@@ -160,7 +160,7 @@ export abstract class BaseTerraformCommandHandler {
                 commandOptions
             );
             terraformTool = this.terraformToolHandler.createToolRunner(planCommand);
-            this.handleProvider(planCommand);
+            await this.handleProvider(planCommand);
             fileStream = fs.createWriteStream(tempFileForPlanOutput);
             terraformTool.execSync(<IExecSyncOptions>{
                 cwd: planCommand.workingDirectory,
@@ -215,7 +215,7 @@ export abstract class BaseTerraformCommandHandler {
     public async plan(): Promise<number> {
         let exitCode = await this.onlyPlan();
         tasks.setVariable('changesPresent', (exitCode === 2).toString(), false, true);
-        this.setOutputVariableToPlanFilePath();
+        await this.setOutputVariableToPlanFilePath();
 
         return Promise.resolve(0);
     }
@@ -225,6 +225,10 @@ export abstract class BaseTerraformCommandHandler {
         this.warnIfMultipleProviders();
         let validateCommand = new TerraformBaseCommandInitializer("validate", tasks.getInput("workingDirectory"), '');
         terraformTool = this.terraformToolHandler.createToolRunner(validateCommand);
+        // Yield once before the first exec. task-lib 5 hooks unhandledRejection, and
+        // without a prior tick a failing exec is reported twice: once by the caller
+        // and once as "Unhandled: ...".
+        await Promise.resolve("This is here because the unit tests fail without it.");
         await terraformTool.exec(<IExecOptions> {
             cwd: validateCommand.workingDirectory
         });
@@ -245,7 +249,7 @@ export abstract class BaseTerraformCommandHandler {
         );
 
         terraformTool = this.terraformToolHandler.createToolRunner(applyCommand);
-        this.handleProvider(applyCommand);
+        await this.handleProvider(applyCommand);
 
         return terraformTool.exec(<IExecOptions> {
             cwd: applyCommand.workingDirectory
@@ -308,7 +312,7 @@ export abstract class BaseTerraformCommandHandler {
 
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(destroyCommand);
-        this.handleProvider(destroyCommand);
+        await this.handleProvider(destroyCommand);
 
         return terraformTool.exec(<IExecOptions> {
             cwd: destroyCommand.workingDirectory
@@ -324,6 +328,10 @@ export abstract class BaseTerraformCommandHandler {
 
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(validateCommand);
+        // Yield once before the first exec. task-lib 5 hooks unhandledRejection, and
+        // without a prior tick a failing exec is reported twice: once by the caller
+        // and once as "Unhandled: ...".
+        await Promise.resolve("This is here because the unit tests fail without it.");
 
         return terraformTool.exec(<IExecOptions>{
             cwd: validateCommand.workingDirectory
