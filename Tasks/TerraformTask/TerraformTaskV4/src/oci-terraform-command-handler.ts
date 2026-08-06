@@ -3,7 +3,7 @@ import {ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
 import {TerraformAuthorizationCommandInitializer} from './terraform-commands';
 import {BaseTerraformCommandHandler} from './base-terraform-command-handler';
 import path = require('path');
-import * as uuidV4 from 'uuid/v4';
+import { v4 as uuidV4 } from 'uuid';
 
 export class TerraformCommandHandlerOCI extends BaseTerraformCommandHandler {
     constructor() {

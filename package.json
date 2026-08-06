@@ -21,16 +21,13 @@
         "webpack": "webpack --config webpack.config.js --progress"
     },
     "devDependencies": {
-        "azure-pipelines-task-lib": "^4.1.0",
-        "azure-pipelines-tool-lib": "^2.0.0-preview",
-        "azure-devops-node-api": "^12.0.0",
-        "copy-webpack-plugin": "^6.3.2",
-        "terser-webpack-plugin": "^5.3.6",
+        "copy-webpack-plugin": "^14.0.0",
         "glob-exec": "^0.1.1",
-        "tfx-cli": "0.23.3",
-        "ts-loader": "^5.2.2",
+        "rimraf": "^6.1.3",
+        "terser-webpack-plugin": "^5.3.14",
+        "tfx-cli": "^0.23.4",
+        "typescript": "^4.9.5",
         "webpack": "^5.107.2",
-        "webpack-cli": "^6.0.1",
-        "glob-parent": ">=6.0.2"
+        "webpack-cli": "^6.0.1"
     }
 }

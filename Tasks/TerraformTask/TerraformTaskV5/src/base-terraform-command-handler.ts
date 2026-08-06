@@ -3,7 +3,7 @@ import {ToolRunner, IExecOptions, IExecSyncOptions, IExecSyncResult} from 'azure
 import {TerraformBaseCommandInitializer, TerraformAuthorizationCommandInitializer} from './terraform-commands';
 import tasks = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import * as uuidV4 from 'uuid/v4';
+import { v4 as uuidV4 } from 'uuid';
 const fs = require('fs');
 const del = require('del');
 
