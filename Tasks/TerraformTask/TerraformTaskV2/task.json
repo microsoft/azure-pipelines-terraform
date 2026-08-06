@@ -12,6 +12,7 @@
     ],
     "demands": [],
     "deprecated": true,
+    "deprecationMessage": "TerraformTaskV2@2 is deprecated and will be removed at least 12 weeks after this warning first appears. Migrate to TerraformTask@5. See https://github.com/microsoft/azure-pipelines-terraform for the removal date and migration guidance.",
     "version": {
         "Major": "2",
         "Minor": "203",
@@ -271,7 +272,6 @@
         }
     ],
     "messages": {
-        "DeprecatedTask": "TerraformTaskV2 is deprecated and will be removed at least 12 weeks after this warning first appears. Migrate to TerraformTaskV5. See https://github.com/microsoft/azure-pipelines-terraform for the removal date and migration guidance.",
         "TerraformToolNotFound": "Failed to find terraform tool in paths",
         "TerraformPlanFailed": "Terraform Plan failed with exit code: %s"
     }

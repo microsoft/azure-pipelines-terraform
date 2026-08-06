@@ -5,18 +5,13 @@ import path = require('path');
 async function run() {
     tasks.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
-    // This task version is deprecated. Set FAIL_DEPRECATED_BUILD_TASK to validate a
-    // migration against the hard failure before the removal date.
-    // TODO(release): once the release date is known, add "removalDate": "YYYY-MM-DD" to
-    // task.json and task.loc.json (12 weeks out) and put that date in the DeprecatedTask
-    // message in task.json and Strings/resources.resjson/en-US/resources.resjson.
-    const failDeprecated = tasks.getVariable('FAIL_DEPRECATED_BUILD_TASK');
-    if (failDeprecated != null && failDeprecated.toLowerCase() === 'true') {
-        tasks.setResult(tasks.TaskResult.Failed, tasks.loc('DeprecatedTask'));
-        return;
-    }
-    tasks.warning(tasks.loc('DeprecatedTask'));
-
+    // This task version is deprecated. The agent emits the notice from the "deprecated"
+    // and "deprecationMessage" fields in task.json, so do not warn from here as well.
+    // Never gate on FAIL_DEPRECATED_BUILD_TASK either: the service sets it during
+    // deprecation brownouts and it cannot be overridden in a pipeline, so honouring it
+    // hard-fails every Terraform step.
+    // TODO(release): once the release date is known, add "removalDate": "YYYY-MM-DD"
+    // (12 weeks out) plus that date in deprecationMessage, in task.json and task.loc.json.
     let parentHandler = new ParentCommandHandler();
     try {
         await parentHandler.execute(tasks.getInput("provider"), tasks.getInput("command"));
