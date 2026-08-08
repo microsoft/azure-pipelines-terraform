@@ -28,7 +28,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         }
     }
 
-    public handleBackend(terraformToolRunner: ToolRunner): void {
+    public async handleBackend(terraformToolRunner: ToolRunner) : Promise<void> {
         let backendServiceName = tasks.getInput("backendServiceArm", true);
         this.setupBackend(backendServiceName);
 
@@ -37,7 +37,7 @@ export class TerraformCommandHandlerAzureRM extends BaseTerraformCommandHandler 
         }
     }
 
-    public handleProvider(command: TerraformAuthorizationCommandInitializer) {
+    public async handleProvider(command: TerraformAuthorizationCommandInitializer) : Promise<void> {
         if (command.serviceProvidername) {
             var serviceprincipalid = tasks.getEndpointAuthorizationParameter(command.serviceProvidername, "serviceprincipalid", true);
             var serviceprincipalkey = tasks.getEndpointAuthorizationParameter(command.serviceProvidername, "serviceprincipalkey", true);

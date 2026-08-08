@@ -11,37 +11,60 @@ const HttpsProxyAgent = require('https-proxy-agent');
 const terraformToolName = "terraform";
 const isWindows = os.type().match(/^Win/);
 const proxy = tasks.getHttpProxyConfiguration();
+const terraformReleasesUrl = 'https://releases.hashicorp.com/terraform/index.json';
+
+// Selects the highest stable (non pre-release) version from a list of Terraform
+// release version strings, e.g. ["1.9.8", "1.10.0-rc1", "1.10.0"] -> "1.10.0".
+export function getLatestTerraformVersion(versions: string[]): string {
+    const stable = versions.filter(version => /^\d+\.\d+\.\d+$/.test(version));
+    stable.sort((a, b) => {
+        const left = a.split('.').map(Number);
+        const right = b.split('.').map(Number);
+        for (let i = 0; i < left.length; i++) {
+            if (left[i] !== right[i]) {
+                return left[i] - right[i];
+            }
+        }
+        return 0;
+    });
+    return stable[stable.length - 1] || "";
+}
+
+async function fetchLatestTerraformVersion(): Promise<string> {
+    let fetchOptions: { agent?: any } = {};
+    if (proxy != null) {
+        var proxyUrl = proxy.proxyUsername !="" ? proxy.proxyUrl.split("://")[0] + '://' + proxy.proxyUsername + ':' + proxy.proxyPassword + '@' + proxy.proxyUrl.split("://")[1]:proxy.proxyUrl;
+        fetchOptions.agent = new HttpsProxyAgent(proxyUrl);
+    }
+
+    try {
+        const response = await fetch(terraformReleasesUrl, fetchOptions);
+        if (!response.ok) {
+
+            throw new Error(`HTTP ${response.status} ${response.statusText}`);
+
+        }
+
+        const data = await response.json();
+        const latestVersion = getLatestTerraformVersion(Object.keys(data.versions || {}));
+        if (!latestVersion) {
+            throw new Error("No stable Terraform versions found in release index");
+        }
+        return latestVersion;
+    } catch (exception: any) {
+
+        const message = exception instanceof Error ? exception.message : String(exception);
+
+        throw new Error(tasks.loc("TerraformVersionNotFound", message));
+
+    }
+}
+
 export async function downloadTerraform(inputVersion: string): Promise<string> {
     var latestVersion: string = "";
     if(inputVersion.toLowerCase() === 'latest') {
         console.log(tasks.loc("GettingLatestTerraformVersion"));
-        if(proxy == null){
-            await fetch('https://checkpoint-api.hashicorp.com/v1/check/terraform')
-            .then((response: { json: () => any; }) => response.json())
-            .then((data: { [x: string]: any; }) => {
-                latestVersion = data.current_version;
-            })
-            .catch((exception: any) => {
-                console.warn(tasks.loc("TerraformVersionNotFound"));
-
-                latestVersion = '1.9.8';
-            })
-        }
-        else
-        {
-
-            var proxyUrl = proxy.proxyUsername !="" ? proxy.proxyUrl.split("://")[0] + '://' + proxy.proxyUsername + ':' + proxy.proxyPassword + '@' + proxy.proxyUrl.split("://")[1]:proxy.proxyUrl;
-            var proxyAgent = new HttpsProxyAgent(proxyUrl);
-            await fetch('https://checkpoint-api.hashicorp.com/v1/check/terraform', { agent: proxyAgent})
-            .then((response: { json: () => any; }) => response.json())
-            .then((data: { [x: string]: any; }) => {
-                latestVersion = data.current_version;
-            })
-            .catch((exception: any) => {
-                console.warn(tasks.loc("TerraformVersionNotFound"));
-                latestVersion = '1.9.8';
-            })
-        }
+        latestVersion = await fetchLatestTerraformVersion();
     }
     var version = latestVersion != "" ? tools.cleanVersion(latestVersion) : tools.cleanVersion(inputVersion);
 
