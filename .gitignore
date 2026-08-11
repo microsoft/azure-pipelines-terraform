@@ -1,6 +1,10 @@
 node_modules
 build
+dist
+views/terraform-plan/dist
 Tasks/**/*.js
+!Tasks/**/webpack.config.js
+*.tsbuildinfo
 .taskkey
 configs/self.json
 *.vsix

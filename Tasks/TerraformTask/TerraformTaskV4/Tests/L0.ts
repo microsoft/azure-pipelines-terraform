@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as path from 'path';
+import * as os from 'os';
 
 describe('Terraform Test Suite', () => {
 
@@ -557,6 +558,64 @@ describe('Terraform Test Suite', () => {
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('AzurePlanSuccessAdditionalArgsL0 should have succeeded.'), 'Should have printed: AzurePlanSuccessAdditionalArgsL0 should have succeeded.');
+        } catch(error) {
+            throw error;
+        }
+    });
+
+    it('azure plan should publish the plan when publishPlan is set', async () => {
+        let tp = path.join(__dirname, './PlanTests/Azure/AzurePlanSuccessPublishPlan.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 3, 'tool should have been invoked three times (providers, plan, show). actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.stdOutContained('task.addattachment'), 'should have published an attachment');
+            assert(tr.stdOutContained('terraform-plan-results'), 'attachment should use the plan tab type');
+            assert(tr.stdOutContained('AzurePlanSuccessPublishPlanL0 should have succeeded.'), 'Should have printed: AzurePlanSuccessPublishPlanL0 should have succeeded.');
+        } catch(error) {
+            throw error;
+        }
+    });
+
+    it('azure show with json output should publish the plan using fileName as its name', async () => {
+        let tp = path.join(__dirname, './ShowTests/Azure/AzureShowJsonPublishPlan.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked once (show). actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.stdOutContained('task.addattachment'), 'should have published an attachment');
+            assert(tr.stdOutContained('terraform-plan-results'), 'attachment should use the plan tab type');
+            assert(tr.stdOutContained('my-show-plan'), 'attachment should be named from the fileName input');
+            assert(tr.stdOutContained('AzureShowJsonPublishPlanL0 should have succeeded.'), 'Should have printed: AzureShowJsonPublishPlanL0 should have succeeded.');
+        } catch(error) {
+            throw error;
+        }
+    });
+
+    it('azure show with file output should set showFilePath and publish the plan', async () => {
+        let tp = path.join(__dirname, './ShowTests/Azure/AzureShowFileOutput.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        // Must match the fileName input the test sets. tl.writeFile is a no-op under the
+        // mock runner, so the file itself is never created and the assertions below cover
+        // the logging commands the agent acts on instead.
+        const showFilePath = path.join(os.tmpdir(), 'terraform-show-file-output-test.json');
+        try {
+            await tr.runAsync();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked once (show). actual: ' + tr.invokedToolCount);
+            assert(tr.errorIssues.length === 0, 'should have no errors');
+            assert(tr.stdOutContained('task.setvariable variable=showFilePath'), 'should have set the showFilePath variable');
+            assert(tr.stdOutContained(showFilePath), 'showFilePath should be the resolved fileName');
+            assert(tr.stdOutContained('task.addattachment'), 'should have published an attachment');
+            assert(tr.stdOutContained('terraform-plan-results'), 'attachment should use the plan tab type');
+            assert(tr.stdOutContained('AzureShowFileOutputL0 should have succeeded.'), 'Should have printed: AzureShowFileOutputL0 should have succeeded.');
         } catch(error) {
             throw error;
         }

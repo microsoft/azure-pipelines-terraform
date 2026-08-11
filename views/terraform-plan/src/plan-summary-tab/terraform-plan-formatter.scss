@@ -1,0 +1,167 @@
+.json-plan {
+    font-family: var(--monospace-font, monospace);
+    font-size: 13px;
+    overflow: auto;
+    max-height: 600px;
+    padding: 10px;
+    border-radius: 3px;
+    background-color: var(--background-color, var(--palette-neutral-0, #fff));
+    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+}
+
+.tf-plan-summary {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: var(--background-color, var(--palette-neutral-2, #f5f5f5));
+    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+    border-radius: 4px;
+}
+
+.tf-plan-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.tf-plan-actions {
+    margin-top: 10px;
+}
+
+.tf-plan-actions ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.tf-action-create {
+    color: var(--create-color, var(--status-success-foreground, var(--palette-success, #28a745)));
+}
+
+.tf-action-update {
+    color: var(--update-color, var(--status-info-foreground, var(--palette-primary, #0078d4)));
+}
+
+.tf-action-delete {
+    color: var(--delete-color, var(--status-error-foreground, var(--palette-error, #d73a49)));
+}
+
+.tf-sensitive-info {
+    color: var(--warning-color, var(--status-warning-foreground, var(--palette-warning, #f2c811)));
+}
+
+.tf-sensitive-badge {
+    background-color: var(--warning-bg-color, var(--status-warning-background, var(--palette-warning-tint, #fff4b5)));
+    color: var(--warning-text-color, var(--status-warning-foreground, var(--palette-warning-shade, #735c0f)));
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.has-sensitive .tf-resource-address {
+    margin-right: 10px;
+}
+
+.tf-plan-details {
+    margin: 20px 0;
+    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.tf-plan-details summary {
+    cursor: pointer;
+    padding: 12px;
+    font-weight: bold;
+    background-color: var(--background-color, var(--palette-neutral-2, #f5f5f5));
+    border-bottom: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+}
+
+.tf-plan-details pre {
+    margin: 0;
+    padding: 8px;
+    background-color: var(--code-bg-color, var(--palette-neutral-0, #fff));
+    border-radius: 3px;
+    border: 1px solid var(--border-color-light, var(--palette-neutral-4, #eee));
+    overflow-x: auto;
+}
+
+.tf-resource-changes {
+    margin-top: 20px;
+    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.tf-resource-changes > h4 {
+    padding: 12px;
+    margin: 0;
+    background-color: var(--background-color, var(--palette-neutral-2, #f5f5f5));
+    border-bottom: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+    font-weight: 600;
+}
+
+.tf-resource-detail {
+    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+    border-radius: 4px;
+    margin: 15px;
+    overflow: hidden;
+    background-color: var(--background-color-secondary, var(--palette-neutral-0, #fff));
+}
+
+.tf-resource-detail summary {
+    cursor: pointer;
+    padding: 12px;
+    background-color: var(--background-color, var(--palette-neutral-2, #f5f5f5));
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+    font-weight: 500;
+}
+
+.tf-resource-address {
+    font-weight: bold;
+    font-family: var(--monospace-font, monospace);
+}
+
+.tf-resource-actions {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background-color: var(--action-bg-color, var(--palette-neutral-4, #f0f0f0));
+}
+
+.tf-resource-content {
+    padding: 15px;
+    background-color: var(--background-color-secondary, var(--palette-neutral-0, #fff));
+}
+
+.tf-resource-before,
+.tf-resource-after {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid var(--border-color, var(--palette-neutral-8, #ddd));
+}
+
+.tf-resource-before {
+    background-color: var(--before-bg-color, var(--palette-neutral-2, #f8f8f8));
+    border-left: 3px solid var(--delete-color, var(--status-error-foreground, var(--palette-error, #d73a49)));
+}
+
+.tf-resource-after {
+    background-color: var(--after-bg-color, var(--palette-neutral-2, #f8f8f8));
+    border-left: 3px solid var(--create-color, var(--status-success-foreground, var(--palette-success, #28a745)));
+}
+
+.tf-resource-before h5,
+.tf-resource-after h5 {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-primary-color, var(--palette-neutral-100, #333));
+}
+
+/* Theme support is now handled through Azure DevOps CSS variables */
+/* No need for manual dark mode detection as we're using theme variables */

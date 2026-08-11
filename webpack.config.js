@@ -43,6 +43,13 @@ module.exports = {
                     },
                     to: "Tasks"
                 },
+                {
+                    // Lives outside Tasks/ because that tree is uploaded as the task payload
+                    // agents download, and this bundle is browser-only. The destination must
+                    // match the `files` entry and contribution uri in azure-devops-extension.json.
+                    from: "./views/terraform-plan/dist",
+                    to: "views/terraform-plan/dist"
+                },
 
             ]
         })
