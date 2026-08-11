@@ -88,6 +88,12 @@ Options specific to  **show**
 - **outputTo\*:** (console or file). You can choose to save output to file or only show output in console (i.e log) 
 - **outputFormat\*:** (json or default) . Output in json or default format
 
+Options specific to  **plan**  
+- **Publish Plan Name (`publishPlan`):** Give the plan a name to publish it to the Terraform Plan tab of the build results, so it can be reviewed in the browser. Leave empty to disable publishing. See [Terraform Plan Tab](#terraform-plan-tab) below.
+
+Options specific to  **show** and **custom** with **outputTo\*:** 'file', and to **show** with **outputFormat\*:** 'json'  
+- **Output Filename (`fileName`):** The file to write the output to. For a JSON plan this is also the name the plan is shown under in the Terraform Plan tab; if it is left empty the plan is named `terraform-plan`.
+
 Options specific to  **custom**  
 When selecting custom you can use any command that is supported natively by terraform.
 - **customCommand\*:** pass any command that is supported natively by terraform
@@ -100,6 +106,36 @@ When selecting custom you can use any command that is supported natively by terr
 
 * **showFilePath:** This variable refers to the location of the file that was created. This file can be used by tasks which are written for tools such as [Open Policy Agent](https://www.openpolicyagent.org/docs/latest/terraform/)<br><br>Note: This variable will only be set if 'command' input is set to 'show'.
 * **jsonOutputVariablesPath:** The location of the JSON file which contains the output variables set by the user in the terraform config files.<br><br>Note: This variable will only be set if 'command' input is set to 'output'.
+
+## Terraform Plan Tab
+
+The extension adds a **Terraform Plan** tab to the build results page, so a plan can be reviewed in the browser instead of by reading the build log.
+
+There are three ways to publish a plan to it. The name shown in the tab comes from the input listed below:
+
+| How to publish | Name shown in the tab |
+| --- | --- |
+| **Command\*:** 'plan' with a name in **Publish Plan Name (`publishPlan`)** | the `publishPlan` value |
+| **Command\*:** 'show' with **outputFormat\*:** 'json' and **outputTo\*:** 'console' | `fileName`, or `terraform-plan` if it is empty |
+| **Command\*:** 'show' with **outputFormat\*:** 'json' and **outputTo\*:** 'file' | `fileName`, or the output file name if it is empty |
+
+```yaml
+- task: TerraformTaskV4@4
+  name: terraformPlan
+  displayName: Create Terraform Plan
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    commandOptions: '-out main.tfplan'
+    environmentServiceNameAzureRM: 'your-environment-service-connection'
+    publishPlan: 'Production plan'
+```
+
+When `publishPlan` is set, the task needs a saved plan file to convert to JSON. If **Additional command arguments\*** already contains `-out`, that file is used and left in place; if it does not, the task appends its own `-out` and removes the generated file after publishing. If publishing fails the task raises a warning and the pipeline continues.
+
+A run that publishes more than one plan gets a dropdown at the top of the tab, so give each plan a distinct name.
+
+Values that Terraform marks as sensitive are replaced with `***REDACTED***` before the plan is displayed, as are values whose name suggests a credential and recognisable SSH and PEM private keys. This is a best-effort safety net, not a guarantee: Terraform does not mark root input variables as sensitive in the plan document, so they are matched by name only, and a credential returned by a provider in a plainly named attribute is shown in full. A published plan is stored as a build attachment, so treat the tab as having the same audience as the build log.
 
 ## Example Task Usage
 Below is a basic example usage of a few commands within the TerraformTaskV4 task.
