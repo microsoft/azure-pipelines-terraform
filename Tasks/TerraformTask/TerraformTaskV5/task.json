@@ -389,8 +389,12 @@
     ],
     "outputVariables": [
         {
-            "name": "jsonPlanFilePath",
-            "description": "The location of the terraform plan file in JSON format that was created. This file can be used by tasks which are written for tools such as [Open Policy Agent](https://www.openpolicyagent.org/docs/latest/terraform/)<br><br>Note: This variable will only be set if 'command' input is set to 'plan'."
+            "name": "showFilePath",
+            "description": "The location of the file written by the show command. Combined with 'outputFormat' set to 'json', this is the terraform plan in JSON format and can be used by tasks which are written for tools such as [Open Policy Agent](https://www.openpolicyagent.org/docs/latest/terraform/)<br><br>Note: This variable will only be set if 'command' input is set to 'show' and 'outputTo' is set to 'file'."
+        },
+        {
+            "name": "customFilePath",
+            "description": "The location of the file written by the custom command.<br><br>Note: This variable will only be set if 'command' input is set to 'custom' and 'outputTo' is set to 'file'."
         },
         {
             "name": "jsonOutputVariablesPath",
