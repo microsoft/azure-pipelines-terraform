@@ -14,8 +14,8 @@
     "demands": [],
     "version": {
         "Major": "5",
-        "Minor": "257",
-        "Patch": "1"
+        "Minor": "279",
+        "Patch": "0"
     },
     "instanceNameFormat": "Terraform : $(provider)",
     "execution": {
