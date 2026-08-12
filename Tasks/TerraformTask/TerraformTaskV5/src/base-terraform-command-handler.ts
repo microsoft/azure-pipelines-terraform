@@ -143,7 +143,13 @@ export abstract class BaseTerraformCommandHandler {
             let commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
                 cwd: showCommand.workingDirectory,
             });
-            
+
+            // Guarded for json only: execSync resolves on a non-zero exit code, so partial
+            // stdout would otherwise be attached to the plan tab as a valid plan.
+            if (outputFormat == "json" && commandOutput.code !== 0) {
+                throw new Error(`Terraform show failed with exit code ${commandOutput.code}`);
+            }
+
             tasks.writeFile(showFilePath, commandOutput.stdout);
             tasks.setVariable('showFilePath', showFilePath, false, true);
             
@@ -195,7 +201,8 @@ export abstract class BaseTerraformCommandHandler {
         // Publishing needs a plan file to run `terraform show -json` against.
         if (publishPlanName && !this.extractPlanFilePath(commandOptions)) {
             generatedPlanFile = path.join(tasks.getVariable('System.DefaultWorkingDirectory') || '.', `terraform-plan-${uuidV4()}.tfplan`);
-            commandOptions = `${commandOptions} -out=${generatedPlanFile}`;
+            // Quoted for ToolRunner.line(), which splits options on whitespace.
+            commandOptions = `${commandOptions} -out="${generatedPlanFile}"`;
         }
 
         let planCommand = new TerraformAuthorizationCommandInitializer(
@@ -234,6 +241,12 @@ export abstract class BaseTerraformCommandHandler {
                     let showCommandOutput = await showTerraformTool.execSync(<IExecSyncOptions> {
                         cwd: planCommand.workingDirectory,
                     });
+
+                    // execSync resolves on a non-zero exit code; without this a failed show
+                    // publishes empty stdout as a plan instead of warning.
+                    if (showCommandOutput.code !== 0) {
+                        throw new Error(`Terraform show failed with exit code ${showCommandOutput.code}`);
+                    }
 
                     this.publishPlanAttachment(publishPlanName, showCommandOutput.stdout);
                 }

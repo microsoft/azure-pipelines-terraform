@@ -56,6 +56,21 @@ function buildPlan(): any {
                 after_sensitive: true
             }
         },
+        // On resources, sensitive_values is a sibling of values, not a root marker.
+        planned_values: {
+            root_module: {
+                resources: [
+                    {
+                        address: 'random_password.generated',
+                        mode: 'managed',
+                        type: 'random_password',
+                        name: 'generated',
+                        values: { result: 'PLANNED_VALUES_SECRET', length: 16 },
+                        sensitive_values: { result: true }
+                    }
+                ]
+            }
+        },
         // Outputs in prior_state/planned_values use { sensitive: true, value: ... }.
         prior_state: {
             values: {
@@ -100,8 +115,16 @@ describe('plan-formatter', () => {
             assert.ok(!html.includes('WHOLE_SIDE_SECRET'));
         });
 
-        it('redacts attributes marked via a sensitive_values object', () => {
+        it('redacts attributes marked via an after_sensitive object', () => {
             assert.ok(!html.includes('RESOURCE_SECRET'));
+        });
+
+        it('redacts resource attributes marked via a sensitive_values sibling of values', () => {
+            assert.ok(!html.includes('PLANNED_VALUES_SECRET'));
+        });
+
+        it('leaves non-sensitive siblings of a sensitive_values marker readable', () => {
+            assert.ok(html.includes('random_password.generated'));
         });
 
         it('redacts root input variables by name, since terraform marks nothing there', () => {

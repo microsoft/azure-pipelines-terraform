@@ -242,9 +242,13 @@ function findSensitiveFields(obj: any, path: string = '', result: Record<string,
         return result;
     }
     
-    // Check if this object has sensitive_values
+    // On resources, sensitive_values mirrors the sibling `values` object: a marker at
+    // sensitive_values.result describes values.result, not the resource root.
     if (obj.sensitive_values && typeof obj.sensitive_values === 'object') {
-        walkSensitiveValues(obj.sensitive_values, path, result);
+        const valuesPath = obj.values && typeof obj.values === 'object'
+            ? (path ? `${path}.values` : 'values')
+            : path;
+        walkSensitiveValues(obj.sensitive_values, valuesPath, result);
     }
     
     // Terraform emits these in two shapes: an object mirroring the value structure
