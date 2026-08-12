@@ -11,9 +11,11 @@
         "Release"
     ],
     "demands": [],
+    "deprecated": true,
+    "deprecationMessage": "It will be removed at least 12 weeks after this warning first appears. Migrate to TerraformTask@5. See https://github.com/microsoft/azure-pipelines-terraform for the removal date and migration guidance.",
     "version": {
         "Major": "0",
-        "Minor": "202",
+        "Minor": "279",
         "Patch": "0"
     },
     "instanceNameFormat": "Terraform : $(provider)",
