@@ -1,3 +1,10 @@
+// Azure DevOps font stack, matching azure-devops-ui's Core/override.css. The Dropdown
+// button is `font-family: inherit`, so it picks its font up from here.
+body {
+    font-family: "Segoe UI", "-apple-system", BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Ubuntu, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 0.875rem;
+}
+
 .terraform-plan-container {
     margin: 10px;
     padding: 10px;
