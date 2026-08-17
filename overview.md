@@ -53,6 +53,8 @@ The TerraformInstaller task installs a specific version of Terraform on the agen
 
 The Terraform task abstracts running Terraform commands as part of an Azure DevOps Pipeline.
 
+This page documents version 5 of the task, referenced in YAML as `TerraformTask@5`. For version 4, see the [TerraformTaskV4 documentation](https://github.com/microsoft/azure-pipelines-terraform/tree/main/Tasks/TerraformTask/TerraformTaskV4).
+
 ### Steps to use the Terraform task
 
 - Install this task from the [Marketplace](https://aka.ms/devlabs/tf/task).
@@ -349,11 +351,12 @@ The Terraform task has the following input parameters:
 
 #### Command and Cloud Specific Inputs for the `plan`, `apply`, and `destroy` commands
 
-- `commandOptions`: The addtiional command arguments to pass to the command. The default value is `''`.
+- `commandOptions`: The additional command arguments to pass to the command. The default value is `''`.
 - `customCommand`: The custom command to run if `command` is set to `custom`. The default value is `''`.
 - `outputTo`: Choose whether to output to the console or a file for the `show` and `output` Terraform commands. The options are `console`, and `file`. The default value is `console`.
-- `fileName`: The name of the file to output to for the `show` and `output` commands if `outputTo` is set to `file`. The default value is `''`.
+- `fileName`: The name of the file to output to for the `show` and `output` commands if `outputTo` is set to `file`. For JSON plan output, this will also be used as the name for the terraform plan to display in the Terraform Plan tab. If not provided, a default name will be used. The default value is `''`.
 - `outputFormat`: The output format to use for the `show` command. The options are `json`, and `default`. The default value is `default`.
+- `publishPlan`: When using the `plan` command, if provided, the terraform plan will be published for visualization in the Terraform Plan tab using this name. Leave empty to disable plan publishing. The default value is `''`.
 
 ##### Azure Specific Inputs for `plan`, `apply`, and `destroy`
 
@@ -372,6 +375,66 @@ The Terraform task has the following input parameters:
 ##### OCI Specific Inputs for `plan`, `apply`, and `destroy`
 
 - `environmentServiceNameOCI`: The name of the OCI service connection to use for the `oci` provider. The default value is `''`.
+
+### Terraform Plan tab
+
+The extension adds a **Terraform Plan** tab to the build results page, so a plan can be reviewed in the browser instead of by reading the build log. The tab appears on any run that used the Terraform task, and shows the plans that run published.
+
+#### Publishing a plan
+
+There are three ways to publish a plan. In each case the name shown in the tab is taken from the input listed below:
+
+| How to publish | Name shown in the tab |
+| --- | --- |
+| `command: plan` with a name in `publishPlan` | the `publishPlan` value |
+| `command: show` with `outputFormat: json` and `outputTo: console` | `fileName`, or `terraform-plan` if it is empty |
+| `command: show` with `outputFormat: json` and `outputTo: file` | `fileName`, or the output file name if it is empty |
+
+Publishing directly from the `plan` command is the shortest route:
+
+```yaml
+- task: TerraformTask@5
+  name: terraformPlan
+  displayName: Run Terraform Plan
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    commandOptions: '-out tfplan'
+    environmentServiceNameAzureRM: 'your-service-connection'
+    publishPlan: 'Production plan'
+```
+
+When `publishPlan` is set, the task needs a saved plan file to convert to JSON:
+
+- If `commandOptions` already contains `-out`, that file is used and left in place.
+- If it does not, the task appends its own `-out` pointing at a generated file under `$(System.DefaultWorkingDirectory)`, and deletes that file once the plan has been published.
+
+The published JSON is also written to `$(System.DefaultWorkingDirectory)` as `<name>.json`, with any character outside `A-Z a-z 0-9 . _ -` replaced by an underscore. The name shown in the tab keeps the value exactly as you entered it, so two plans whose names differ only in those characters share one file on disk — give them names that differ in more than punctuation.
+
+If publishing fails, the task raises a warning and the pipeline continues; the plan itself is unaffected.
+
+#### Reading the tab
+
+A run that publishes more than one plan gets a dropdown at the top of the tab, labelled with the names above, and it opens on the last plan published. A pipeline that plans several workspaces or environments therefore wants a distinct name per plan.
+
+For a JSON plan the tab shows the Terraform and format versions, a **Resource Changes** summary counting the resources per action, and a **Resource Change Details** list with one expandable entry per resource showing its address, its actions and its before and after values. Entries holding sensitive values carry a **Contains sensitive data** badge. A collapsed **View Complete Plan** section holds the whole plan document.
+
+Output that is not a JSON plan is shown as text, with terminal colours preserved. Only JSON plans get the summary and per-resource sections, so use `outputFormat: json` if you want the structured view.
+
+#### Sensitive values
+
+Values that Terraform marks as sensitive are replaced with `***REDACTED***` before the plan is displayed. This covers resource attributes Terraform flags in the plan document and outputs declared with `sensitive = true`. The tab additionally hides values whose name suggests a credential — among them `password`, `secret`, `token`, `api_key`, `primary_key` and `connection_string` — and replaces recognisable SSH and PEM private keys and Azure subscription IDs wherever they appear.
+
+Redaction is a best-effort safety net rather than a guarantee, and two limits matter before publishing plans from a pipeline that handles production credentials:
+
+- Terraform does not mark root input variables as sensitive in the plan document, so they are matched by name only. Declaring a variable `sensitive = true` is what makes it redacted where it flows into resource attributes.
+- A credential returned by a provider in a plainly named attribute is shown in full. Names chosen to stay readable, such as `key_vault_secret_id`, `secret_name` and `token_endpoint`, are never redacted, since they normally identify a secret rather than contain one.
+
+A published plan is stored as a build attachment, so anyone who can read the build can read the plan. Treat the tab as having the same audience as the build log.
+
+#### The tab says no plans were published
+
+The tab reports `No terraform plans have been published for this pipeline run.` when the run produced no plan attachment. Check that the publishing task used one of the three combinations in the table above — most often `outputFormat` was left at `default`, or `publishPlan` was left empty. Publishing requires version 4 or 5 of the Terraform task; earlier versions never publish, and the tab is shown for them regardless.
 
 ### Creating a new service connection
 
