@@ -668,7 +668,7 @@ describe('Terraform Test Suite', function () {
         // Must match the fileName input the test sets. tl.writeFile is a no-op under the
         // mock runner, so the file itself is never created and the assertions below cover
         // the logging commands the agent acts on instead.
-        const showFilePath = path.join(os.tmpdir(), 'terraform-show-file-output-test.json');
+        const showFilePath = path.join(os.tmpdir(), 'terraform-show-working-directory', 'terraform-show-file-output-test.json');
 
         await tr.runAsync();
 

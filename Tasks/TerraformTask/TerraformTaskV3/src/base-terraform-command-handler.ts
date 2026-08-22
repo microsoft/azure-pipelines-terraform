@@ -113,7 +113,7 @@ export abstract class BaseTerraformCommandHandler {
             return terraformTool.exec(<IExecOptions> {
             cwd: showCommand.workingDirectory});
         }else if(outputTo == "file"){
-            const showFilePath = path.resolve(tasks.getInput("workingDirectory") || tasks.getVariable('System.DefaultWorkingDirectory') || '.', tasks.getInput("filename"));
+            const showFilePath = path.resolve(showCommand.workingDirectory || '', tasks.getInput("filename", true));
             let commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
                 cwd: showCommand.workingDirectory,
             });
@@ -199,7 +199,7 @@ export abstract class BaseTerraformCommandHandler {
             return terraformTool.exec(<IExecOptions> {
             cwd: customCommand.workingDirectory});
         }else if(outputTo == "file"){
-            const customFilePath = path.resolve(tasks.getInput("workingDirectory") || tasks.getVariable('System.DefaultWorkingDirectory') || '.', tasks.getInput("filename"));
+            const customFilePath = path.resolve(customCommand.workingDirectory || '', tasks.getInput("filename", true));
             let commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
                 cwd: customCommand.workingDirectory});
             
