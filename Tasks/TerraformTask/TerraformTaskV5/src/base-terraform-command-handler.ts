@@ -139,7 +139,7 @@ export abstract class BaseTerraformCommandHandler {
             // Required here: fileName is optional at the schema level because it doubles
             // as the plan display name for outputFormat=json, but writing to a file
             // without it would throw an unhelpful path.resolve TypeError.
-            const showFilePath = path.resolve(tasks.getInput("filename", true));
+            const showFilePath = path.resolve(showCommand.workingDirectory || '', tasks.getInput("filename", true));
             let commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
                 cwd: showCommand.workingDirectory,
             });
@@ -316,7 +316,7 @@ export abstract class BaseTerraformCommandHandler {
             return await terraformTool.execAsync(<IExecOptions> {
             cwd: customCommand.workingDirectory});
         }else if(outputTo == "file"){
-            const customFilePath = path.resolve(tasks.getInput("filename", true));
+            const customFilePath = path.resolve(customCommand.workingDirectory || '', tasks.getInput("filename", true));
             let commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
                 cwd: customCommand.workingDirectory});
             
