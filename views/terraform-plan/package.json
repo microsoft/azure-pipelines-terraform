@@ -1,0 +1,45 @@
+{
+  "name": "terraform-plan-view",
+  "version": "1.0.0",
+  "description": "View component for displaying terraform plan output in Azure Pipelines",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack --mode development",
+    "start": "webpack-dev-server --mode development",
+    "test": "mocha --require ts-node/register \"Tests/**/*.spec.ts\""
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ansi_up": "^5.1.0",
+    "azure-devops-extension-api": "^1.158.0",
+    "azure-devops-extension-sdk": "^2.0.11",
+    "azure-devops-ui": "^2.167.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "url-parse": "^1.5.10"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "@types/url-parse": "^1.4.11",
+    "css-loader": "^7.1.4",
+    "mocha": "^11.8.0",
+    "ts-node": "^10.9.2",
+    "html-webpack-plugin": "^5.6.8",
+    "sass": "^1.102.0",
+    "sass-loader": "^17.0.0",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.6.2",
+    "typescript": "^5.9.3",
+    "webpack": "^5.109.2",
+    "webpack-cli": "^7.2.2",
+    "webpack-dev-server": "^6.0.0"
+  },
+  "overrides": {
+    "serialize-javascript": "^7.0.5",
+    "diff": "^8.0.3"
+  }
+}

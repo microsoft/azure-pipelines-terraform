@@ -4,7 +4,8 @@
     "description": "",
     "scripts": {
         "clean": "rimraf ./build",
-        "build:release": "npm run clean && npm run deps && npm run compile && npm run deps:prune && webpack",
+        "build:plan-view": "cd ./views/terraform-plan && npm install && npm run build",
+        "build:release": "npm run clean && npm run deps && npm run compile && npm run deps:prune && npm run build:plan-view && webpack",
         "package:self": "tfx extension create --rev-version --manifest-globs azure-devops-extension.json task.json --overrides-file ./configs/self.json --root ./build",
         "package:dev": "tfx extension create --rev-version --manifest-globs azure-devops-extension.json task.json --overrides-file ./configs/dev.json --root ./build",
         "package:test": "tfx extension create --manifest-globs azure-devops-extension.json --overrides-file ./configs/test.json --root ./build",
