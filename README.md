@@ -4,6 +4,8 @@
 
 This repo contains the Azure DevOps Pipeline tasks for installing Terraform and running Terraform commands in a build or release pipeline. The goal of this extension is to guide the user in the process of using Terraform to deploy infrastructure within Azure, Amazon Web Services(AWS) and Google Cloud Platform(GCP).
 
+The published extension is available on the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks).
+
 This extension contains the following contributions:
 - Terraform tool installer - for installing Terraform if not installed on the build agent
 - Terraform - for executing the core Terraform commands
