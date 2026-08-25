@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "custom-terraform-tasks",
     "name": "Terraform",
-    "version": "0.1.13",
+    "version": "0.1.35",
     "publisher": "ms-devlabs",
     "targets": [
         {
@@ -14,13 +14,16 @@
     "categories": [
         "Azure Pipelines"
     ],
-    "Tags": [ 
+    "scopes": [
+        "vso.build"
+    ],
+    "Tags": [
         "Terraform",
         "Azure",
         "AWS",
         "GCP",
         "OCI",
-        "Release", 
+        "Release",
         "DevOps"
     ],
     "branding": {
@@ -60,6 +63,9 @@
     "content": {
         "details": {
             "path": "overview.md"
+        },
+        "license": {
+            "path": "LICENSE"
         }
     },
     "files": [
@@ -68,6 +74,10 @@
         },
         {
             "path": "Tasks/TerraformInstaller"
+        },
+        {
+            "path": "views/terraform-plan/",
+            "addressable": true
         },
         {
             "path": "images/1_AWS_service_endpoint.PNG",
@@ -147,9 +157,9 @@
                     {
                         "name": "AWS",
                         "endpointUrl": "{{endpoint.url}}",
-                        "RequestVerb":"GET",
+                        "RequestVerb": "GET",
                         "resultSelector": "xpath://ListAllMyBucketsResult/Buckets/Bucket/Name"
-                    }                
+                    }
                 ],
                 "authenticationSchemes": [
                     {
@@ -364,6 +374,21 @@
                             "dataType": "string"
                         }
                     }
+                ]
+            }
+        },
+        {
+            "description": "A tab to show terraform plan output",
+            "id": "terraform-plan-tab",
+            "type": "ms.vss-build-web.build-results-tab",
+            "targets": [
+                "ms.vss-build-web.build-results-view"
+            ],
+            "properties": {
+                "name": "Terraform Plan",
+                "uri": "views/terraform-plan/dist/index.html",
+                "supportsTasks": [
+                    "FE504ACC-6115-40CB-89FF-191386B5E7BF"
                 ]
             }
         }

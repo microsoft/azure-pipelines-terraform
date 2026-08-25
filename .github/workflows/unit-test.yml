@@ -1,5 +1,5 @@
 ---
-name: Unit Testing for TerraformTaskV4
+name: Unit Testing
 on:
   pull_request:
     branches:
@@ -9,15 +9,45 @@ on:
     - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  unit-test:
+  unit-test-v4:
     name: Unit Test V4 Task
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Run Unit Tests
       run: |
         cd Tasks/TerraformTask/TerraformTaskV4
         npm install -include=dev
         npm test
+  unit-test-v5:
+    name: Unit Test V5 Task
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    - name: Run Unit Tests
+      run: |
+        cd Tasks/TerraformTask/TerraformTaskV5
+        npm install -include=dev
+        npm test
+  unit-test-plan-view:
+    name: Unit Test Plan View
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    - name: Run Unit Tests
+      run: |
+        cd views/terraform-plan
+        npm install -include=dev
+        npm test
+    # No task tsconfig covers the view, so this is where type errors get caught.
+    - name: Build
+      run: |
+        cd views/terraform-plan
+        npm run build

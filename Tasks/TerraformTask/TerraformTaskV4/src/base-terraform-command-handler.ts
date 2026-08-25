@@ -3,11 +3,14 @@ import {ToolRunner, IExecOptions, IExecSyncOptions, IExecSyncResult} from 'azure
 import {TerraformBaseCommandInitializer, TerraformAuthorizationCommandInitializer} from './terraform-commands';
 import tasks = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import * as uuidV4 from 'uuid/v4';
-const fs = require('fs');
+import { v4 as uuidV4 } from 'uuid';
 const del = require('del');
 
 export abstract class BaseTerraformCommandHandler {
+    // Must match terraformPlanAttachmentType in views/terraform-plan; the tab queries
+    // build attachments by exactly this type.
+    protected static readonly planAttachmentType: string = "terraform-plan-results";
+
     providerName: string;
     terraformToolHandler: ITerraformToolHandler;
     backendConfig: Map<string, string>;
@@ -111,18 +114,52 @@ export abstract class BaseTerraformCommandHandler {
         await this.handleProvider(showCommand);
         
         if(outputTo == "console"){
+            // JSON is captured rather than streamed so it can be attached for the plan
+            // tab. Other formats keep streaming straight to the log.
+            if (outputFormat == "json") {
+                let commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
+                    cwd: showCommand.workingDirectory,
+                });
+
+                // execSync resolves on a non-zero exit code where exec would reject.
+                if (commandOutput.code !== 0) {
+                    throw new Error(`Terraform show failed with exit code ${commandOutput.code}`);
+                }
+
+                this.publishPlanAttachment(tasks.getInput("fileName") || "terraform-plan", commandOutput.stdout);
+
+                console.log(commandOutput.stdout);
+                return commandOutput.code;
+            }
+
             return terraformTool.exec(<IExecOptions> {
             cwd: showCommand.workingDirectory});
         }else if(outputTo == "file"){
-            const showFilePath = path.resolve(tasks.getInput("filename"));
+            // Required here: fileName is optional at the schema level because it doubles
+            // as the plan display name for outputFormat=json, but writing to a file
+            // without it would throw an unhelpful path.resolve TypeError.
+            const showFilePath = path.resolve(tasks.getInput("filename", true));
             let commandOutput = await terraformTool.execSync(<IExecSyncOptions> {
                 cwd: showCommand.workingDirectory,
             });
-            
+
+            // Guarded for json only: execSync resolves on a non-zero exit code, so partial
+            // stdout would otherwise be attached to the plan tab as a valid plan.
+            if (outputFormat == "json" && commandOutput.code !== 0) {
+                throw new Error(`Terraform show failed with exit code ${commandOutput.code}`);
+            }
+
             tasks.writeFile(showFilePath, commandOutput.stdout);
             tasks.setVariable('showFilePath', showFilePath, false, true);
-            
-            return commandOutput;
+
+            if (outputFormat == "json") {
+                tasks.addAttachment(
+                    BaseTerraformCommandHandler.planAttachmentType,
+                    tasks.getInput("fileName") || path.basename(showFilePath),
+                    showFilePath);
+            }
+
+            return commandOutput.code;
         }
     }
     public async output(): Promise<number> {
@@ -154,18 +191,31 @@ export abstract class BaseTerraformCommandHandler {
     public async plan(): Promise<number> {
         let serviceName = `environmentServiceName${this.getServiceProviderNameFromProviderInput()}`;
         let commandOptions = tasks.getInput("commandOptions") != null ? `${tasks.getInput("commandOptions")} -detailed-exitcode`:`-detailed-exitcode`
+
+        const publishPlanName = tasks.getInput("publishPlan") || "";
+
+        // A plan file we created, and are therefore responsible for removing.
+        let generatedPlanFile = "";
+
+        // Publishing needs a plan file to run `terraform show -json` against.
+        if (publishPlanName && !this.extractPlanFilePath(commandOptions)) {
+            generatedPlanFile = path.join(tasks.getVariable('System.DefaultWorkingDirectory') || '.', `terraform-plan-${uuidV4()}.tfplan`);
+            // Quoted for ToolRunner.line(), which splits options on whitespace.
+            commandOptions = `${commandOptions} -out="${generatedPlanFile}"`;
+        }
+
         let planCommand = new TerraformAuthorizationCommandInitializer(
             "plan",
             tasks.getInput("workingDirectory"),
             tasks.getInput(serviceName, true),
             commandOptions
         );
-        
+
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(planCommand);
         await this.handleProvider(planCommand);
         this.warnIfMultipleProviders();
-    
+
         let result = await terraformTool.exec(<IExecOptions> {
             cwd: planCommand.workingDirectory,
             ignoreReturnCode: true
@@ -175,7 +225,76 @@ export abstract class BaseTerraformCommandHandler {
             throw new Error(tasks.loc("TerraformPlanFailed", result));
         }
         tasks.setVariable('changesPresent', (result === 2).toString(), false, true);
+
+        if (publishPlanName) {
+            try {
+                const planFilePath = this.extractPlanFilePath(commandOptions);
+
+                if (planFilePath) {
+                    let showTerraformTool = this.terraformToolHandler.createToolRunner(new TerraformBaseCommandInitializer(
+                        "show",
+                        planCommand.workingDirectory,
+                        `-json "${planFilePath}"`
+                    ));
+
+                    let showCommandOutput = await showTerraformTool.execSync(<IExecSyncOptions> {
+                        cwd: planCommand.workingDirectory,
+                    });
+
+                    // execSync resolves on a non-zero exit code; without this a failed show
+                    // publishes empty stdout as a plan instead of warning.
+                    if (showCommandOutput.code !== 0) {
+                        throw new Error(`Terraform show failed with exit code ${showCommandOutput.code}`);
+                    }
+
+                    this.publishPlanAttachment(publishPlanName, showCommandOutput.stdout);
+                }
+            } catch (error) {
+                // A failed publish must not fail the plan itself.
+                console.log(`Error publishing plan: ${error}`);
+                tasks.warning(`Failed to publish terraform plan: ${error}`);
+            } finally {
+                // Never remove a user-supplied -out; later steps may consume it.
+                if (generatedPlanFile && tasks.exist(generatedPlanFile)) {
+                    try {
+                        tasks.rmRF(generatedPlanFile);
+                    } catch (cleanupError) {
+                        tasks.debug(`Could not remove temporary plan file ${generatedPlanFile}: ${cleanupError}`);
+                    }
+                }
+            }
+        }
+
         return result;
+    }
+
+    /**
+     * Read the plan file path out of the command options, handling `-out=<path>` and
+     * `-out <path>` with optional quoting so paths containing spaces survive. Returns
+     * an empty string when no -out is present.
+     */
+    private extractPlanFilePath(commandOptions: string): string {
+        const match = commandOptions.match(/-out(?:=|\s+)(?:"([^"]+)"|'([^']+)'|([^\s]+))/);
+        return match ? (match[1] || match[2] || match[3] || '') : '';
+    }
+
+    /** Write plan JSON to the working directory and attach it for the plan tab. */
+    private publishPlanAttachment(planName: string, planJson: string): void {
+        const workDir = tasks.getVariable('System.DefaultWorkingDirectory') || '.';
+        const planFilePath = path.join(workDir, `${BaseTerraformCommandHandler.toSafeFileName(planName)}.json`);
+
+        tasks.writeFile(planFilePath, planJson);
+        tasks.addAttachment(BaseTerraformCommandHandler.planAttachmentType, planName, planFilePath);
+    }
+
+    /**
+     * Reduce a user-supplied plan name to a single safe path segment. The name is free
+     * text, so without this a value containing separators would write outside the
+     * working directory. Only the file name is affected; the attachment keeps the
+     * name as entered.
+     */
+    private static toSafeFileName(planName: string): string {
+        return planName.replace(/[^A-Za-z0-9._-]/g, '_') || 'terraform-plan';
     }
 
     public async custom(): Promise<number> {

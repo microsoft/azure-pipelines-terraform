@@ -13,7 +13,7 @@
   "demands": [],
   "version": {
     "Major": "0",
-    "Minor": "202",
+    "Minor": "279",
     "Patch": "0"
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -29,6 +29,12 @@
   ],
   "execution": {
     "Node10": {
+      "target": "src/index.js"
+    },
+    "Node16": {
+      "target": "src/index.js"
+    },
+    "Node20_1": {
       "target": "src/index.js"
     }
   },

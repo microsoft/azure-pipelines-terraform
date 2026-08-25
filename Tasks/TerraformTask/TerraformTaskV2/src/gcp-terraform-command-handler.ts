@@ -3,7 +3,7 @@ import {ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
 import {TerraformAuthorizationCommandInitializer} from './terraform-commands';
 import {BaseTerraformCommandHandler} from './base-terraform-command-handler';
 import path = require('path');
-import * as uuidV4 from 'uuid/v4';
+import { v4 as uuidV4 } from 'uuid';
 
 export class TerraformCommandHandlerGCP extends BaseTerraformCommandHandler {
     constructor() {
@@ -35,7 +35,7 @@ export class TerraformCommandHandlerGCP extends BaseTerraformCommandHandler {
         this.backendConfig.set('credentials', jsonKeyFilePath);
     }
 
-    public handleBackend(terraformToolRunner: ToolRunner): void {
+    public async handleBackend(terraformToolRunner: ToolRunner) : Promise<void> {
         let backendServiceName = tasks.getInput("backendServiceGCP", true);
         this.setupBackend(backendServiceName);
 
@@ -44,7 +44,7 @@ export class TerraformCommandHandlerGCP extends BaseTerraformCommandHandler {
         }
     }
 
-    public handleProvider(command: TerraformAuthorizationCommandInitializer) {
+    public async handleProvider(command: TerraformAuthorizationCommandInitializer) : Promise<void> {
         if (command.serviceProvidername) {
             let jsonKeyFilePath = this.getJsonKeyFilePath(command.serviceProvidername);
 
