@@ -43,28 +43,6 @@ export abstract class BaseTerraformCommandHandler {
         return versionNumbersInt1.length == versionNumbersInt2.length ? 0: (versionNumbersInt1.length < versionNumbersInt2.length ? -1 : 1);
     }
 
-    public warnIfMultipleProviders(): void {
-        let terraformPath;
-        try {
-            terraformPath = tasks.which("terraform", true);
-        } catch(err) {
-            throw new Error(tasks.loc("TerraformToolNotFound"));
-        }
-
-        let terraformToolRunner: ToolRunner = tasks.tool(terraformPath);
-        terraformToolRunner.arg("providers");
-        let commandOutput = terraformToolRunner.execSync(<IExecSyncOptions>{
-            cwd: tasks.getInput("workingDirectory")
-        });
-
-        let countProviders = ["aws", "azurerm", "google", "oracle"].filter(provider => commandOutput.stdout.includes(provider)).length;
-        
-        tasks.debug(countProviders.toString());
-        if (countProviders > 1) {
-            tasks.warning("Multiple provider blocks specified in the .tf files in the current working directory.");
-        }
-    }
-
     public getServiceProviderNameFromProviderInput(): string {
         let provider: string = tasks.getInput("provider", true);
         
@@ -215,7 +193,6 @@ export abstract class BaseTerraformCommandHandler {
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(planCommand);
         await this.handleProvider(planCommand);
-        this.warnIfMultipleProviders();
     
         let result = await terraformTool.execAsync(<IExecOptions> {
             cwd: planCommand.workingDirectory,
@@ -345,7 +322,6 @@ export abstract class BaseTerraformCommandHandler {
 
         terraformTool = this.terraformToolHandler.createToolRunner(applyCommand);
         await this.handleProvider(applyCommand);
-        this.warnIfMultipleProviders();
 
         return await terraformTool.execAsync(<IExecOptions> {
             cwd: applyCommand.workingDirectory
@@ -372,7 +348,6 @@ export abstract class BaseTerraformCommandHandler {
         let terraformTool;
         terraformTool = this.terraformToolHandler.createToolRunner(destroyCommand);
         await this.handleProvider(destroyCommand);
-        this.warnIfMultipleProviders();
 
         return await terraformTool.execAsync(<IExecOptions> {
             cwd: destroyCommand.workingDirectory

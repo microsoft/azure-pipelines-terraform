@@ -549,7 +549,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 1, 'should have 1 warning');
             assert(tr.stdOutContained('AzurePlanSuccessNoAdditionalArgsL0 should have succeeded.'), 'Should have printed: AzurePlanSuccessNoAdditionalArgsL0 should have succeeded.');
@@ -564,7 +564,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 1, 'should have 1 warning');
             assert(tr.stdOutContained('AzurePlanSuccessAdditionalArgsL0 should have succeeded.'), 'Should have printed: AzurePlanSuccessAdditionalArgsL0 should have succeeded.');
@@ -579,7 +579,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 3, 'tool should have been invoked three times (providers, plan, show). actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times (plan, show). actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.stdOutContained('task.addattachment'), 'should have published an attachment');
             assert(tr.stdOutContained('terraform-plan-results'), 'attachment should use the plan tab type');
@@ -596,7 +596,7 @@ describe('Terraform Test Suite', function () {
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
             // Unquoted, extractPlanFilePath truncates at the space and show never runs.
-            assert(tr.invokedToolCount === 3, 'tool should have been invoked three times (providers, plan, show). actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times (plan, show). actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.stdOutContained('task.addattachment'), 'should have published an attachment');
             assert(tr.stdOutContained('terraform-plan-fixed-uuid.tfplan'), 'show should have received the whole generated path');
@@ -692,7 +692,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 1, 'should have 1 warning');
             assert(tr.stdOutContained('Execution failed: invalid config files'), 'Should have shown error message');
@@ -707,7 +707,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 1, 'should have 1 warning');
             assert(tr.stdOutContained('Error: No configuration files'), 'Should have shown error message');
@@ -722,7 +722,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('AWSPlanSuccessNoAdditionalArgsL0 should have succeeded.'), 'Should have printed: AWSPlanSuccessNoAdditionalArgsL0 should have succeeded.');
@@ -737,7 +737,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('AWSPlanSuccessAdditionalArgsL0 should have succeeded.'), 'Should have printed: AWSPlanSuccessAdditionalArgsL0 should have succeeded.');
@@ -752,7 +752,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('Execution failed: invalid config files'), 'Should have shown error message');
@@ -767,7 +767,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('Error: No configuration files'), 'Should have shown error message');
@@ -782,7 +782,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('GCPPlanSuccessNoAdditionalArgsL0 should have succeeded.'), 'Should have printed: GCPPlanSuccessNoAdditionalArgsL0 should have succeeded.');
@@ -797,7 +797,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('GCPPlanSuccessAdditionalArgsL0 should have succeeded.'), 'Should have printed: GCPPlanSuccessAdditionalArgsL0 should have succeeded.');
@@ -812,7 +812,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('Execution failed: invalid config files'), 'Should have shown error message');
@@ -827,7 +827,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('Error: No configuration files'), 'Should have shown error message');
@@ -844,7 +844,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 1, 'should have 1 warnings');
             assert(tr.stdOutContained('AzureApplySuccessNoAdditionalArgsL0 should have succeeded.'), 'Should have printed: AzureApplySuccessNoAdditionalArgsL0 should have succeeded.');
@@ -859,7 +859,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('AzureApplySuccessAuthenticationSchemeManagedServiceIdentityL0 should have succeeded.'), 'Should have printed: AzureApplySuccessAuthenticationSchemeManagedServiceIdentityL0 should have succeeded.');
@@ -874,7 +874,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('AzureApplySuccessAuthenticationSchemeWorkloadIdentityFederationL0 should have succeeded.'), 'Should have printed: AzureApplySuccessAuthenticationSchemeWorkloadIdentityFederationL0 should have succeeded.');
@@ -889,7 +889,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 1, 'should have 1 warning');
             assert(tr.stdOutContained('AzureApplySuccessAdditionalArgsWithAutoApproveL0 should have succeeded.'), 'Should have printed: AzureApplySuccessAdditionalArgsWithAutoApproveL0 should have succeeded.');
@@ -904,7 +904,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 1, 'should have 1 warning');
             assert(tr.stdOutContained('AzureApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.'), 'Should have printed: AzureApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
@@ -919,7 +919,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 1, 'should have 1 warning');
             assert(tr.stdOutContained('Execution failed: invalid config files'), 'Should have shown error message');
@@ -934,7 +934,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 1, 'should have 1 warning');
             assert(tr.stdOutContained('Error: No configuration files'), 'Should have shown error message');
@@ -949,7 +949,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('AWSApplySuccessNoAdditionalArgsL0 should have succeeded.'), 'Should have printed: AWSApplySuccessNoAdditionalArgsL0 should have succeeded.');
@@ -964,7 +964,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('AWSApplySuccessAdditionalArgsWithAutoApproveL0 should have succeeded.'), 'Should have printed: AWSApplySuccessAdditionalArgsWithAutoApproveL0 should have succeeded.');
@@ -979,7 +979,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('AWSApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.'), 'Should have printed: AWSApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
@@ -994,7 +994,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('Execution failed: invalid config files'), 'Should have shown error message');
@@ -1009,7 +1009,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('Error: No configuration files'), 'Should have shown error message');
@@ -1024,7 +1024,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('GCPApplySuccessNoAdditionalArgsL0 should have succeeded.'), 'Should have printed: GCPApplySuccessNoAdditionalArgsL0 should have succeeded.');
@@ -1039,7 +1039,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('GCPApplySuccessAdditionalArgsWithAutoApproveL0 should have succeeded.'), 'Should have printed: GCPApplySuccessAdditionalArgsWithAutoApproveL0 should have succeeded.');
@@ -1054,7 +1054,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('GCPApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.'), 'Should have printed: GCPApplySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
@@ -1069,7 +1069,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('Execution failed: invalid config files'), 'Should have shown error message');
@@ -1084,7 +1084,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('Error: No configuration files'), 'Should have shown error message');
@@ -1101,7 +1101,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 1, 'should have 1 warning');
             assert(tr.stdOutContained('AzureDestroySuccessNoAdditionalArgsL0 should have succeeded.'), 'Should have printed: AzureDestroySuccessNoAdditionalArgsL0 should have succeeded.');
@@ -1116,7 +1116,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 1, 'should have 1 warning');
             assert(tr.stdOutContained('AzureDestroySuccessAdditionalArgsWithAutoApproveL0 should have succeeded.'), 'Should have printed: AzureDestroySuccessAdditionalArgsWithAutoApproveL0 should have succeeded.');
@@ -1131,7 +1131,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 1, 'should have 1 warning');
             assert(tr.stdOutContained('AzureDestroySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.'), 'Should have printed: AzureDestroySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
@@ -1146,7 +1146,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 1, 'should have 1 warning');
             assert(tr.stdOutContained('Execution failed: invalid config files'), 'Should have shown error message');
@@ -1161,7 +1161,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('AWSDestroySuccessNoAdditionalArgsL0 should have succeeded.'), 'Should have printed: AWSDestroySuccessNoAdditionalArgsL0 should have succeeded.');
@@ -1176,7 +1176,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('AWSDestroySuccessAdditionalArgsWithAutoApproveL0 should have succeeded.'), 'Should have printed: AWSDestroySuccessAdditionalArgsWithAutoApproveL0 should have succeeded.');
@@ -1191,7 +1191,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('AWSDestroySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.'), 'Should have printed: AWSDestroySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
@@ -1206,7 +1206,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('Execution failed: invalid config files'), 'Should have shown error message');
@@ -1221,7 +1221,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('GCPDestroySuccessNoAdditionalArgsL0 should have succeeded.'), 'Should have printed: GCPDestroySuccessNoAdditionalArgsL0 should have succeeded.');
@@ -1236,7 +1236,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('GCPDestroySuccessAdditionalArgsWithAutoApproveL0 should have succeeded.'), 'Should have printed: GCPDestroySuccessAdditionalArgsWithAutoApproveL0 should have succeeded.');
@@ -1251,7 +1251,7 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 0, 'should have no errors');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('GCPDestroySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.'), 'Should have printed: GCPDestroySuccessAdditionalArgsWithoutAutoApproveL0 should have succeeded.');
@@ -1266,41 +1266,10 @@ describe('Terraform Test Suite', function () {
 
         runValidations(() => {
             assert(tr.failed, 'task should have failed');
-            assert(tr.invokedToolCount === 2, 'tool should have been invoked two times. actual: ' + tr.invokedToolCount);
+            assert(tr.invokedToolCount === 1, 'tool should have been invoked one time. actual: ' + tr.invokedToolCount);
             assert(tr.errorIssues.length === 1, 'should have one error');
             assert(tr.warningIssues.length === 0, 'should have no warnings');
             assert(tr.stdOutContained('Execution failed: invalid config files'), 'Should have shown error message');
-        }, tr);
-    });
-
-    /* test for multiple providers */
-
-    it('warnIfMultipleProviders should not warn for single provider', async () => {
-        let tp = path.join(__dirname, './MultipleProviderTests/SingleProviderNoWarning.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        await tr.runAsync();
-
-        runValidations(() => {
-            assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
-            assert(tr.errorIssues.length === 0, 'should have no errors');
-            assert(tr.warningIssues.length === 0, 'should have no warnings');
-        }, tr);
-    });
-
-    it('warnIfMultipleProviders should warn correctly for multiple providers', async () => {
-        let tp = path.join(__dirname, './MultipleProviderTests/MultipleProviderWarning.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
-        await tr.runAsync();
-
-        runValidations(() => {
-            assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.invokedToolCount === 1, 'should have invoked tool one time. actual: ' + tr.invokedToolCount);
-            assert(tr.errorIssues.length === 0, 'should have no errors');
-            assert(tr.warningIssues.length === 1, 'should have one warning');
-            assert(tr.createdWarningIssue('Multiple provider blocks specified in the .tf files in the current working directory.'), 'Should have created warning: Multiple provider blocks specified in the .tf files in the current working drectory.');
         }, tr);
     });
 
