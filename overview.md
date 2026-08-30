@@ -10,7 +10,9 @@ This extension provides the following components:
 - A task for executing the core Terraform commands
 - A service connection for connecting to an Amazon Web Services(AWS) account
 - A service connection for connecting to a Google Cloud Platform(GCP) account
-- A service connection for connecting to a Oracle Cloud Infrastructure(OCI) account
+- A service connection for connecting to an Oracle Cloud Infrastructure(OCI) account
+- A task for installing a specific version of Terraform, if not already installed, on the agent
+- A task for executing the core Terraform commands
 
 The Terraform tool installer task acquires a specified version of [Terraform](https://www.terraform.io/) from the Internet or the tools cache and prepends it to the PATH of the Azure Pipelines Agent (hosted or private). This task can be used to change the version of Terraform used in subsequent tasks. Adding this task before the Terraform task in a build definition ensures you are using that task with the right Terraform version.
 
@@ -480,9 +482,9 @@ The Terraform task requires a GCP service connection for setting up the credenti
 
 ![Creating a GCP service connection](images/2_GCP_service_endpoint.PNG)
 
-#### Create a new service connection for connecting to a OCI account
+#### Create a new service connection for connecting to an OCI account
 
-The Terraform task requires a OCI service connection for setting up the credentials to connect to an OCI account. For setting up a new OCI service connection:
+The Terraform task requires an OCI service connection for setting up the credentials to connect to an OCI account. For setting up a new OCI service connection:
 
 - Using OCI Console add an API Key by generating it (https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#two) and download it
 - On the project page, go to **Project settings** and choose **Service connections**.
