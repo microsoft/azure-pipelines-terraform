@@ -8,15 +8,13 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
 
 tr.setInput('provider', 'azurerm');
 tr.setInput('command', 'show');
-tr.setInput('workingDirectory', 'DummyWorkingDirectory');
+tr.setInput('workingDirectory', path.join(os.tmpdir(), 'terraform-show-working-directory'));
 tr.setInput('environmentServiceNameAzureRM', 'AzureRM');
 tr.setInput('outputTo', 'file');
 tr.setInput('outputFormat', 'json');
-// Absolute so the output lands in the temp directory. path.resolve would
-// otherwise place a relative name next to the test process working directory.
-tr.setInput('fileName', path.join(os.tmpdir(), 'terraform-show-file-output-test.json'));
+tr.setInput('fileName', 'terraform-show-file-output-test.json');
 
-process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = os.tmpdir();
+process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = path.join(os.tmpdir(), 'terraform-default-working-directory');
 
 process.env['ENDPOINT_AUTH_SCHEME_AzureRM'] = 'ServicePrincipal';
 process.env['ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID'] = 'DummmySubscriptionId';
