@@ -12,9 +12,10 @@
   "minimumAgentVersion": "2.144.0",
   "dependencies": {
     "azure-pipelines-task-lib": "^5.278.2",
-    "azure-pipelines-tool-lib": "^2.0.12",
+    "azure-pipelines-tool-lib": "^2.281.0",
     "https-proxy-agent": "^5.0.0",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "uuid": "^11.1.1"
   },
   "overrides": {
     "diff": "^8.0.3",
